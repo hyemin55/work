@@ -63,7 +63,7 @@ public class FileController {
 //            System.out.println(imagePath.toAbsolutePath().toString());
 
 //            전체 경로+ 파일이름 출력
-            String myFilePath = imagePath.toAbsolutePath() + "\\" + file.getOriginalFilename();
+            String myFilePath = imagePath.toAbsolutePath() + File.separator + file.getOriginalFilename();
 //            System.out.println(myFilePath);
 
             File saveFile = new File(myFilePath);
@@ -84,7 +84,7 @@ public class FileController {
         try{
             for (MultipartFile file : files) {
                 String fileName = file.getOriginalFilename();
-                String filePath = imagePath.toString()+"\\"+fileName;
+                String filePath = imagePath.toString()+File.separator+fileName;
                 System.out.println(filePath);
                 File dest = new File(filePath);
                 file.transferTo(dest);

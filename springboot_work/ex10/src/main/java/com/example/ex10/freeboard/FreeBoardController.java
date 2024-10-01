@@ -49,11 +49,6 @@ public class FreeBoardController {
                                                             @RequestParam(name = "size", defaultValue = "5") int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "idx");
 
-//        pageNum = 0;
-//        내용이 보여지는 갯수
-//        size = 5;
-
-
         Pageable pageable = PageRequest.of(pageNum, size, sort);
         Page<FreeBoard> page = freeBoardRepository.findAll(pageable);
 
@@ -88,7 +83,7 @@ public class FreeBoardController {
         FreeBoard freeBoard = freeBoardRepository.findById(idx)
                 .orElseThrow(() -> new BizException(ErrorCode.NOT_FOUND));
 
-        freeBoard.setView_Count(freeBoard.getView_Count()+1);
+        freeBoard.setView_Count(freeBoard.getView_Count() + 1);
         freeBoardRepository.save(freeBoard);
 
         //        FreeboardController의 EAGER모드 사용할 때.
@@ -117,7 +112,7 @@ public class FreeBoardController {
 //        System.out.println(freeBoardReqDto);
         if (file != null) {
 //            System.out.println(file.getOriginalFilename());
-            String myFilePath = Paths.get("ex10/images/file/").toAbsolutePath() + "\\" + file.getOriginalFilename();
+            String myFilePath = Paths.get("ex10/images/file/").toAbsolutePath() + File.separator + file.getOriginalFilename();
 
             try {
                 File destFile = new File(myFilePath);
