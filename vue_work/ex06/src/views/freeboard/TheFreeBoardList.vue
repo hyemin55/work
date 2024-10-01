@@ -74,7 +74,7 @@
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { GLOBAL_URL } from '@/api/util';
-import {getFreeBoard} from '@/api/freeboardApi'
+import { getFreeBoard } from '@/api/freeboardApi'
 
 // numm, []배열 빈공백 -> false로 들어간다.
 const temp = ref(null)

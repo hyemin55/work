@@ -17,7 +17,8 @@ export const saveFreeboard = async (formData) => {
   }
 }
 export const getFreeBoard = async (pageNum) => {
-  if (pageNum == undefined) pageNum = 0
+  if (pageNum == undefined) 
+    pageNum = 0
   try {
     const res = await axios
     .get(`${URL}?pageNum=${pageNum}`)
