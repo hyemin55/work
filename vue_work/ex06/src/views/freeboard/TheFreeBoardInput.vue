@@ -32,17 +32,18 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { saveFreeboard } from '@/api/freeboardApi'
 
-const title = ref('');
-const content = ref('');
-const myfile = ref(null);
-const router = useRouter();
+const title = ref('')
+const content = ref('')
+const myfile = ref(null)
+const router = useRouter()
 
 const onFileChange = (e) => {
-  myfile.value = e.target.files[0];
+  myfile.value = e.target.files[0]
 }
 
-const save = () => {
+const save = async () => {
   const data = {
     title: title.value,
     content: content.value
@@ -52,21 +53,29 @@ const save = () => {
   formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }))
   formData.append('file', myfile.value)
 
-  axios
-    .post('http://localhost:10000/freeboard', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then((res) => {
-      // console.log(res)
-      alert('저장하였습니다.')
-      router.push({ name: 'freeboardlist', params: { aa: 10, bb: '안녕하세요' } })
-    })
-    .catch((e) => {
-      // console.log(e)
-      alert('에러' + e.response.data.message)
-    })
+  const res = await saveFreeboard(formData)
+  if(res.status==200){
+    alert('저장하였습니다.')
+    router.push({name:'freeboardlist'})
+    return;
+  }
+  alert('에러'+res.respons.data.message);
+
+  // axios
+  //   .post('http://localhost:10000/freeboard', formData, {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data'
+  //     }
+  //   })
+  //   .then((res) => {
+  //     // console.log(res)
+  //     alert('저장하였습니다.')
+  //     router.push({ name: 'freeboardlist', params: { aa: 10, bb: '안녕하세요' } })
+  //   })
+  //   .catch((e) => {
+  //     // console.log(e)
+  //     alert('에러' + e.response.data.message)
+  //   })
 }
 </script>
 
