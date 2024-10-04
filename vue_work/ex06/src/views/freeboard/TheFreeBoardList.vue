@@ -5,12 +5,12 @@
       <table class="border border-b-gray-500 w-full">
         <thead>
           <tr>
-            <th class="border">idx</th>
-            <th class="border">title</th>
-            <th class="border">author</th>
-            <th class="border">regdate</th>
-            <th class="border">viewcount</th>
-            <th class="border">img</th>
+            <th class="border text-center txet-lg p-2">idx</th>
+            <th class="border text-center txet-lg p-2">title</th>
+            <th class="border text-center txet-lg p-2">author</th>
+            <th class="border text-center txet-lg p-2">regdate</th>
+            <th class="border text-center txet-lg p-2">viewcount</th>
+            <th class="border text-center txet-lg p-2">img</th>
           </tr>
         </thead>
         <tbody>
@@ -22,13 +22,11 @@
               :key="item.idx"
               @click="viewPage(item.idx)"
             >
-              <td class="border text-center">{{ item.idx }}</td>
-              <td class="border text-center">
-                {{ item.title }}
-              </td>
-              <td class="border text-center">{{ item.creAuthor }}</td>
-              <td class="border text-center">{{ item.regDate }}</td>
-              <td class="border text-center">{{ item.view_Count }}</td>
+              <td class="border text-center txet-lg p-2">{{ item.idx }}</td>
+              <td class="border text-center txet-lg p-2">{{ item.title }}</td>
+              <td class="border text-center txet-lg p-2">{{ item.creAuthor }}</td>
+              <td class="border text-center txet-lg p-2">{{ item.regDate }}</td>
+              <td class="border text-center txet-lg p-2">{{ item.view_Count }}</td>
               <template v-if="item.list[0]">
                 <td class="border text-center text-lg p-1">
                   <img

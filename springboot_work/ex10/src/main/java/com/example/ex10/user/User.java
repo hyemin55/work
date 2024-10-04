@@ -56,6 +56,9 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime wdate;
 
+//    테이블 create 하면서 role(역할-user or admin or user등급 등등) 컬럼 추가
+    private String role;
+
     // JPA CLASS -> talbe CREATE가 됩니다.
 
     @OneToMany(mappedBy = "user",

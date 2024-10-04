@@ -59,6 +59,7 @@ public class FreeBoard {
     //    서로 참조해야할 때 양방향 매핑이라한다. mappedBy를 사용해 참조할 이름을 똑같이 적어줘야한다.
 //    EAGER는
 //    LAZY가 기본값이다.
+//    orphanRemoval = true는 부모를 잃어버린 고아객체가 되면 고아객체를 삭제해라.
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "freeBoard",
             cascade = CascadeType.ALL,
