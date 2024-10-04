@@ -17,14 +17,31 @@ export const saveFreeboard = async (formData) => {
   }
 }
 export const getFreeBoard = async (pageNum) => {
-  if (pageNum == undefined) 
-    pageNum = 0
+  if (pageNum == undefined) pageNum = 0
   try {
-    const res = await axios
-    .get(`${URL}?pageNum=${pageNum}`)
+    const res = await axios.get(`${URL}?pageNum=${pageNum}`)
     return res
   } catch (e) {
     console.log(e)
     return e
+  }
+}
+export const getFreeBoardView = async (idx) => {
+  try {
+    const res = await axios.get(`${URL}/view/${idx}`)
+    return res
+  } catch (e) {
+    console.log(e)
+    return e
+  }
+}
+
+export const freeboardDelete = async (idx) => {
+  try {
+    const res = await axios.delete(`${URL}/delete/${idx}`)
+    return res
+  } catch (e) {
+    console.log(e)
+    return e;
   }
 }

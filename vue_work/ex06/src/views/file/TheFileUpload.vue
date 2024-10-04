@@ -28,25 +28,23 @@ const save = () => {
     return
   }
 
-  const formData = new FormData();
-  formData.append('file', myfile.value); // 'file'이 key여야 함
+  const formData = new FormData()
+  formData.append('file', myfile.value) // 'file'이 key여야 함
   formData.append(
     'fileDto',
-    new Blob(
-      [JSON.stringify({ name: 'filename', desc: 'aValue' })],
-      { type: 'application/json' }
-    )
-  );
-   
-  axios.post('http://localhost:10000/file/upload', formData, {
-    headers: { 'content-Type': 'multipart/form-data' }
-  })
-  .then((res) => {
-      console.log(res);
+    new Blob([JSON.stringify({ name: 'filename', desc: 'aValue' })], { type: 'application/json' })
+  )
+
+  axios
+    .post('http://localhost:10000/file/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    .then((res) => {
+      console.log(res)
     })
     .catch((e) => {
-      console.log(e);
-    });
+      console.log(e)
+    })
 }
 
 // (e)는 이미 설정된 이벤트 객체이다.

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="h1-red">TheFileUpload</h1>
+    <h1 class="h1-red">TheFileUploads</h1>
     <div class="p-5">
       <button
         class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"

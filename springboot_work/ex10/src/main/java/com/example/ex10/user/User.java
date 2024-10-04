@@ -53,6 +53,7 @@ public class User {
     private String password;
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime wdate;
 
     // JPA CLASS -> talbe CREATE가 됩니다.

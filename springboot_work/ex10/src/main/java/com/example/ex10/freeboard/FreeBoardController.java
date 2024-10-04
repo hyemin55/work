@@ -4,6 +4,9 @@ import com.example.ex10.error.BizException;
 import com.example.ex10.error.ErrorCode;
 import com.example.ex10.file.FileEntity;
 import com.example.ex10.file.FileRepository;
+import com.example.ex10.user.User;
+import com.example.ex10.user.UserRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -33,6 +37,7 @@ public class FreeBoardController {
 
     private final FreeBoardRepository freeBoardRepository;
     private final FileRepository fileRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     //    welcome 안에 application의 my.value의 값이 들어간다.
@@ -61,17 +66,18 @@ public class FreeBoardController {
 
         List<FreeBoardResponseDto> list = new ArrayList<>();
         for (FreeBoard freeBoard : freeBoardResponsePageDto.getContent()) {
-            FreeBoardResponseDto freeBoardResponsDto
+            FreeBoardResponseDto freeBoardResponseDto
                     = new ModelMapper()
                     .map(freeBoard, FreeBoardResponseDto.class);
 
             DateTimeFormatter dateTimeFormatter
                     = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm");
 
-            freeBoardResponsDto.setRegDate(dateTimeFormatter.format(freeBoard.getRegDate()));
-            freeBoardResponsDto.setModDate(dateTimeFormatter.format(freeBoard.getModDate()));
+            freeBoardResponseDto.setCreAuthor(freeBoard.getUser().getName());
+            freeBoardResponseDto.setRegDate(dateTimeFormatter.format(freeBoard.getRegDate()));
+            freeBoardResponseDto.setModDate(dateTimeFormatter.format(freeBoard.getModDate()));
 
-            list.add(freeBoardResponsDto);
+            list.add(freeBoardResponseDto);
         }
         freeBoardResponsePageDto.setList(list);
 //        return  ResponseEntity.ok(list.getContent());
@@ -95,6 +101,11 @@ public class FreeBoardController {
 
         freeBoardResponseDto.setRegDate(dateTimeFormatter.format(freeBoard.getRegDate()));
         freeBoardResponseDto.setModDate(dateTimeFormatter.format(freeBoard.getModDate()));
+
+        freeBoardResponseDto.setCreAuthor(freeBoard.getUser().getName());
+        freeBoardResponseDto.setModAuthor(freeBoard.getUser().getName());
+        freeBoardResponseDto.setUserIdx(freeBoard.getUser().getIdx());
+
         return ResponseEntity.ok(freeBoardResponseDto);
     }
 
@@ -102,18 +113,22 @@ public class FreeBoardController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
+
+//    @Transactional
     public ResponseEntity<FreeBoard> save(
             @Valid @RequestPart(name = "data") FreeBoardReqDto freeBoardReqDto,
             @RequestPart(name = "file", required = false) MultipartFile file) {
 
-        FreeBoard freeBoard = new ModelMapper().map(freeBoardReqDto, FreeBoard.class);
+        FreeBoard freeBoard = modelMapper.map(freeBoardReqDto, FreeBoard.class);
         freeBoardRepository.save(freeBoard);
+        // Todo...
+        // 1번 사용자가 무조건 작성 한걸로..
+        // jwt 로그인 하면 ... 로그인한 사용자를 넣을꺼예요
+        User user = userRepository.findById(1l).orElse(new User());
+        freeBoard.setUser(user);
 
-//        System.out.println(freeBoardReqDto);
         if (file != null) {
-//            System.out.println(file.getOriginalFilename());
-            String myFilePath = Paths.get("ex10/images/file/").toAbsolutePath() + File.separator + file.getOriginalFilename();
-
+            String myFilePath = Paths.get("images/file/").toAbsolutePath() + File.separator + file.getOriginalFilename();
             try {
                 File destFile = new File(myFilePath);
                 file.transferTo(destFile);
@@ -122,14 +137,21 @@ public class FreeBoardController {
             }
 
             FileEntity fileEntity = new FileEntity();
-//        파일 이름까지 들어간다.
             fileEntity.setName(file.getOriginalFilename());
-//        DB칼럼에 url주소 넣기
-            fileEntity.setPath(Paths.get("images/file/")
-                    .toAbsolutePath().toString());
+            fileEntity.setPath(Paths.get("images/file/").toAbsolutePath().toString());
             fileEntity.setFreeBoard(freeBoard);
             fileRepository.save(fileEntity);
-
+            freeBoard.setList(Arrays.asList(fileEntity));
+            freeBoardRepository.save(freeBoard);
+        }else{
+            List<FileEntity> list = fileRepository.findByFreeBoardIdx(freeBoard.getIdx());
+            list.forEach(fileEntity -> {
+                // delete * from free_board_file where idx = ?
+                fileRepository.deleteById(fileEntity.getIdx());
+                fileRepository.flush();
+            });
+            freeBoard.setList(Arrays.asList());
+            freeBoardRepository.save(freeBoard);
         }
         return ResponseEntity.status(200).body(freeBoard);
     }

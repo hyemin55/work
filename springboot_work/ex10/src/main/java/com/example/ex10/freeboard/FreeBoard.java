@@ -19,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
@@ -41,6 +40,7 @@ public class FreeBoard {
     private User user;
 
     @CreatedBy
+    @Column(updatable = false)
     private String creAuthor;
 
     @LastModifiedBy
@@ -61,6 +61,22 @@ public class FreeBoard {
 //    LAZY가 기본값이다.
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "freeBoard",
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<FileEntity> list = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "FreeBoard{" +
+                "idx=" + idx +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", creAuthor='" + creAuthor + '\'' +
+                ", modAuthor='" + modAuthor + '\'' +
+                ", regDate=" + regDate +
+                ", modDate=" + modDate +
+                ", view_Count=" + view_Count +
+                ", list=" + list +
+                '}';
+    }
 }

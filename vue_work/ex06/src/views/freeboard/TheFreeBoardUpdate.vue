@@ -17,7 +17,7 @@
       ></textarea>
 
       <div class="my-3">
-          <input type="file" name="" id="" @change="onFileChange">
+        <input type="file" name="" id="" @change="onFileChange" />
       </div>
       <button
         @click="save"
@@ -30,44 +30,40 @@
 </template>
 
 <script setup>
-import axios from 'axios'
-import { ref } from 'vue'
+import { getFreeBoardView, saveFreeboard } from '@/api/freeboardApi'
+import { ref, watchEffect } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+// import { GLOBAL_URL } from '@/api/util'
 
-const title = ref('');
-const content = ref('');
-const regdate = ref('');
-const creAuthor = ref('');
-const idx = ref(0);
-const router = useRouter();
-const route = useRoute();
-const myfile = ref(null);
-;
-const onFileChange = (e)=>{
-  myfile.value = e.target.files[0];
+const title = ref('')
+const content = ref('')
+const regdate = ref('')
+const creAuthor = ref('')
+const idx = ref(0)
+const router = useRouter()
+const route = useRoute()
+const myfile = ref(null)
+
+const onFileChange = (e) => {
+  myfile.value = e.target.files[0]
 }
 
 // console.log(route.query);
-
-const getfreeboard = () =>{
-  axios
-    .get(`http://localhost:10000/freeboard/view/${route.query.idx}`)
-    .then((res) => {
-      title.value = res.data.title
-      content.value = res.data.content
-      regdate.value = res.data.regdate
-      creAuthor.value = res.data.creAuthor
-      idx.value = res.data.idx
-})
-.catch((e) => {
-      // console.log(e)
-      alert(e.response.data.message)
-      router.push({ name: 'freeboardlist' })
-    })
+watchEffect(async () => {
+  const res = await getFreeBoardView(route.query.idx)
+  if (res.status == 200) {
+    title.value = res.data.title
+    content.value = res.data.content
+    regdate.value = res.data.regdate
+    creAuthor.value = res.data.creAuthor
+    idx.value = res.data.idx
+  } else {
+    alert(res.response.data.message)
+    router.push({ name: 'freeboardlist' })
   }
+})
 
-
-const save = () => {
+const save = async () => {
   const data = {
     // 1번 글을 수정하겠다는 설정
     idx: route.query.idx,
@@ -78,22 +74,9 @@ const save = () => {
   const formData = new FormData()
   formData.append('data', new Blob([JSON.stringify(data)], { type: 'application/json' }))
   formData.append('file', myfile.value)
-
-  axios
-    .post('http://localhost:10000/freeboard', formData)
-    .then((res) => {
-      console.log(res)
-      alert('저장하였습니다.')
-      router.push({ name: 'freeboardlist', params: { aa: 10, bb: '안녕하세요' } })
-    })
-    .catch((e) => {
-      console.log(e)
-      alert('에러' + e.response.data.message)
-    });
+  const res = await saveFreeboard(formData)
+  if (res.status == 200) router.push({ name: 'freeboardlist' })
 }
-
-getfreeboard();
-
 </script>
 
 <style scoped>
