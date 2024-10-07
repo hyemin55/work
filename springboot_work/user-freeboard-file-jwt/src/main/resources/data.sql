@@ -1,17 +1,17 @@
-INSERT INTO users (idx, username, age, email, password, wdate, role)
-VALUES (1, 'Red', 25, 'red@example.com', '1234', '2024-09-24 10:00:00', 'ROLE_ADMIN');
+INSERT INTO users (idx, username, age, email, password, wdate)
+VALUES (1, 'Red', 25, 'red@example.com', 'password123', '2024-09-24 10:00:00');
 
-INSERT INTO users (idx, username, age, email, password, wdate, role)
-VALUES (2, 'Blue', 30, 'blue@example.com', 'password123', '2024-09-24 10:00:00', 'ROLE_ADMIN');
+INSERT INTO users (idx, username, age, email, password, wdate)
+VALUES (2, 'Blue', 30, 'blue@example.com', 'password123', '2024-09-24 10:00:00');
 
-INSERT INTO users (idx, username, age, email, password, wdate, role)
-VALUES (3, 'Green', 22, 'green@example.com', 'password123', '2024-09-24 10:00:00', 'ROLE_ADMIN');
+INSERT INTO users (idx, username, age, email, password, wdate)
+VALUES (3, 'Green', 22, 'green@example.com', 'password123', '2024-09-24 10:00:00');
 
-INSERT INTO users (idx, username, age, email, password, wdate, role)
-VALUES (4, 'Yellow', 28, 'yellow@example.com', 'password123', '2024-09-24 10:00:00', 'ROLE_ADMIN');
+INSERT INTO users (idx, username, age, email, password, wdate)
+VALUES (4, 'Yellow', 28, 'yellow@example.com', 'password123', '2024-09-24 10:00:00');
 
-INSERT INTO users (idx, username, age, email, password, wdate, role)
-VALUES (5, 'Purple', 35, 'purple@example.com', 'password123', '2024-09-24 10:00:00', 'ROLE_ADMIN');
+INSERT INTO users (idx, username, age, email, password, wdate)
+VALUES (5, 'Purple', 35, 'purple@example.com', 'password123', '2024-09-24 10:00:00');
 
 
 INSERT INTO free_board (idx, title, content, user_idx, cre_Author, mod_Author, reg_Date, mod_Date, view_Count)
