@@ -6,7 +6,10 @@ import TheFreeBoardList from '../views/freeboard/TheFreeBoardList.vue'
 import TheFreeBoardView from '../views/freeboard/TheFreeBoardView.vue'
 import TheFreeBoardUpdate from '@/views/freeboard/TheFreeBoardUpdate.vue'
 import TheFileUpload from '@/views/file/TheFileUpload.vue'
-import TheFileDownload from '@/views/file/TheFileDownload.vue';
+import TheFileDownload from '@/views/file/TheFileDownload.vue'
+import TheJoin from '@/views/login/TheJoin.vue'
+import TheLogin from '@/views/login/TheLogin.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -49,6 +52,18 @@ const router = createRouter({
       path: '/filedownload',
       name: 'filedownload',
       component: TheFileDownload
+    }
+    ,
+    {
+      path: '/join',
+      name: 'join',
+      component: TheJoin
+    }
+    ,
+    {
+      path: '/login',
+      name: 'login',
+      component: TheLogin
     }
    ]
 })

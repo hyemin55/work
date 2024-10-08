@@ -5,8 +5,9 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <header>
     <div class="wrapper p-5 text-white text-3xl bg-yellow-400">
-      <nav class="flex space-x-5">
-        <div>
+      <nav class="flex justify-between">
+        <div class="flex space-x-5">
+          <div>
           <RouterLink to="/">Home</RouterLink>
         </div>
         <div>
@@ -28,8 +29,17 @@ import { RouterLink, RouterView } from 'vue-router'
           <RouterLink to="/fileupload">FileUpload</RouterLink>
         </div>
         <div>
-          <RouterLink to="/filedownload">filedownload</RouterLink>
+          <RouterLink to="/filedownload">Filedownload</RouterLink>
         </div>
+      </div>
+        <div class="flex space-x-5">
+        <div>
+          <RouterLink to="/join">Join</RouterLink>
+        </div>
+        <div>
+          <RouterLink to="/login">Login</RouterLink>
+        </div>
+      </div>
       </nav>
     </div>
   </header>

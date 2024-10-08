@@ -2,6 +2,6 @@
     "doki.wallpaper.enabled": true,
     "doki.sticker.path": "D:\\work\\update\\빵빵덕토끼.png",
     "workbench.list.defaultFindMatchType": "fuzzy",
-    "doki.sticker.css": "z-index:100;background-position:103% 100%; background-size: 200px;",
+    "doki.sticker.css": "z-index:100;background-position:100% 97%; background-size: 200px;",
     "terminal.integrated.allowChords": true
 }

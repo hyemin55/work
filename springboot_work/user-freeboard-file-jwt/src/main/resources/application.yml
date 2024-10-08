@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ex10
+    name: user-freeboard-file-jwt
 
 # sql구문 실행하라
   sql:
@@ -32,6 +32,8 @@ spring:
        max-file-size: 100MB
        max-request-size: 100MB
        file-size-threshold: 0
+  jwt:
+    secret: abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd
 
 my:
   value : "welcome to my value"
