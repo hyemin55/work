@@ -10,10 +10,22 @@
             type="text"
             id="username"
             name="username"
-            value="장길동"
+            v-model= name
             required
             class="mt-1 p-2 border border-gray-300 rounded w-full"
             placeholder="사용자 이름을 입력하세요"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="age" class="block text-sm font-medium text-gray-700">나이</label>
+          <input
+            type="text"
+            id="age"
+            name="age"
+            v-model= age
+            required
+            class="mt-1 p-2 border border-gray-300 rounded w-full"
+            placeholder="나이를 입력하세요"
           />
         </div>
         <div class="mb-4">
@@ -22,7 +34,7 @@
             type="email"
             id="email"
             name="email"
-            value="aaa@naver.com"
+            v-model= email
             required
             class="mt-1 p-2 border border-gray-300 rounded w-full"
             placeholder="이메일을 입력하세요"
@@ -34,7 +46,7 @@
             type="password"
             id="password"
             name="password"
-            value="123456"
+            v-model="password"
             required
             class="mt-1 p-2 border border-gray-300 rounded w-full"
             placeholder="비밀번호를 입력하세요"
@@ -48,7 +60,7 @@
             type="password"
             id="confirm-password"
             name="confirm-password"
-            value="123456"
+            v-model="passwordConfirm"
             required
             class="mt-1 p-2 border border-gray-300 rounded w-full"
             placeholder="비밀번호를 다시 입력하세요"
@@ -68,18 +80,32 @@
 
 <script setup>
 import { doJoin } from '@/api/loginApi';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+
+const router = useRouter();
+const name = ref('');
+const password = ref('');
+const age = ref('');
+const email = ref('');
 
 const doSubmit = async(event) => {
     // event.stopPropagation(); //이벤트 전파 막기
     event.preventDefault(); //기본적으로 새로고침 막기
     // const res = console.log("연결됐나?"+event);
     const res = await doJoin({
-        "name": "장길동",
-        "password": "1234",
-        "age": "20",
-        "email": "aaa@naver.com"
+        "name": name.value,
+        "password": password.value,
+        "age": age.value,
+        "email": email.value
+        
     }); // join API 호출
-    console.log(res);
+    if (res.status =='200'){
+      alert("회원가입 성공! 로그인페이지로 이동합니다.");
+      router.push({name: 'login'});
+    }else{
+      alert('회원가입 실패'+res.response.data.message);
+    }
 }
 </script>
 <style lang="scss" scoped></style>

@@ -4,10 +4,12 @@ import { GLOBAL_URL } from './util'
 export const URL = `${GLOBAL_URL}/freeboard`
 
 export const saveFreeboard = async (formData) => {
+  const token = localStorage.getItem('token');
   try {
     const res = await axios.post(`${URL}`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer ' + token
       }
     })
     return res
@@ -17,9 +19,15 @@ export const saveFreeboard = async (formData) => {
   }
 }
 export const getFreeBoard = async (pageNum) => {
+  const token = localStorage.getItem('token');
   if (pageNum == undefined) pageNum = 0
   try {
-    const res = await axios.get(`${URL}?pageNum=${pageNum}`)
+    const res = await axios.get(`${URL}?pageNum=${pageNum}`,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    })
     return res
   } catch (e) {
     console.log(e)

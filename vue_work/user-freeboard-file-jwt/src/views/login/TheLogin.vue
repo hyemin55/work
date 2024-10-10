@@ -31,16 +31,20 @@
 <script setup>
 import { ref } from 'vue';
 import { doLogin } from '@/api/loginApi';
+import { useRouter } from 'vue-router';
 
+// email 변수에 초기값 설정
 const email = ref('');
+//  password 변수에 초기값 설정
 const password = ref('');
+const router = useRouter('');
 
 const submitLogin = async () => {
     const data = { "email": email.value, "password": password.value };
     const res = await doLogin(data);
     localStorage.setItem('token', res.data);
-    console.log(res);
-
+    alert('로그인 성공'+res);
+    router.push({name: 'freeboardlist'});
 }
 </script>
 
