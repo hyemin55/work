@@ -1,7 +1,7 @@
 {
-    "doki.wallpaper.enabled": true,
-    "doki.sticker.path": "C:\\Users\\user\\Desktop\\img\\빵빵덕캐릭터회색.png",
+    "doki.wallpaper.enabled": false,
+    "doki.sticker.path": "D:\\work\\update\\빵빵덕캐릭터회색.png",
     "workbench.list.defaultFindMatchType": "fuzzy",
-    "doki.sticker.css": "z-index:100;background-position:102% 97%; background-size: 250px;",
+    "doki.sticker.css": "z-index:100;background-position:100% 97%; background-size: 200px;",
     "terminal.integrated.allowChords": true
 }
