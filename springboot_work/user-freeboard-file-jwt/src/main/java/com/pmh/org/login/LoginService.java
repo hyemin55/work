@@ -43,12 +43,16 @@ public class LoginService implements UserDetailsService {
                 () -> new UsernameNotFoundException(username)
         );
 
-        return org.springframework.security.core.userdetails
-                .User
-                .builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles("ADMIN")
-                .build();
+//        return org.springframework.security.core.userdetails
+//                .User
+//                .builder()
+//                .username(user.getEmail())
+//                .password(user.getPassword())
+//                .roles("ADMIN")
+//                .build();
+
+        return new LoginUserDetails(user.getEmail(),
+                user.getPassword(),
+                user.getRole());
     }
 }

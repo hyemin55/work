@@ -54,14 +54,22 @@ public class FreeBoardController {
             @RequestParam(name = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(name = "size", defaultValue = "5") int size) {
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println("email = "+email);
 
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        String role = SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().stream().map(grantedAuthority ->grantedAuthority.toString() ).toString();
+
+        System.out.println(email+" "+role);
         if(email == null && email.equals("") || email.equals("anonymousUser")){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }else{
             System.out.println("로그인했네");
         }
+
+//        관리자 로그인할때 확인하고 넘어가기.
+//        if(role.equals("ROLE_ADMIN"))
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Sort sort = Sort.by(Sort.Direction.DESC, "idx");
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-242.22855.74">
+    <data-source name="pmh@127.0.0.1" uuid="02c8d192-dd0b-48b0-be43-979570bb21c6">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@127.0.0.1" uuid="c48ff56d-e473-4927-8e86-d49b43421658">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@127.0.0.1" uuid="0265730a-6a61-4714-b2af-a1f4e1e7e37e">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@localhost" uuid="4fe6b53e-3c39-4a61-8b3b-a660e7ee188c">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@127.0.0.1" uuid="ec69b888-3b8c-40d1-91fd-beeabbe16462">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@127.0.0.1" uuid="e1645846-222f-41df-bff3-53d9000de383">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@localhost" uuid="26b02884-0e12-49d9-977f-0627474d0673">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@localhost" uuid="5416bee2-840a-404f-9626-ef6b7cb72c7c">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="pmh@127.0.0.1" uuid="25c1656b-df3e-4860-a5c7-de91c7d9bf84">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
