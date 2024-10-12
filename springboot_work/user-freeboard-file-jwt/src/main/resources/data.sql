@@ -30,3 +30,6 @@ INSERT INTO free_board (idx, title, content, user_idx, cre_Author, mod_Author, r
 VALUES (5, 'Fifth Title', 'This is the fifth content.', 5, 'Author5', 'Modifier5', '2024-09-20 07:00:00', '2024-09-20 07:30:00', 50);
 
 INSERT INTO `pmh`.`free_board_file` (`free_board_idx`, `idx`, `file_desc`, `name`) VALUES (4, 2, '이미지파일', '빵빵덕세안-removebg-preview.png' );
+
+INSERT INTO todo (idx, user_idx, content, tdate)
+VALUES (1, 2, '오늘은 무슨요일?', '2024-10-12 13:59:00');

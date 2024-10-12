@@ -24,7 +24,7 @@ public class Todo {
     private Long idx;
 
 //    user는 하나이고 todo는 여러개이다.
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User user;
 
 //    content 데이터 길이는 1000이다.
@@ -35,5 +35,5 @@ public class Todo {
     @CreatedDate
 //    업데이트 시 수정X
     @Column(updatable = false)
-    private LocalDateTime Date;
+    private LocalDateTime tdate;
 }

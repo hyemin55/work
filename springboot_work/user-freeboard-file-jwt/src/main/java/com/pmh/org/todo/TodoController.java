@@ -16,7 +16,7 @@ public class TodoController {
 
     private final TodoRepository todoRepository;
 
-    @GetMapping("select")
+    @GetMapping
 //    public String select(){return "hihi";}
     public ResponseEntity<List<Todo>> select(){
 

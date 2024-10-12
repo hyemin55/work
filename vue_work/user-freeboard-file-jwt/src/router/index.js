@@ -9,6 +9,7 @@ import TheFileUpload from '@/views/file/TheFileUpload.vue'
 import TheFileDownload from '@/views/file/TheFileDownload.vue'
 import TheJoin from '@/views/login/TheJoin.vue'
 import TheLogin from '@/views/login/TheLogin.vue'
+import TheTodoCalendar from '@/todo/TheTodoCalendar.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,18 +53,21 @@ const router = createRouter({
       path: '/filedownload',
       name: 'filedownload',
       component: TheFileDownload
-    }
-    ,
+    },
     {
       path: '/join',
       name: 'join',
       component: TheJoin
-    }
-    ,
+    },
     {
       path: '/login',
       name: 'login',
       component: TheLogin
+    },
+    {
+      path: '/todocalendar',
+      name: 'todocalendar',
+      component: TheTodoCalendar
     }
    ]
 })

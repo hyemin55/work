@@ -18,5 +18,5 @@ public class TodoReqDto {
     private String content;
 
     @NotEmpty
-    private LocalDateTime Date;
+    private LocalDateTime tdate;
 }
