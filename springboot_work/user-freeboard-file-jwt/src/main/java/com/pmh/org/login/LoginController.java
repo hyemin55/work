@@ -60,6 +60,7 @@ public class LoginController {
             @RequestParam("jwt") String jwt,
             HttpServletResponse response) throws IOException {
 
+        System.out.println(jwt);
 //        jwt가 유효한지 검사, 유효하지 않으면 갑자기 Exception 발생
         Jws<Claims> claimsJws = jwtManager.getClaims(jwt);
 //        jwt가 유효하면 email 가져오기

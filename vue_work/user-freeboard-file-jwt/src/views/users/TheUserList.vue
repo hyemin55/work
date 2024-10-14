@@ -65,7 +65,7 @@
 <script setup>
 import { deleteUser, getUsers, saveUser } from '@/api/userApi'
 import { ref, watchEffect } from 'vue'
-
+import Swal from "sweetalert2"
 const arr = ref([])
 
 const idx = ref()
@@ -89,8 +89,12 @@ const modalUser = async (item) => {
       email: email.value,
       password: '마이패스워드'
     })
+    Swal.fire({
+      title: '알림',
+      text: '수정하였습니다.',
+      icon: 'success'
+    })
     // update를 해야함..
-    alert('수정하였습니다.')
     const retValue = await getUsers()
     arr.value = retValue.data
     return

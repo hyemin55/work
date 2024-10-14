@@ -43,7 +43,7 @@ public class SecurityConfig {
         http.httpBasic(basic -> basic.disable());
 
 //        모든요청은 permitAll한다.
-        http.authorizeRequests(auth -> auth.requestMatchers("**").permitAll());
+        http.authorizeRequests(auth -> auth.requestMatchers("/**").permitAll());
 //                .requestMatchers("/", "/login", "/join", "/freeboard/**", "/user/**", "/file/**").permitAll()
 //                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 //                .requestMatchers("/test/**").permitAll()

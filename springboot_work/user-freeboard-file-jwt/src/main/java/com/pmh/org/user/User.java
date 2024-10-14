@@ -2,6 +2,7 @@ package com.pmh.org.user;
 
 
 import com.pmh.org.freeboard.FreeBoard;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -50,6 +51,7 @@ public class User {
     private String email;
 
     @Column(length = 100)
+    @Schema(hidden = true) // or @JsonIgnore
     private String password;
 
     @CreatedDate

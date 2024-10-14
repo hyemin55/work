@@ -1,5 +1,6 @@
 package com.pmh.org.login.jwt;
 
+import com.pmh.org.error.JWTAuthException;
 import com.pmh.org.login.LoginUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -83,11 +84,13 @@ public class JWTFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e) {
+                throw new JWTAuthException("JWT TOKEN" + e.getMessage());
+
 //                System.out.println(e.getMessage());
 //               throw new AuthException(e.getMessage());
             }
             // 여기서 무조건 지나가는
         }
-            filterChain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }

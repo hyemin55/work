@@ -3,7 +3,7 @@ import { GLOBAL_URL } from './util';
 
 const login = `${GLOBAL_URL}/login`;
 const join = `${GLOBAL_URL}/join`;
-const check = `${GLOBAL_URL}/`;
+const check = `${GLOBAL_URL}/check`;
 
 export const doJoin = async (data) => {
     try {
@@ -28,9 +28,10 @@ export const doLogin = async (data) => {
 
 export const doLogincheck = async () => {
     const token = localStorage.getItem('token');
-    if(!token) return false;
+    // if(!token) return false;
     try {
-        const res = await axios.get(`${check}?jwt=${token} `);
+        const res = await axios.get(`${check}?jwt=${token}`);
+        console.log(res);
         return res;
     } catch (e) {
         console.log(e);

@@ -1,5 +1,6 @@
 package com.pmh.org.login.jwt;
 
+import com.pmh.org.error.JWTAuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -49,7 +50,7 @@ public class JWTManager {
             cliams.getPayload().getExpiration().before(new Date());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "fail";
+            throw new JWTAuthException("JWT TOKEN" + e.getMessage());
         }
         return "success";
     }
@@ -69,8 +70,7 @@ public class JWTManager {
 //            claims 안에서 email 값 가져오기
             return cliams;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new JWTAuthException("JWT TOKEN" + e.getMessage());
         }
     }
 }
