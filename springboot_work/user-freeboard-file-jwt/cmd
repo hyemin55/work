@@ -1,0 +1,17 @@
+# 마리아디비 컨테이너 실행할 때 -e
+# docker run -d -e MARIADB_ROOT_PASSWORD=1234 -p 3306:3306 mariadb
+
+
+# maria_container network 연결
+# docker network connect nginx-spring-maria mariaDB
+
+
+# docker run -d -p 10000:10000 --network freeboard_container johyemin/freeboard
+
+docker run -p 10000:10000 \
+-e SPRING_DATASOURCE_URL=jdbc:mariadb://mariaDB:3306/pmh?serverTimezone=Asia/Seoul \
+-e SPRING_DATASOURCE_PASSWORD=1234 \
+-d --network nginx-spring-maria \
+--name freeboard-container \
+johyemin/freeboard
+
