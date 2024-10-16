@@ -1,0 +1,7 @@
+docker compose down
+
+docker build -t johymin/freeboardvue .
+
+docker push johymin/freeboardvue
+
+docker compose up -d 

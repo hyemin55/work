@@ -27,11 +27,10 @@ public class FileController {
     private final FileRepository fileRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public FileController(FileRepository fileRepository, ModelMapper modelMapper) {
 //        toAbsolutePath는 상대경로를 절대경로로 바꿔준다.
 //        html에서 ./main/java/com.example/ex10/images/file/이랑 같다.
-        this.imagePath = Paths.get("ex10/images/file/").toAbsolutePath();
+        this.imagePath = Paths.get("images/file").toAbsolutePath();
         this.fileRepository = fileRepository;
         this.modelMapper = modelMapper;
 
@@ -58,13 +57,13 @@ public class FileController {
         try {
 
 //            파일 이름 출력
-//            System.out.println(file.getOriginalFilename());
+           System.out.println("파일 이름 출력 "+file.getOriginalFilename());
 //            파일 경로 출력
-//            System.out.println(imagePath.toAbsolutePath().toString());
+           System.out.println("파일 경로 출력 "+imagePath.toAbsolutePath().toString());
 
 //            전체 경로+ 파일이름 출력
             String myFilePath = imagePath.toAbsolutePath() + File.separator + file.getOriginalFilename();
-//            System.out.println(myFilePath);
+           System.out.println("전체 경로 "+myFilePath);
 
             File saveFile = new File(myFilePath);
             file.transferTo(saveFile);

@@ -1,0 +1,20 @@
+# Dockerfile
+FROM node:16
+
+# Set the working directory
+WORKDIR /app
+
+# node_modules 복사했어... 미안해...납득이 안되지... 그냥.. 그러려니 해.... 
+COPY ./node_modules /app/node_modules/.
+
+RUN chmod -R 777 /app
+
+COPY . .
+# Install dependencies
+RUN npm i
+
+# Expose the port that the app runs on
+EXPOSE 5173
+
+# Start the app in development mode
+CMD ["npm", "run", "dev"]

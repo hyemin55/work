@@ -13,7 +13,7 @@
         <h1>작성자 {{ creAuthor }}</h1>
       </div>
       <div v-for="item in list" :key="item">
-        <img :src="`http://localhost:10000/file/download/${item.name}`" width="400" alt="" />
+        <img :src="`${GLOBAL_URL}/file/download/${item.name}`" width="400" alt="" />
         {{ item.name }}
       </div>
       <div class="flex justify-between mt-5">
@@ -36,7 +36,7 @@
 
 <script setup>
 import { freeboardDelete, getFreeBoardView } from '@/api/freeboardApi'
-import axios from 'axios'
+import { GLOBAL_URL } from '@/api/util';
 import { ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 

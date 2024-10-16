@@ -17,6 +17,7 @@
 </template>
 
 <script setup>
+import { GLOBAL_URL } from '@/api/util';
 import axios from 'axios'
 import { ref } from 'vue'
 
@@ -36,7 +37,7 @@ const save = () => {
   )
 
   axios
-    .post('http://localhost:10000/file/upload', formData, {
+    .post(`${GLOBAL_URL}/file/upload`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
     .then((res) => {
