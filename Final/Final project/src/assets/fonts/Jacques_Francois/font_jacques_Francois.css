@@ -1,0 +1,10 @@
+@font-face {
+	font-family: 'JacquesFrancois-Regular';
+	src: local('JacquesFrancois-Regular'), url('./JacquesFrancois-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+:root{
+	--font-JacquesFrancois: 'JacquesFrancois-Regular';
+}
+

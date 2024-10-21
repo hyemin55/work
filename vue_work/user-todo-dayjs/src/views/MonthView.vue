@@ -35,7 +35,7 @@ const dateClick = date => {
 //처음 로딩할떄는 now로 현재달력을 보여준다.
 watch(
   now,
-  newValue => {
+  (newValue, _) => {
     groupColumns.value = [];
     const columns = ref([]);
     const startday = dayjs(now.value).startOf('month');

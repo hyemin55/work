@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div>
     <button @click="handle">클릭하세요</button>
     <p v-if="con">클릭하셨어요 다시 클릭하면 없어져요</p>
     <p v-show="con">con값이 true이면 클릭했을때 보인다.</p>
@@ -68,21 +68,6 @@ const incrementAge=()=>{
 </script>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-.about {
-  display: table-column;
-  align-content: center;
-  justify-content: center;
-}
-[v-cloak] {
-  display: none;
-}
 .bor {
   border: 1px solid rgb(95, 46, 10);
   text-align: center;

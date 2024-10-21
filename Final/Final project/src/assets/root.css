@@ -2,11 +2,15 @@
 
 /* semantic color variables for this project */
 :root {
+  /* 메인컬러 설정 */
   --color-main-bloode: rgb(96, 0, 0);
   --color-main-red: rgb(147, 33, 33);
   --color-main-gray: rgb(222, 222, 222);
   --color-main-Lgray: rgb(237, 237, 237);
+  /* 이외 컬러 설정 */
   --color-text-gray: rgb(153, 153, 153);
   --color-purewhite: rgb(255, 255, 255);
   --color-pureblack: rgb(0, 0, 0);
+  /* 메인 너비 설정 */
+  --main-max-width: 1280px;
 }

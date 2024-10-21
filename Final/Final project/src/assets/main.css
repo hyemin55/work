@@ -1,9 +1,12 @@
 @import './root.css';
+@import './fonts/PRISTINA/font_pristina.css';
+@import './fonts/Jacques_Francois/font_jacques_Francois.css';
+@import './fonts/pretendard/pretendard.css';
 
-* {
+*,*::before,*::after {
   margin: 0;
   padding: 0;
-  font-family: 'Jacques Francois', 'Pristina', 'Inter', 'Pretendard';
+  font-family: 'Pretendard-Regular', 'JacquesFrancois-Regular', 'PRISTINA';
   box-sizing: border-box;
 }
 a {
@@ -14,17 +17,26 @@ ul,
 ol {
   list-style-type: none;
 }
-
-.full_page {
-  width: 100vw;
-  height: 100vh;
-  background-color: bisque;
+html{
+  font-size: 10px;
 }
-.max_width_1280 {
-  width: 1280px;
-  height: 200px;
-  background-color: aliceblue;
-  margin: 0 auto;
+img{
+  vertical-align: bottom;
+  border: none;
+}
+button {
+  all: unset;        
+  display: inline-block;  
+  cursor: pointer;        
+  padding: 0;              
+  margin: 0;            
+  border: none;         
+  background: none;   
+  color: inherit;         
+  font: inherit;             
+  text-align: inherit;    
+  text-decoration: none;    
+  box-sizing: border-box;    
 }
 
 /* @media (hover: hover) {

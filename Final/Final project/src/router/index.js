@@ -1,3 +1,5 @@
+import CartView from '@/views/CartView.vue'
+import LoginView from '@/views/LoginView.vue'
 import MainView from '@/views/MainView.vue'
 import ProductListView from '@/views/ProductListView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -11,24 +13,24 @@ const router = createRouter({
       component: MainView,
     },
     {
-      path: '/perfume/',
-      name: 'perfume',
-      component: ProductListView,
-    },
-    {
-      path: '/diffuser',
-      name: 'diffuser',
-      component: ProductListView,
-    },
-    {
-      path: '/candle',
-      name: 'candle',
+      path: '/category/:title', // 매개변수 추가
+      name: 'productList',
       component: ProductListView,
     },
     {
       path: '/search',
       name: 'search',
       component: ProductListView,
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
     },
   ],
 })
