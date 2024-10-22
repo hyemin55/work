@@ -27,11 +27,12 @@
 const kakaoLogin = () => {
   window.Kakao.Auth.authorize({
     redirectUri: 'http://localhost:5173/oauth',
+    // scope: 'account_email,friends,talk_calendar,talk_calendar_task',
   });
 };
 const kakaoLogout = () => {
   window.Kakao.Auth.logout();
 };
 </script>
-.min-height-80 { @apply min-h-screen; min-height: calc(100vh - 80px); }
+
 <style lang="scss" scoped></style>

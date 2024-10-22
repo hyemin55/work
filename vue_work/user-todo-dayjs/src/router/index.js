@@ -1,13 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import HomeView from '@/views/HomeView.vue';
 import MonthView from '@/views/MonthView.vue';
 import AboutView from '@/views/AboutView.vue';
 import testview from '@/views/test.vue';
-import LoginView from '../views/Login.vue';
+import LoginView from '@/views/login/LoginView.vue';
+import OauthView from '@/views/login/OauthView.vue';
+
+const loginRouter = [
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView,
+  },
+  {
+    path: '/oauth',
+    name: 'oauth',
+    component: OauthView,
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // 위의 const를 그대로 넣고싶으면 ... 변수명을 입력해준다. 자바스크립스트에서 새로나온 문법.
+    ...loginRouter,
+
     {
       path: '/',
       name: 'home',
@@ -23,11 +40,7 @@ const router = createRouter({
       name: 'about',
       component: AboutView,
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-    },
+
     {
       path: '/test',
       name: 'test',

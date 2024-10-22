@@ -1,0 +1,43 @@
+<template>
+  <div>
+    <h1>oauth</h1>
+  </div>
+</template>
+
+<script setup>
+import { watchEffect,ref } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
+
+const route = useRoute();
+const res = ref('');
+
+// 받은 인가코드로 토큰받아오기
+watchEffect(async () => {
+  if (route.query.code) {
+    res.value = await axios.post('https://kauth.kakao.com/oauth/token', null, {
+      params: {
+        grant_type: 'authorization_code',
+        client_id: '3729987ab56f48c56116ec21b049a78e', // 카카오 REST API 키
+        redirect_uri: 'http://localhost:5173/oauth',
+        client_secret: 'rvxajLH92o1Lz9Joj69mju2A0pD5lVgi', // 리다이렉트 URI
+        code: route.query.code, // 받은 인가 코드
+      },
+    });
+    // console.log(res.value.padStart.access_token)
+    localStorage.setItem('kakaoToken',res.value.data.access_token);
+
+    
+    // 카카오에 user의 사용자정보 받아오기
+    // const accessToken = res.value.data.access_token;
+    // const userInfo = await axios.get("https://kapi.kakao.com/v2/user/me", {
+    //     headers: {
+    //         Authorization: `Bearer ${accessToken}`,
+    //         'Content-Type':'application/x-www-form-urlencoded;charset=utf-8'
+    //     },
+    // });
+    // console.log(userInfo);
+  }
+});
+
+</script>

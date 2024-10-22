@@ -1,22 +1,18 @@
 package com.example.org.kakao;
 
+import com.example.org.kakao.dto.KakaoMessageDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("kakao")
 @Slf4j
+@CrossOrigin
+@RequiredArgsConstructor
 public class KakaoController {
+
+    private final KakaoService kakaoService;
 
     @GetMapping("login")
     public String kakaoCode(@RequestParam(value = "code") String code) {
@@ -24,59 +20,22 @@ public class KakaoController {
         log.debug("code{}", code);
 
         // 1. restTemplate
-        try {
-            // token 확인 주소..
-            String url = "https://kauth.kakao.com/oauth/token";
-            RestTemplate restTemplate = new RestTemplate();
-
-            MultiValueMap headers = new LinkedMultiValueMap();
-            headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-
-            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("grant_type", "authorization_code");
-            body.add("client_id", "a74d8c37f265d73b45045ad6a81d7f87");
-            body.add("redirect_uri", "http://localhost:5173/oauth");
-            body.add("code", code);
-            body.add("client_secret", "Z64fQykYQU7U8RYWt1M1luRnrlGR1sJL");
-
-            HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
-            ResponseEntity<KakaoTokenDto> result = restTemplate.exchange(url,
-                    HttpMethod.POST,
-                    requestEntity,
-                    KakaoTokenDto.class);
-            log.info("result {}", result);
-
-            KakaoTokenDto kakaoTokenDto = result.getBody();
-
-            // 메시지 보내는 주소...
-            url = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
-
-
-            MultiValueMap headers2 = new LinkedMultiValueMap();
-            headers2.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-            headers2.add("Authorization", "Bearer " + kakaoTokenDto.getAccess_token());
-
-            MultiValueMap<String, String> body2 = new LinkedMultiValueMap<>();
-            body2.add("template_object", templateString());
-
-            HttpEntity<MultiValueMap<String, String>> requestEntity2 = new HttpEntity<>(body2, headers2);
-
-            ResponseEntity<String> result2 = restTemplate.exchange(url,
-                    HttpMethod.POST,
-                    requestEntity2,
-                    String.class);
-            log.info("msg 카카옥 메시지 전송 성공....." + result2.toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        kakaoService.getToken(code);
+//        kakaoService.messageSend();
 
         // 2. openfeign
 
-        return "kakao code";
+        return "kakao join success";
     }
 
+    @PostMapping("messagesend")
+    public String messageSend(@RequestBody KakaoMessageDto kakaoMessageDto) {
+        kakaoService.messageSend(
+                kakaoMessageDto.getEmail(),
+                kakaoMessageDto.getMessage());
+
+        return "message send success";
+    }
 
     public String templateString() {
         return "{\n" +
@@ -136,8 +95,8 @@ public class KakaoController {
                 "            {\n" +
                 "                \"title\": \"웹으로 이동\",\n" +
                 "                \"link\": {\n" +
-                "                    \"web_url\": \"http://www.daum.net\",\n" +
-                "                    \"mobile_web_url\": \"http://m.daum.net\"\n" +
+                "                    \"web_url\": \"http://www.naver.com\",\n" +
+                "                    \"mobile_web_url\": \"http://m.naver.com\"\n" +
                 "                }\n" +
                 "            },\n" +
                 "            {\n" +

@@ -1,29 +1,29 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-// 컴포넌트에서 사용할 reactive 상태 선언
-const FooterVisible = ref(false)
+const FooterVisible = ref(false);
 
-// 스크롤 이벤트 핸들러
 const handleScroll = () => {
-  const scrollHeight = window.innerHeight + window.scrollY
-  const documentHeight = document.documentElement.scrollHeight
-  FooterVisible.value = scrollHeight >= documentHeight
-}
-console.log(`scrollHeight: ${scrollHeight}, documentHeight: ${documentHeight}`)
-// 컴포넌트가 마운트되었을 때 스크롤 이벤트 리스너 추가
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
+  const scrollPosition = window.innerHeight + window.scrollY; // 현재 스크롤 위치
+  const documentHeight = document.documentElement.scrollHeight; // 전체 문서 높이
 
-// 컴포넌트가 언마운트되었을 때 스크롤 이벤트 리스너 제거
+  // 스크롤이 끝에 도달하면 FooterVisible 값을 true로 변경
+  FooterVisible.value = scrollPosition >= documentHeight - 1; // 약간의 오차를 허용하기 위해 -1
+};
+
+// 컴포넌트가 마운트될 때 스크롤 이벤트 추가
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+// 컴포넌트가 언마운트될 때 스크롤 이벤트 제거
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <template>
-  <section id="footer" v-if="FooterVisible">
+  <footer id="footer" :class="{ show: FooterVisible }">
     <div id="footer_text">
       <ul>
         <li>회사소개</li>
@@ -51,29 +51,37 @@ onBeforeUnmount(() => {
         (주)CHERRISH에 있습니다.
       </p>
     </div>
-  </section>
+  </footer>
 </template>
 
 <style scoped>
 #footer {
-  background-color: var(--color-main-gray);
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
   position: fixed;
-  /* display: none; */
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-main-gray);
+  transition: transform 0.5s ease-in-out; /* 애니메이션 추가 */
 }
+
+#footer.show {
+  transform: translateY(-100%); /* 보일 때 화면으로 슬라이드 업 */
+}
+
 #footer_text {
   max-width: var(--main-max-width);
   width: 100%;
   margin: 0 auto;
-  padding: 20px 0px;
+  padding: 20px;
+  font-size: 1.3rem;
 }
+
 ul {
   display: flex;
+  gap: 20px;
 }
+
 li {
-  margin-right: 20px;
+  list-style: none;
 }
 </style>
