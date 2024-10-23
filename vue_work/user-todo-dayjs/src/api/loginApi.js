@@ -10,3 +10,19 @@ export const login = async code => {
     return err;
   }
 };
+
+export const msgSend = async message => {
+  console.log('token ' + localStorage.getItem('token'));
+  try {
+    const res = await axios.get(`${url}/kakao/msg?message=${message}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};

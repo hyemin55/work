@@ -14,7 +14,7 @@ const router = createRouter({
       component: MainView,
     },
     {
-      path: '/category/:title', // 매개변수 추가
+      path: '/category/:title/:idx', // 매개변수 추가
       name: 'productList',
       component: ProductListView,
     },

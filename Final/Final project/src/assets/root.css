@@ -14,3 +14,9 @@
   /* 메인 너비 설정 */
   --main-max-width: 1280px;
 }
+
+@media (max-width: 1280px) {
+  :root{ 
+    --main-max-width: 100%;
+}
+}

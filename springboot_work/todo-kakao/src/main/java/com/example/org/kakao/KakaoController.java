@@ -1,8 +1,11 @@
 package com.example.org.kakao;
 
+import com.example.org.filter.JWTUtils;
 import com.example.org.kakao.dto.KakaoMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,19 +16,20 @@ import org.springframework.web.bind.annotation.*;
 public class KakaoController {
 
     private final KakaoService kakaoService;
+    private final JWTUtils jwtUtils;
 
     @GetMapping("login")
-    public String kakaoCode(@RequestParam(value = "code") String code) {
+    public ResponseEntity<String> kakaoCode(@RequestParam(value = "code") String code) {
 
-        log.debug("code{}", code);
+//        log.debug("code{}", code);
 
         // 1. restTemplate
-        kakaoService.getToken(code);
+       String jwt = kakaoService.getToken(code);
 //        kakaoService.messageSend();
 
         // 2. openfeign
 
-        return "kakao join success";
+        return ResponseEntity.ok(jwt);
     }
 
     @PostMapping("messagesend")
@@ -36,6 +40,24 @@ public class KakaoController {
 
         return "message send success";
     }
+
+    @GetMapping("msg")
+    public ResponseEntity<String> messageSend(@RequestParam(value = "message") String message,
+                             @RequestHeader(value = "Authorization", required = false) String authorization) {
+
+        log.info(authorization);
+        try{
+            String jwt = authorization.split("Bearer ")[1];
+//            String email = jwtUtils.getEmailFromJwt(jwt);
+            kakaoService.messageSend(jwt, message);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("jwt empty");
+        }
+//        jwt
+//        kakaoService.messageSend(email, message);
+        return ResponseEntity.ok("message send success");
+    }
+
 
     public String templateString() {
         return "{\n" +

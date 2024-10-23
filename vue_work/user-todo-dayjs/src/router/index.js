@@ -5,6 +5,7 @@ import AboutView from '@/views/AboutView.vue';
 import testview from '@/views/test.vue';
 import LoginView from '@/views/login/LoginView.vue';
 import OauthView from '@/views/login/OauthView.vue';
+import MessageView from '@/views/MessageView.vue';
 
 const loginRouter = [
   {
@@ -40,7 +41,11 @@ const router = createRouter({
       name: 'about',
       component: AboutView,
     },
-
+    {
+      path: '/message',
+      name: 'message',
+      component: MessageView,
+    },
     {
       path: '/test',
       name: 'test',

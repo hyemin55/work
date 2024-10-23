@@ -1,14 +1,23 @@
 <script setup>
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const HeaderMode = ref(false);
+watchEffect(() => {
+  HeaderMode.value = route.path === '/'; 
+});
+
 // 대분류 카테코리를 이곳으로 받자(되면...)
 const categories = [
-  { title: 'Perfume', path: '/category/Perfume' }, 
-  { title: 'Diffuser', path: '/category/Diffuser' }, 
-  { title: 'Candle', path: '/category/Candle' }, 
+  { title: 'Perfume', path: '/category/Perfume/3' }, 
+  { title: 'Diffuser', path: '/category/Diffuser/2' }, 
+  { title: 'Candle', path: '/category/Candle/1' }, 
 ];
 </script>
 
 <template>
-  <section id="header">
+  <section id="header" :class="{'sticky':!HeaderMode, 'fixed':HeaderMode}">
     <article id="header_top">
       <p>Where people linger, a fragrance remains</p>
       <ul class="login">
@@ -50,10 +59,17 @@ const categories = [
   height: 100px;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  /* position: fixed; */
   z-index: 999;
   top: 0;
   left: 0;
+}
+.sticky{
+  position: sticky;
+  background-color: rgb(255, 255, 255, 1);
+}
+.fixed{
+  position: fixed;
   background-color: rgb(255, 255, 255, 0.2);
 }
 #header>article{

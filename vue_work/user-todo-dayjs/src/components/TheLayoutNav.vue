@@ -34,6 +34,9 @@
           <RouterLink to="/month" class="hover:text-orange-500"
             >Month</RouterLink
           >
+          <RouterLink to="/message" class="hover:text-orange-500"
+            >Message</RouterLink
+          >
           <RouterLink to="/login" class="hover:text-orange-500"
             >Login</RouterLink
           >
@@ -56,6 +59,11 @@
             to="/month"
             class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
             >Month</RouterLink
+          >
+          <RouterLink
+            to="/message"
+            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            >Message</RouterLink
           >
           <RouterLink
             to="/login"

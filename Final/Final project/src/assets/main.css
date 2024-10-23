@@ -3,7 +3,9 @@
 @import './fonts/Jacques_Francois/font_jacques_Francois.css';
 @import './fonts/pretendard/pretendard.css';
 
-*,*::before,*::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   font-family: 'Pretendard-Regular', 'JacquesFrancois-Regular', 'PRISTINA';
@@ -17,26 +19,31 @@ ul,
 ol {
   list-style-type: none;
 }
-html{
+html {
   font-size: 10px;
 }
-img{
+img {
   vertical-align: bottom;
   border: none;
 }
 button {
-  all: unset;        
-  display: inline-block;  
-  cursor: pointer;        
-  padding: 0;              
-  margin: 0;            
-  border: none;         
-  background: none;   
-  color: inherit;         
-  font: inherit;             
-  text-align: inherit;    
-  text-decoration: none;    
-  box-sizing: border-box;    
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.max-width-1280px {
+  width: 1280px;
+  margin: 0 auto;
 }
 
 /* @media (hover: hover) {
