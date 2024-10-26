@@ -1,29 +1,40 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-const FooterVisible = ref(false);
+const FooterVisible = ref('')
 
 const handleScroll = () => {
-  const scrollPosition = window.innerHeight + window.scrollY; // 현재 스크롤 위치
-  const documentHeight = document.documentElement.scrollHeight; // 전체 문서 높이
+  const scrollPosition = window.innerHeight + window.scrollY // 현재 스크롤 위치
+  const documentHeight = document.documentElement.scrollHeight // 전체 문서 높이
 
   // 스크롤이 끝에 도달하면 FooterVisible 값을 true로 변경
-  FooterVisible.value = scrollPosition >= documentHeight - 1; // 약간의 오차를 허용하기 위해 -1
-};
+  FooterVisible.value = scrollPosition > documentHeight - 10 // 약간의 오차를 허용하기 위해 -1
+}
 
-// 컴포넌트가 마운트될 때 스크롤 이벤트 추가
+const checkHeight = () => {
+  const documentHeight = document.documentElement.scrollHeight
+  const windowHeight = window.innerHeight
+
+  // 문서의 높이가 화면 높이보다 작으면 바로 FooterVisible 값을 true로 변경
+  if (documentHeight <= windowHeight) {
+    FooterVisible.value = true
+  }
+}
+
+// 컴포넌트가 마운트될 때 스크롤 이벤트 추가 및 페이지 높이 체크
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
+  window.addEventListener('scroll', handleScroll)
+  checkHeight() // 페이지 높이를 체크하여 바로 푸터를 표시할지 결정
+})
 
 // 컴포넌트가 언마운트될 때 스크롤 이벤트 제거
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
-  <footer id="footer" :class="{ show: FooterVisible }">
+  <footer id="footer" :class="{ show: FooterVisible, noshow: !FooterVisible }">
     <div id="footer_text">
       <ul>
         <li>회사소개</li>
@@ -56,18 +67,11 @@ onBeforeUnmount(() => {
 
 <style scoped>
 #footer {
-  position: fixed;
-  bottom: -100%;
-  left: 0;
   width: 100%;
+  height: 160px;
   background-color: var(--color-main-gray);
-  transition: transform 0.5s ease-in-out; /* 애니메이션 추가 */
+  margin-top: 60px;
 }
-
-#footer.show {
-  transform: translateY(-100%); /* 보일 때 화면으로 슬라이드 업 */
-}
-
 #footer_text {
   max-width: var(--main-max-width);
   width: 100%;

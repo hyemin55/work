@@ -10,9 +10,13 @@ const route = useRoute();
 <template>
   <Header></Header>
 
-  <RouterView />
+  <RouterView class="min-height"/>
 
   <Footer></Footer>
 </template>
 
-<style scoped></style>
+<style scoped>
+.min-height{
+  min-height: calc(100vh - 320px);
+}
+</style>

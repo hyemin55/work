@@ -25,7 +25,13 @@ const sendMessage = async () => {
     alert('로그인하셔야 메시지를 보낼수 있습니다.');
     return;
   }
-  await msgSend(message.value);
+  const res = await msgSend(message.value);
+  if (res.status.toString().startWith('2')) {
+    alert('메시지 전송 성공');
+    message.value = '';
+  } else {
+    alert('메시지 전송 실패');
+  }
 };
 </script>
 <style lang="scss" scoped></style>

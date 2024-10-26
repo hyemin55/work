@@ -79,9 +79,9 @@ watchEffect(async () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgb(255, 249, 241);
 }
 .product_category_title {
+  font-family: var(--font-JacquesFrancois);
   font-size: 2.8rem;
 }
 .product_category {
@@ -139,5 +139,12 @@ watchEffect(async () => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+
+/* 미디어쿼리 구간 */
+@media (max-width: 630px) {
+  .product_list {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 </style>

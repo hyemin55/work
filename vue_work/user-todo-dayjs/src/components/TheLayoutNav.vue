@@ -8,7 +8,11 @@
         >
         <!-- Hamburger Menu (for mobile) -->
         <div class="sm:hidden">
-          <button id="menu-btn" class="text-gray-800 focus:outline-none">
+          <button
+            @click="menuDisplay"
+            id="menu-btn"
+            class="text-gray-800 focus:outline-none"
+          >
             <svg
               class="w-6 h-6"
               fill="none"
@@ -47,24 +51,37 @@
         <div id="mobile-menu" class="hidden sm:hidden bg-white">
           <RouterLink
             to="/"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            class="block px-4 py-2 text-gray-800 pt-3 hover:bg-gray-100"
             >Home</RouterLink
           >
           <RouterLink
             to="/about"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            class="block px-4 py-2 text-gray-800 pt-3 hover:bg-gray-100"
             >About</RouterLink
           >
           <RouterLink
             to="/month"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            class="block px-4 py-2 text-gray-800 pt-3 hover:bg-gray-100"
             >Month</RouterLink
           >
           <RouterLink
             to="/message"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            class="block px-4 py-2 text-gray-800 pt-3 hover:bg-gray-100"
             >Message</RouterLink
           >
+          <template v-if="useStore.loginCheck">
+            <div class="w-12">
+              <img :src="useStore.thumbnail" alt="" class="rounded-full" />
+            </div>
+          </template>
+
+          <template v-else>
+            <div>
+              <router-link to="/login" class="pt-3 hover:text-orange-500"
+                >Login</router-link
+              >
+            </div>
+          </template>
           <RouterLink
             to="/login"
             class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
@@ -77,12 +94,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+import { useUserStore } from '@/stores/user';
+import { loginCheck } from '@/api/loginApi';
 const mobileMenu = ref(false);
 
 const menuDisplay = () => {
   mobileMenu.value = !mobileMenu.value;
 };
+const useStore = useUserStore();
+console.log('useStore.loginCheck = ' + useStore.loginCheck);
+console.log('useStore.user = ' + useStore.user);
+
+watchEffect(async () => {
+  if (!localStorage.getItem('token')) return;
+
+  const res = await loginCheck();
+  if (res.status.toString().startWith('2')) {
+    console.log('res = ' + res.data);
+    useUserStore.login(res.data);
+    // 통신 성공 했을 때 pinia 상태값 바꾸기s
+  }
+});
 </script>
 
 <style lang="scss" scoped></style>

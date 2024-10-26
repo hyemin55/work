@@ -1,38 +1,35 @@
 <script setup>
-import axios from 'axios';
-
-
 const kakaoLogin = () => {
-  // window.Kakao.Auth.authorize({
-    // redirect_uri: "http://localhost:5173/oauth",
-  // });
+  window.Kakao.Auth.authorize({
+    redirectUri: 'http://localhost:5173/login',
+  })
+}
 
-  // axios.get('');
-
-
-  console.log(route.query.code)
-};
-
-const kakaoLogout = () => {
-	window.Kakao.Auth.logout();
-
-	alert('로그아웃 성공');
-};
-
-
+// const kakaoLogout = () => {
+//   localStorage.removeItem('token')
+//   alert('로그아웃 성공')
+// }
 </script>
 
 <template>
   <section id="login">
     <article id="login_box">
       <h1 class="login_box_h1">Sign in</h1>
-      <div class="login_box_btn">
-        <a id="kakao-login-btn"
-         href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=3729987ab56f48c56116ec21b049a78e&redirect_uri=http://localhost:5173/oauth">
+      <div class="login_box_btn" @click="kakaoLogin()">
+        <a id="kakao-login-btn" >
           <img src="../img/btn_kakao.svg" />카카오로 시작하기
         </a>
       </div>
-        <div @click="kakaoLogout()">로그아웃</div>
+      <div class="login_box_btn" @click="kakaoLogin()">
+        <a id="kakao-login-btn" >
+          <img src="../img/btn_naver.svg" />네이버로 시작하기
+        </a>
+      </div>
+      <div class="login_box_btn" @click="kakaoLogin()">
+        <a id="kakao-login-btn" >
+          <img src="../img/btn_google.svg" />구글로 시작하기
+        </a>
+      </div>
     </article>
   </section>
 </template>
@@ -42,37 +39,43 @@ const kakaoLogout = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 80vh;
 }
-#login_box{
+#login_box {
   /* background-color: antiquewhite; */
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;  
+  flex-direction: column;
   width: 485px;
   height: 343px;
+  transform: translateY(-30%);
+  /* background-color: rgb(240, 240, 240);
+  border-radius: 50px; */
 }
-#kakao-login-btn img {
-  width: 30px;
-  margin: 0 10px;
+.login_box_h1 {
+  font-size: 1.7rem;
+  padding: 20px;
+  margin-top: -20px;
 }
-#kakao-login-btn{
+.login_box_btn {
+  display: flex;
+  border: 0.5px solid var(--color-main-bloode);
+  width: 350px;
+  height: 45px;
+  border-radius: 9px;
   cursor: pointer;
+  margin: 10px 0;
+}
+#kakao-login-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-gray);
+  font-size: 1.2rem;
 }
-.login_box_h1{
-  font-size: 1.7rem;
-  padding: 20px;
-}
-.login_box_btn{
-  display: flex;
-  border: 0.5pt solid var(--color-main-bloode);
-  width: 350px;
-  height: 45px;
-  border-radius: 9px;
+#kakao-login-btn img {
+  width: 30px;
+  margin: 0 10px;
 }
 </style>

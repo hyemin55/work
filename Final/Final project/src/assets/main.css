@@ -40,6 +40,9 @@ button {
   text-decoration: none;
   box-sizing: border-box;
 }
+input[type="checkbox"] {
+  cursor: pointer;
+}
 
 .max-width-1280px {
   width: 1280px;

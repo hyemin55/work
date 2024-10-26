@@ -1,0 +1,37 @@
+<template>
+  <article id="main_editor">
+    <h1>Editor's Picks</h1>
+
+    <!-- <ul id="main_editor_list">
+        <li class="main_editor_img1">
+          <img src="../../img/editor_front_img.png" alt="" />
+        </li>
+        <li class="main_editor_img2">
+          <img src="../../img/editor_front_img.png" alt="" />
+        </li>
+      </ul> -->
+
+    <EditorPicksSlide></EditorPicksSlide>
+  </article>
+</template>
+
+<script setup>
+import EditorPicksSlide from '../../components/EditorPicksSlide.vue'
+</script>
+
+<style scoped>
+/* ==== main_editor ==== */
+#main_editor {
+  width: var(--main-max-width);
+  margin: 0 auto;
+  height: 800px;
+  background-color: #f3eed9;
+  overflow: hidden;
+}
+#main_editor > h1 {
+  font-size: 4rem;
+  font-family: var(--font-JacquesFrancois);
+  text-align: center;
+  padding: 40px 0;
+}
+</style>
