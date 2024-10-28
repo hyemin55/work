@@ -1,5 +1,6 @@
 package com.example.org.conf;
 
+import com.example.org.filter.JWTUtils;
 import com.example.org.filter.SecurityFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class SecurityConfig {
         // 스프링 스큐리티... -> PasswordEncoder...
         httpSecurity.authorizeHttpRequests( auth -> auth.requestMatchers("/**").permitAll());
 
-        httpSecurity.addFilterAt(new SecurityFilter(),
+        httpSecurity.addFilterAt(new SecurityFilter(new JWTUtils()),
                 UsernamePasswordAuthenticationFilter.class);
 
         // 세션 유지 기능 사용 안함..

@@ -1,10 +1,10 @@
 package com.example.org.todo;
 
 import com.example.org.kakao.jpa.KakaoEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,13 +15,22 @@ import java.time.LocalDate;
 public class TodoEntity {
 
     @Id
+    @Schema(hidden = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(example = "할일제목")
+    @Size(min = 2,max = 255)
     private String title;
+    @Schema(example = "할일 적으세요")
     private String content;
+    @Schema(example = "false")
     private boolean completed;
     private LocalDate selectDate;
 
-    @ManyToOne(targetEntity = TodoEntity.class)
+    @Schema(hidden = true)
+    @ManyToOne
+    @JoinColumn(name = "kakao_id")
+    @JsonIgnore
     private KakaoEntity kakaoEntity;
 }

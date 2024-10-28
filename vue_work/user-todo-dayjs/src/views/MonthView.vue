@@ -1,60 +1,107 @@
 <script setup>
 import dayjs from 'dayjs';
-import { ref, watch } from 'vue';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { ref, watch, watchEffect } from 'vue';
+// import utc from 'dayjs/plugin/utc';
+// import timezone from 'dayjs/plugin/timezone';
+import { saveTodo, getTodos } from '@/api/monthApi';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+// dayjs.extend(utc);
+// dayjs.extend(timezone);
+
+const isDisabled = ref(false);
 
 const now = ref(dayjs());
+const columns = ref([]);
 const groupColumns = ref([]);
+
+// selectDate 가 값이 null일때는 false 값이 date 로 바뀌면 true;
 const selectDate = ref(null);
+const title = ref('');
+const content = ref('');
+const todos = ref([]);
+const toast = ref(false);
+
+const setDate = e => {
+  selectDate.value = e.target.value;
+};
+
+const doSave = async () => {
+  isDisabled.value = true;
+  await saveTodo(title.value, content.value, selectDate.value);
+  await doGet();
+
+  title.value = '';
+  content.value = '';
+  toast.value = true;
+
+  setTimeout(() => {
+    toast.value = false;
+    isDisabled.value = false;
+  }, 3000);
+};
+
+const doGet = async () => {
+  const res = await getTodos();
+  if (res.status == '200') {
+    const newData = res.data;
+    if (JSON.stringify(todos.value) !== JSON.stringify(newData))
+      todos.value = res.data;
+  }
+};
 
 const subMonth = () => {
   now.value = dayjs(now.value).subtract(1, 'month');
-  console.log(now.value.format('YYYY-MM-DD'));
+  // console.log(now.value.format('YYYY-MM-DD'));
 };
+
 const subYear = () => {
   now.value = dayjs(now.value).subtract(1, 'year');
-  console.log(now.value.format('YYYY-MM-DD'));
+  // console.log(now.value.format('YYYY-MM-DD'));
 };
 const addYear = () => {
   now.value = dayjs(now.value).add(1, 'year');
-  console.log(now.value.format('YYYY-MM-DD'));
+  // console.log(now.value.format('YYYY-MM-DD'));
 };
 const addMonth = () => {
   now.value = dayjs(now.value).add(1, 'month');
-  console.log(now.value.format('YYYY-MM-DD'));
+  // console.log(now.value.format('YYYY-MM-DD'));
 };
 
-const dateClick = date => {
+const selectDateFn = date => {
   console.log('dateClick', dayjs(date).format('YYYY-MM-DD'));
   selectDate.value = dayjs(date).format('YYYY-MM-DD');
 };
+
+const dateClick = date => {
+  selectDate.value = dayjs(date).format('YYYY-MM-DD');
+  // console.log('dateClick', dayjs(date).format('YYYY-MM-DD'));
+};
 //처음 로딩할떄는 now로 현재달력을 보여준다.
 watch(
-  now,
-  (newValue, _) => {
-    groupColumns.value = [];
-    const columns = ref([]);
+  [now, todos],
+  async () => {
+    await doGet();
+    columns.value = []; // 원래 있던 값 제거
+    groupColumns.value = []; // 원래 있던 값 제거
+    // 제일 처음 로딩 할때는 now는 현재 달력...
     const startday = dayjs(now.value).startOf('month');
     const lastday = dayjs(now.value).endOf('month');
-    const startdayofweek = startday.get('day');
-    const lastdayofweek = lastday.get('day');
+    const startdayOfWeek = startday.get('day');
+    const lastdayOfWeek = lastday.get('day');
 
-    // 이전달의 일부 날짜 추가
-    for (let i = 1; i <= startdayofweek; i++) {
+    // 저번달에 날짜 추가
+    for (let i = 1; i <= startdayOfWeek; i++) {
       columns.value.unshift(dayjs(startday).subtract(i, 'day'));
     }
-    //  현재 달력 날짜
+    // 현재 달력에 날짜 추가
     for (let i = 0; i < lastday.get('date'); i++) {
       columns.value.push(dayjs(startday).add(i, 'day'));
     }
-    // 다음달의 일부 날짜 추가
-    for (let i = 1; i <= 6 - lastdayofweek; i++) {
+    // 다음달에 날짜 추가
+    for (let i = 1; i <= 6 - lastdayOfWeek; i++) {
       columns.value.push(dayjs(lastday).add(i, 'day'));
     }
+
     groupColumns.value.push(columns.value.slice(0, 7));
     groupColumns.value.push(columns.value.slice(7, 14));
     groupColumns.value.push(columns.value.slice(14, 21));
@@ -62,10 +109,14 @@ watch(
     groupColumns.value.push(columns.value.slice(28, 35));
   },
   {
-    immediate: true, //현재페이지 처음 로딩 될때도 실행
-    deep: true, //안에 값이 객체이면 객체 안에 변수도 변경 될때 watch안에 있는 함수 실행
+    immediate: true, // 현재페이지 처음 로딩 될때 도 실행
+    deep: true, // 안에 값이 객체이면 객체 안에 변수도 변경 될때 watch안에 있는 함수 실행
   },
 );
+
+// watchEffect(async () => {
+//   await doGet();
+// });
 </script>
 
 <template>
@@ -130,6 +181,7 @@ watch(
         :key="group.length"
       >
         <div
+          @click="selectDateFn(column)"
           v-for="(column, index) in group"
           :key="column.format('YYYY-MM-DD')"
           class="text-center p-8"
@@ -139,12 +191,21 @@ watch(
             'opacity-20': !column.isSame(now, 'month'),
           }"
         >
-          <span
-            @click="dateClick(column)"
-            class="cursor-pointer p-5 hover:border"
-            >{{ column.get('date') }}</span
-          >
-          <div class="bg-gray-900 w-10"></div>
+          <span class="cursor-pointer">
+            {{ column.get('date') }}
+            <template v-for="todo in todos" :key="todo">
+              <div
+                class="rounded"
+                :class="{
+                  'bg-red-500': todo.completed == '0',
+                  'bg-blue-500': todo.completed == '1',
+                }"
+                v-if="todo.selectDate === column.format('YYYY-MM-DD')"
+              >
+                {{ todo.title }}
+              </div>
+            </template>
+          </span>
         </div>
       </div>
       <!-- <div
@@ -166,6 +227,7 @@ watch(
             >할일 제목</label
           >
           <input
+            v-model="title"
             type="text"
             id="task"
             placeholder="할일 제목을 입력하세요"
@@ -181,6 +243,7 @@ watch(
             >상세 설명</label
           >
           <textarea
+            v-model="content"
             id="description"
             rows="4"
             placeholder="상세 설명을 입력하세요"
@@ -189,8 +252,14 @@ watch(
         </div>
 
         <div class="mb-6">
+          <label
+            for="due-date"
+            class="block text-gray-700 text-sm font-bold mb-2"
+            >마감일</label
+          >
           <input
-            :value="selectDate"
+            @change="selectDate"
+            v-model="selectDate"
             type="date"
             id="due-date"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -199,6 +268,7 @@ watch(
 
         <div class="flex items-center justify-center">
           <button
+            :disabled="isDisabled"
             type="submit"
             class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
@@ -208,6 +278,9 @@ watch(
       </form>
     </div>
   </div>
+  <template v-if="toast">
+    <div class="toast">등록하였습니다.</div>
+  </template>
 </template>
 
 <style></style>

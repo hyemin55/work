@@ -30,7 +30,7 @@ export const useUserStore = defineStore('member', {
     },
   },
   persist: {
-    enabled: true,
+    enabled: false,
     strategies: [
       {
         paths: ['nickName', 'profileImage'], // 로컬 스토리지에 저장될 키

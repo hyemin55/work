@@ -41,7 +41,7 @@ import axios from 'axios'
 import 'vue3-carousel/dist/carousel.css'
 import { GLOBAL_URL } from '@/api/util'
 import router from '@/router'
-import ProductDetailView from '@/views/ProductDetailView.vue'
+import ProductDetailView from '@/views/productdetail/_ProductDetailView.vue'
 
 const slides = ref([])
 const pageNum = 0

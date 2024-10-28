@@ -1,7 +1,7 @@
 <template>
   <section id="main_wrapper">
     <article id="main_video">
-      <video autoplay muted loop src="../img/main.mp4"></video>
+      <!-- <video autoplay muted loop src="../../img/main.mp4"></video> -->
     </article>
 
     <MainBestView></MainBestView>
@@ -13,11 +13,11 @@
 </template>
 
 <script setup>
-import MainBestView from './mainpage/MainBestView.vue'
-import MainEditorView from './mainpage/MainEditorView.vue'
-import MainListView from './mainpage/MainListView.vue'
-import MainNewView from './mainpage/MainNewView.vue'
-import PromotionBannerView from './mainpage/PromotionBannerView.vue'
+import MainBestView from './MainBestView.vue'
+import MainEditorView from './MainEditorView.vue'
+import MainListView from './MainListView.vue'
+import MainNewView from './MainNewView.vue'
+import PromotionBannerView from './PromotionBannerView.vue'
 
 // main_editor_list
 // const editor_images = [
@@ -46,10 +46,13 @@ import PromotionBannerView from './mainpage/PromotionBannerView.vue'
 
 <style scoped>
 /* 1-section 설정 */
+#main_wrapper{
+  position: relative;
+}
 #main_video {
   width: 100%;
   height: 100vh;
-  /* background-color: rgb(35, 138, 74); */
+  background-color: rgb(35, 138, 74);
 }
 #main_video video {
   width: 100%;

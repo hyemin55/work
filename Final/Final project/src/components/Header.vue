@@ -2,6 +2,8 @@
 import { useUserStore } from '@/stores/Login'
 import { ref, watchEffect, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { logout } from '@/api/KakaoLoginApi'
+
 const route = useRoute()
 const router = useRouter()
 const HeaderMode = ref(false)
@@ -15,12 +17,15 @@ watchEffect(() => {
 })
 
 const kakaoLogout = () => {
+  // await logout(sessionStorage.getItem('token'))
   sessionStorage.removeItem('token')
   useStore.logout()
-  console.log('로그아웃 성공')
-  token.value = false
-  window.location.reload()
+  // console.log('로그아웃 성공')
+  // console.log(token.value)
+  // token.value = false
+  router.push({ name: 'login2' })
 }
+
 onMounted(() => {
   const savedToken = sessionStorage.getItem('token')
   if (savedToken) {
@@ -74,13 +79,15 @@ onMounted(() => {
           <li @click="kakaoLogout()">로그아웃</li>
           <li>|</li>
           <li><router-link to="/mypage">마이페이지</router-link></li>
+          <li>|</li>
+          <li>고객센터</li>
         </ul>
       </template>
       <template v-else>
         <ul class="login">
           <li><RouterLink to="/login2">로그인</RouterLink></li>
           <li>|</li>
-          <li>회원가입</li>
+          <li>고객센터</li>
         </ul>
       </template>
     </article>

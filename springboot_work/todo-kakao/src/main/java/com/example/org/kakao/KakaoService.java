@@ -1,5 +1,6 @@
 package com.example.org.kakao;
 
+import com.example.org.error.UserException;
 import com.example.org.filter.JWTUtils;
 import com.example.org.kakao.dto.KakaoTokenDto;
 import com.example.org.kakao.dto.KakaoUserInfoDto;
@@ -71,27 +72,35 @@ public class KakaoService {
                     new HttpEntity<>(null, httpHeaders),
                     KakaoUserInfoDto.class
             );
-            System.out.println("KakaoUserInfoDto = "+res.getBody());
+//            System.out.println("KakaoUserInfoDto = "+res.getBody());
 
 //          유저정보 가져오기 끝.
-            KakaoEntity kakaoEntity = new ModelMapper().map(kakaoTokenDto, KakaoEntity.class);
 
             KakaoUserInfoDto kakaoUserInfoDto = res.getBody();
-            kakaoEntity.setEmail(kakaoUserInfoDto.getKakaoAccount().getEmail());
-            kakaoEntity.setNickname(kakaoUserInfoDto.getKakaoAccount().getProfile().getNickname());
-            kakaoEntity.setProfile_image(kakaoUserInfoDto.getProperties().getProfileImage());
-            kakaoEntity.setThumbnail_image(kakaoUserInfoDto.getProperties().getThumbnailImage());
 
-            // userId 중복 안되게 생성...
-            kakaoEntity.setUserId(UUID.randomUUID().toString());
-
-//            db 저장하기
-            kakaoRepository.save(kakaoEntity);
-
-//            자체 제작 JWT 만들어주기
-           String jwt =  jwtUtils.createJWT(kakaoEntity.getEmail());
-
-           return jwt;
+            // 해당하는 EMAIL 이 있으면..
+            KakaoEntity dbKakaoEntity = kakaoRepository.findByEmail(kakaoUserInfoDto.getKakaoAccount().getEmail());
+            if(dbKakaoEntity ==null) {
+                KakaoEntity kakaoEntity = new ModelMapper().map(kakaoTokenDto, KakaoEntity.class);
+                kakaoEntity.setEmail(kakaoUserInfoDto.getKakaoAccount().getEmail());
+                kakaoEntity.setNickname(kakaoUserInfoDto.getKakaoAccount().getProfile().getNickname());
+                kakaoEntity.setProfile_image(kakaoUserInfoDto.getProperties().getProfileImage());
+                kakaoEntity.setThumbnail_image(kakaoUserInfoDto.getProperties().getThumbnailImage());
+                kakaoEntity.setUserId(UUID.randomUUID().toString());
+                kakaoRepository.save(kakaoEntity);
+            }else{
+                dbKakaoEntity.setNickname(kakaoUserInfoDto.getKakaoAccount().getProfile().getNickname());
+                dbKakaoEntity.setProfile_image(kakaoUserInfoDto.getProperties().getProfileImage());
+                dbKakaoEntity.setThumbnail_image(kakaoUserInfoDto.getProperties().getThumbnailImage());
+                dbKakaoEntity.setUserId(UUID.randomUUID().toString());
+                dbKakaoEntity.setAccess_token(kakaoTokenDto.getAccess_token());
+                dbKakaoEntity.setRefresh_token(kakaoTokenDto.getRefresh_token());
+                dbKakaoEntity.setExpires_in(kakaoTokenDto.getExpires_in());
+                dbKakaoEntity.setRefresh_token_expires_in(kakaoTokenDto.getRefresh_token_expires_in());
+                kakaoRepository.save(dbKakaoEntity);
+            }
+            String jwt = jwtUtils.createJWT(kakaoUserInfoDto.getKakaoAccount().getEmail());
+            return jwt;
 
         }catch (Exception e){
             e.printStackTrace();
@@ -99,6 +108,13 @@ public class KakaoService {
         return "fail";
     }
 
+
+    // 메시지 보내기 함수..
+    // 1. jwt 내용 확인...(email 있는지..., 유효한토큰..) Email 가져오기..
+    // 2. https://kapi.kakao.com/v2/api/talk/memo/default/send
+    // headers = contectType accessToken
+    // body template_object {   }
+    // 우리가 발급한 JWT login..., AccessToken(유효시간)-> message X , RefreshToken(유효시간)
     public void messageSend(String jwt, String message){
 
         String email = jwtUtils.getEmailFromJwt(jwt);
@@ -113,10 +129,14 @@ public class KakaoService {
 //        headers2.add("Authorization", "Bearer " + kakaoTokenDto.getAccess_token());
 
         KakaoEntity kakaoEntity = kakaoRepository.findByEmail(email);
+        if (kakaoEntity == null) {
+            throw new UserException("Could not find Email");
+        }
+
         headers2.add("Authorization", "Bearer " + kakaoEntity.getAccess_token());
 
         MultiValueMap<String, String> body2 = new LinkedMultiValueMap<>();
-        body2.add("template_object", String.format(messageString(),email,message));
+        body2.add("template_object", String.format(KakaoUtils.messageString(),email,message));
 
         HttpEntity<MultiValueMap<String, String>> requestEntity2 = new HttpEntity<>(body2, headers2);
 
@@ -126,16 +146,5 @@ public class KakaoService {
                                             String.class);
         log.info("msg 카카옥 메시지 전송 성공....." + result2.toString());
 
-    }
-    public String messageString(){
-        return "{\n" +
-                "        \"object_type\": \"text\",\n" +
-                "        \"text\": \"%s %s\",\n" +
-                "        \"link\": {\n" +
-                "            \"web_url\": \"http://first.hellomh.site/first/test\",\n" +
-                "            \"mobile_web_url\": \"http://first.hellomh.site/first/test\"\n" +
-                "        },\n" +
-                "        \"button_title\": \"바로 확인\"\n" +
-                "    }";
     }
 }

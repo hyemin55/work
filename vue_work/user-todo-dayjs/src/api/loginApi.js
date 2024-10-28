@@ -8,10 +8,14 @@ const obj = {
 const apiClient = axios.create(obj);
 
 const url = 'http://localhost:20000';
+
 export const login = async code => {
   try {
     const res = await axios.get(`${url}/kakao/login?code=${code}`);
-    return res.data;
+    if (res.status.toString().startsWith('2')) {
+      localStorage.setItem('token', res.data);
+    }
+    return res;
   } catch (err) {
     console.log(err);
     return err;
@@ -19,7 +23,6 @@ export const login = async code => {
 };
 
 export const msgSend = async message => {
-  console.log('token ' + localStorage.getItem('token'));
   try {
     const res = await axios.get(`${url}/kakao/msg?message=${message}`, {
       headers: {

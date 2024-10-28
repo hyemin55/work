@@ -41,9 +41,20 @@
           <RouterLink to="/message" class="hover:text-orange-500"
             >Message</RouterLink
           >
-          <RouterLink to="/login" class="hover:text-orange-500"
-            >Login</RouterLink
-          >
+          <template v-if="useStore.loginCheck">
+            <div class="w-12">
+              <router-link to="/myPage"
+                ><img
+                  :src="useStore.thumbnail"
+                  class="rounded-full cursor-pointer"
+              /></router-link>
+            </div>
+          </template>
+          <template v-else>
+            <RouterLink to="/login" class="hover:text-orange-500"
+              >Login</RouterLink
+            >
+          </template>
         </div>
       </div>
       <template v-if="mobileMenu">
@@ -103,16 +114,14 @@ const menuDisplay = () => {
   mobileMenu.value = !mobileMenu.value;
 };
 const useStore = useUserStore();
-console.log('useStore.loginCheck = ' + useStore.loginCheck);
-console.log('useStore.user = ' + useStore.user);
 
 watchEffect(async () => {
   if (!localStorage.getItem('token')) return;
 
   const res = await loginCheck();
   if (res.status.toString().startWith('2')) {
-    console.log('res = ' + res.data);
-    useUserStore.login(res.data);
+    // console.log('res = ' + res.data);
+    useStore.login(res.data);
     // 통신 성공 했을 때 pinia 상태값 바꾸기s
   }
 });

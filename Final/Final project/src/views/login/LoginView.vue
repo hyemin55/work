@@ -17,17 +17,17 @@ const kakaoLogin = () => {
       <h1 class="login_box_h1">Sign in</h1>
       <div class="login_box_btn" @click="kakaoLogin()">
         <a id="kakao-login-btn" >
-          <img src="../img/btn_kakao.svg" />카카오로 시작하기
+          <img src="../../img/btn_kakao.svg" />카카오로 시작하기
         </a>
       </div>
       <div class="login_box_btn" @click="kakaoLogin()">
         <a id="kakao-login-btn" >
-          <img src="../img/btn_naver.svg" />네이버로 시작하기
+          <img src="../../img/btn_naver.svg" />네이버로 시작하기
         </a>
       </div>
       <div class="login_box_btn" @click="kakaoLogin()">
         <a id="kakao-login-btn" >
-          <img src="../img/btn_google.svg" />구글로 시작하기
+          <img src="../../img/btn_google.svg" />구글로 시작하기
         </a>
       </div>
     </article>
@@ -49,7 +49,7 @@ const kakaoLogin = () => {
   flex-direction: column;
   width: 485px;
   height: 343px;
-  transform: translateY(-30%);
+  transform: translateY(-15%);
   /* background-color: rgb(240, 240, 240);
   border-radius: 50px; */
 }

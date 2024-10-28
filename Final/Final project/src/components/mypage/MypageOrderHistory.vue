@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <h1>myOrderHistory</h1>
+  </div>
 </template>
 
 <script setup></script>

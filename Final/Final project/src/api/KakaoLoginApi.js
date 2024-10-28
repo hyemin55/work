@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { GLOBAL_URL } from './util'
-import OauthView from '@/views/OauthView.vue'
 
 export const login = async code => {
   try {
@@ -29,4 +28,14 @@ export const loginCheck = async data => {
     console.error(err)
     return err
   }
+}
+
+export const logout = async ACCESS_TOKEN => {
+  const res = await axios.post('https://kapi.kakao.com/v1/user/logout', {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+    },
+  })
+  console.log(res)
 }
