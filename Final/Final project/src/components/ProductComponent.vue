@@ -27,10 +27,12 @@ const addToCart = () => {
     console.log(e)
   }
 }
+
 // 찜목록 추가
+const redHeart = ref(false)
 const addToWishlist = () => {
-  // alert("༼ つ ◕_◕ ༽つ 찜~")
-  console.log('찜목록 추가')
+  alert("༼ つ ◕_◕ ༽つ 찜~")
+  redHeart.value = !redHeart.value;
 }
 
 // 1. productList에서 axios 통신을 통해 데이테이베이스에서 온 정보, for구문으로 받아온다.
@@ -43,7 +45,6 @@ const props = defineProps({
     required: true,
   },
 })
-console.log(props.productInfo)
 
 // 3. defineProps으로 정의한 명령어를 변수로 정리하는 부분입니다.
 const productName = ref(props.productInfo.productName || '상품이름')
@@ -81,7 +82,7 @@ const navDetailProduct = () => {
             alt=""
           />
         </li>
-        <li class="wish_push" @click.stop="addToWishlist">
+        <li class="wish_push" :class="{active : redHeart}" @click.stop="addToWishlist">
           <img
             class="icon"
             src="../img/icon/free-icon-font-heart-line.svg"
@@ -164,7 +165,7 @@ const navDetailProduct = () => {
   opacity: 0;
 }
 .product_img > ul > li:hover {
-  background-color: rgba(20, 20, 20, 0.8);
+  background-color: var(--color-main-bloode);
   border: 2px solid rgba(255, 255, 255, 0.6);
 }
 .product_img > ul > li:nth-child(1) {
@@ -173,6 +174,13 @@ const navDetailProduct = () => {
 .cart_push:hover .icon {
   filter: brightness(0) saturate(100%) invert(1); /* 흰색으로 변경 */
 }
+
+.wish_push.active{
+  background-color: var(--color-main-bloode);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
 
 .icon {
   width: 60%;

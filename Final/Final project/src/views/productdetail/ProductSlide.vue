@@ -1,10 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, defineProps } from 'vue'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
+import axios from 'axios'
+import { GLOBAL_URL } from '@/api/util'
 const currentSlide = ref(0)
 
 const slideTo = nextSlide => (currentSlide.value = nextSlide)
+const list = ref([])
 
 const galleryConfig = {
   itemsToShow: 1,
@@ -14,25 +17,53 @@ const galleryConfig = {
 }
 
 const thumbnailsConfig = {
-  itemsToShow: 4,
+  itemsToShow: 5.5,
   wrapAround: true,
 }
+
+const props = defineProps({
+  productId: {
+    type: Object,
+    required: true,
+  },
+})
+
+onMounted(async () => {
+  try {
+    const res = await axios.get(
+      `${GLOBAL_URL}/detail/images/${props.productId}`,
+    )
+    console.log(res)
+    if (res.status == 200) {
+      list.value = res.data
+      console.log(list.value)
+      console.log(list.value.images)
+    }
+    return res
+  } catch (e) {
+    console.error('실패', e)
+  }
+})
 </script>
 
 <template>
   <article id="productSlide">
-    <h1>이미지 슬라이드</h1>
     <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
-      <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item">{{ slide }}</div>
+      <Slide v-for="(image, index) in list" :key="index">
+        <img
+          :src="`${GLOBAL_URL}/api/file/download/${image[0].filename}`"
+          alt=""
+          class="carousel_image"
+        />
       </Slide>
     </Carousel>
 
     <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide">
-      <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item" @click="slideTo(slide - 1)">
-          {{ slide }}
-        </div>
+      <Slide v-for="(image, index) in list" :key="index">
+        <img
+          :src="`${GLOBAL_URL}/api/file/download/${image[0].filename}`"
+          class="carousel_thumbnail"
+        />
       </Slide>
 
       <template #addons>
@@ -45,10 +76,41 @@ const thumbnailsConfig = {
 <style scoped>
 /* 왼쪽 슬라이드 구역 */
 #productSlide {
-  margin: 25px 1% 25px 2%;
-  background-color: aqua;
+  margin: 20px 1.5% 25px 0;
   width: 50%;
   height: 700px;
   text-align: center;
+}
+#gallery {
+  width: 100%;
+  height: 550px;
+  padding: 15px 0;
+  border: 0.5px solid var(--color-main-Lgray);
+  border-radius: 20px;
+  /* background-color: antiquewhite; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel_image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  /* background-color: brown; */
+  border-radius: 15px;
+}
+.carousel_thumbnail {
+  cursor: pointer;
+  object-fit: cover;
+  width: 90%;
+  height: 90px;
+  margin: 20px 0;
+  padding: 5%;
+  border: 0.5px solid var(--color-main-Lgray);
+  border-radius: 20px;
 }
 </style>

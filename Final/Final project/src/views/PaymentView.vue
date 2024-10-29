@@ -1,5 +1,5 @@
 <template>
-  <div><h1>Login</h1></div>
+  <div><h1>결제창</h1></div>
 </template>
 
 <script setup></script>

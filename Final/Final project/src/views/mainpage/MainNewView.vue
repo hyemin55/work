@@ -1,12 +1,13 @@
+<script setup>
+import NewSilde from '@/components/NewSilde.vue'
+</script>
+
 <template>
   <article id="main_new">
     <h1>NEW</h1>
     <NewSilde></NewSilde>
   </article>
 </template>
-<script setup>
-import NewSilde from '@/components/NewSilde.vue'
-</script>
 
 <style scoped>
 /* ==== main_new ==== */
@@ -26,8 +27,5 @@ import NewSilde from '@/components/NewSilde.vue'
   display: flex;
   justify-content: center;
   padding: 40px 0;
-}
-.main_new_box img {
-  width: 80%;
 }
 </style>

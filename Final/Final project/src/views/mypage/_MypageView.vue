@@ -9,12 +9,17 @@ import { useUserStore } from '../../stores/Login'
 import CurrentSituation from './CurrentSituation.vue'
 
 const user = useUserStore()
-const NoprofileImage = ref(user.profileImage)
+// const NoprofileImage = ref(user.profileImage)
+const NoprofileImage = computed(() => user.profileImage)
 
 onMounted(() => {
-  // if (!NoprofileImage.value) {
-  //   user.profileImage = require('@/img/빵빵덕세안.png')
-  // }
+  if (
+    NoprofileImage.value ===
+    'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg'
+  ) {
+    console.log(NoprofileImage.value)
+    user.profileImage = require('@/img/빵빵덕세안.png')
+  }
 })
 
 const selectpage = ref('myOrderHistory')
@@ -32,7 +37,6 @@ const currentComponent = computed(() => componentMap[selectpage.value])
   <section id="mypage">
     <article id="myInfoNav">
       <div class="nickname">
-        <!-- <img src="@/img/빵빵덕세안.png" alt="" /> -->
         <img :src="user.profileImage" alt="" />
         <p>{{ user.nickName }}</p>
       </div>

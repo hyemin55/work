@@ -1,47 +1,11 @@
 <!-- 슬라이드 공식 사이트 = https://ismail9k.github.io/vue3-carousel/getting-started.html -->
-<template>
-  <div class="wrapper">
-    <Carousel
-      :items-to-show="3.2"
-      :autoplay="2000"
-      :snapAlign="'center'"
-      :wrap-around="true"
-      :pause-autoplay-on-hover="true"
-      :mouseDrag="false"
-    >
-      <Slide v-for="(slide, index) in slides" :key="index">
-        <!-- <div v-for="productDtail in New_list" :key="productDtail.productId"> -->
-        <div class="carousel__item" @click="navDetailProduct(slide.productId)">
-          <p class="time_check">{{ slide.registerDate }} 등록상품</p>
-          <img
-            class="slideImg"
-            :src="`${GLOBAL_URL}/api/file/download/${slide.images[0].filename}`"
-          />
-          <div class="item_info">
-            <p>{{ slide.brandName }}</p>
-            <p>{{ slide.productName }}</p>
-            <p>￦{{ slide.price }}</p>
-          </div>
-        </div>
-        <!-- </div> -->
-      </Slide>
-
-      <template #addons>
-        <!-- <Pagination /> -->
-      </template>
-      <!-- <Navigation /> -->
-    </Carousel>
-  </div>
-</template>
-
 <script setup>
+import { Carousel, Slide, Navigation, Icon, Pagination } from 'vue3-carousel'
 import { ref, watchEffect } from 'vue'
-import { Carousel, Pagination, Slide, Navigation } from 'vue3-carousel'
 import axios from 'axios'
 import 'vue3-carousel/dist/carousel.css'
 import { GLOBAL_URL } from '@/api/util'
 import router from '@/router'
-import ProductDetailView from '@/views/productdetail/_ProductDetailView.vue'
 
 const slides = ref([])
 const pageNum = 0
@@ -71,7 +35,6 @@ const getNewList = async () => {
 watchEffect(() => {
   getNewList()
 })
-// `/productsdetail/${props.productInfo.productId}
 const navDetailProduct = productId => {
   console.log(productId)
   router.push(`/productsdetail/${productId}`)
@@ -79,6 +42,42 @@ const navDetailProduct = productId => {
 
 // getNewList()
 </script>
+
+<template>
+  <div class="wrapper">
+    <Carousel
+      :items-to-show="3.5"
+      :autoplay="2000"
+      :snapAlign="'center'"
+      :wrap-around="true"
+      :pause-autoplay-on-hover="true"
+      :mouseDrag="false"
+      :i18n="iconArrowRight"
+    >
+      <Slide v-for="(slide, index) in slides" :key="index">
+        <!-- <div v-for="productDtail in New_list" :key="productDtail.productId"> -->
+        <div class="carousel__item" @click="navDetailProduct(slide.productId)">
+          <p class="time_check">{{ slide.registerDate }} 등록상품</p>
+          <img
+            class="slideImg"
+            :src="`${GLOBAL_URL}/api/file/download/${slide.images[0].filename}`"
+          />
+          <div class="item_info">
+            <p>{{ slide.brandName }}</p>
+            <p>{{ slide.productName }}</p>
+            <p>￦{{ slide.price }}</p>
+          </div>
+        </div>
+        <!-- </div> -->
+      </Slide>
+
+      <template #addons>
+        <!-- <Pagination /> -->
+        <Navigation class="slideNavigation" />
+      </template>
+    </Carousel>
+  </div>
+</template>
 
 <style scoped>
 .carousel__item {
