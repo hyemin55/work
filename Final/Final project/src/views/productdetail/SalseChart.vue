@@ -100,6 +100,6 @@ figcaption {
 }
 .TransactionHistoryContent li {
   margin: 5px 0;
-  /* background-color: aquamarine; */
+  background-color: aquamarine;
 }
 </style>

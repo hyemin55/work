@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/Login'
 import { ref, watchEffect, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { logout } from '@/api/KakaoLoginApi'
+import { eventBus } from '@/eventBus';
 
 const route = useRoute()
 const router = useRouter()
@@ -62,6 +63,11 @@ onMounted(() => {
     HeaderMode.value = false
   }
 })
+
+const cartLogin = () => {
+  eventBus.emit('cartLogin');
+};
+
 </script>
 
 <template>
@@ -118,6 +124,7 @@ onMounted(() => {
               class="icon"
               src="../img/icon/free-icon-font-basket-shopping-simple-9768421.png"
               alt=""
+              @click="cartLogin();"
             />
           </RouterLink>
         </li>

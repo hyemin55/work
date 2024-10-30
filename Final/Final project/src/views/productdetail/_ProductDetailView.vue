@@ -18,17 +18,19 @@ const productId = computed(() => route.params.idx)
       <ProductSlide :productId="productId" />
       <ProductInfoSection />
     </main>
-    <ProductDescription id="ProductDescription" />
-    <ProductDetailReview id="ProductDetailReview" />
+    <ProductDescription />
+    <ProductDetailReview />
   </section>
 </template>
 
 <style scoped>
-.productRoute {
-  padding: 20px 0 0 0;
-  margin: 0 auto;
+nav {
+  padding: 10px 0;
   color: var(--color-text-gray);
+}
+.productRoute {
   width: var(--main-max-width);
+  margin: 0 auto;
 }
 #product {
   width: var(--main-max-width);
@@ -40,23 +42,5 @@ const productId = computed(() => route.params.idx)
   /* justify-content: center; */
   height: auto;
   /* background-color: antiquewhite; */
-}
-#ProductDescription::before {
-  position: absolute;
-  content: '';
-  border: 0.5px solid var(--color-main-Lgray);
-  height: 0.1px;
-  width: var(--main-max-width);
-  display: flex;
-  margin-top: -20px;
-}
-#ProductDetailReview::before {
-  position: absolute;
-  content: '';
-  border: 0.5px solid var(--color-main-Lgray);
-  height: 0.1px;
-  width: var(--main-max-width);
-  display: flex;
-  margin-top: -20px;
 }
 </style>

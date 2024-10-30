@@ -1,20 +1,28 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
 import CartProductComponent from '@/components/CartProductComponent.vue';
-import router from '@/router';
 import { useCartStore } from '@/stores/CartStore';
+import { useUserStore } from '@/stores/Login';
 import axios from 'axios';
 import { computed, ref, watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
+import { eventBus } from '@/eventBus';
 
+// 로그인 pinia
+const userStore = useUserStore();
+const userID = computed(() => userStore.userId)
+const userLogin = computed(() => userStore.loginCheck)
+
+// 장바구니 pinia
 const cartStore = useCartStore();
 const cart = computed(() => cartStore.cartItems);
 const allChecked = ref(true);
 
+// 장바구니 계산
 const deliveryPrice = ref(5000);
 const total_amount = computed(() => {
   return Number(deliveryPrice.value + cartStore.totalPrice);
 });
-
 
 // 전체 선택 체크박스 토글
 const toggleAllCheck = () => {
@@ -23,46 +31,62 @@ const toggleAllCheck = () => {
 
 // 장바구니 삭제
 const deleteToCart = async() => {
-  await axios.delete(`${GLOBAL_URL}/cart/remove`, 
-  {
-    data : cartStore.cartCheckList, 
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
   cartStore.removeItem();
+  
+  if(userLogin.value){
+    await axios.delete(`${GLOBAL_URL}/cart/remove`, 
+    {
+      data : cartStore.cartCheckList, 
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    });
+  }
 };
 
 
-// 회원장바구니 불러오기
-// watchEffect(async()=>{
-//   console.log('회원장바구니 호출')
-//   const res = await axios.get(`${GLOBAL_URL}/cartProduct/select?memberId=1`)
-//   .then(res => {
-//     cartStore.updateCart(res.data);
-//   })
-//   .catch(error => {
-//       console.error(error);
-//   });
-// });
+// 로그인 확인
+eventBus.on('cartLogin', async() => {
+  console.log('이게 된다고???')
+  console.log(userLogin.value)
+
+  if(userLogin.value){
+    await fetchMemberCart();
+  }
+});
 
 const fetchMemberCart = async () => {
-  alert('로그인 성공')
-  console.log('회원장바구니 호출');
+  console.log('로그인됨')
+  const pushData = cart.value.map(item => ({
+  productId: item.productId,
+  quantity: item.quantity
+}));
   try {
-    const res = await axios.get(`${GLOBAL_URL}/cartProduct/select?memberId=1`);
+    const res = await axios.get(`${GLOBAL_URL}/cartProduct/select`, {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    });
     // 스토어에서 장바구니 업데이트
     cartStore.updateCart(res.data);
+
+    await axios.post(`${GLOBAL_URL}/cart/merge`, pushData,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    })
   } catch (error) {
     console.error(error);
   }
 };
 
 // 결제하기
-// const doPayment =()=>{
-//   router.push()
-// };
-
+const router1 = useRouter();
+const doPayment = () =>{
+  router1.push(`/payment/1`)
+};
 </script>
 
 <template>
@@ -80,7 +104,6 @@ const fetchMemberCart = async () => {
             <label for="allCheck">전체 선택</label>
           </li>
           <li><button @click="deleteToCart">선택 삭제</button></li>
-          <li><button @click="fetchMemberCart">로그인 장바구니</button></li>
         </ul>
 
         <CartProductComponent 

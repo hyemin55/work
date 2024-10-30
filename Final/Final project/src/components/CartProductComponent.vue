@@ -1,8 +1,14 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { GLOBAL_URL } from '@/api/util'
 import { useCartStore } from '@/stores/CartStore'
 import axios from 'axios';
+import { useUserStore } from '@/stores/Login';
+
+// 로그인 pinia
+const userStore = useUserStore();
+const userID = computed(() => userStore.userId)
+const userLogin = computed(() => userStore.loginCheck)
 
 const cartStore = useCartStore()
 
@@ -65,11 +71,14 @@ const upCount = async() => {
     quantity : 1,
     memberId : 1,
   }
-  await axios.post(`${GLOBAL_URL}/cartProduct/increment`, data,{
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
+  if(userLogin.value){
+    await axios.post(`${GLOBAL_URL}/cartProduct/increment`, data,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+      }
+    })
+  }
 };
 const downCount = async() => {
   if(cart_quantity.value>1){
@@ -79,11 +88,14 @@ const downCount = async() => {
       quantity : 1,
       memberId : 1,
     }
-    await axios.post(`${GLOBAL_URL}/cartProduct/decrement`, data,{
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+    if(userLogin.value){
+      await axios.post(`${GLOBAL_URL}/cartProduct/decrement`, data,{
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+        }
+      })
+    }
   }
 };
 watch(() => props.productInfo.quantity, (newValue) => {

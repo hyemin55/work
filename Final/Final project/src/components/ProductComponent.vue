@@ -1,30 +1,41 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useCartStore } from '@/stores/CartStore'
 import axios from 'axios'
+import { useUserStore } from '@/stores/Login'
+
+// 로그인 pinia
+const userStore = useUserStore();
+const userID = computed(() => userStore.userId)
+const userLogin = computed(() => userStore.loginCheck)
 
 // 장바구니 추가
 const cartStore = useCartStore()
 const addToCart = () => {
   console.log('장바구니 추가')
   // alert("장바구니에 담았습니다.")
-
   cartStore.addItem(props.productInfo)
 
-  // axios통신 부분
-  const data = {
-    memberId: 1,
-    productId: props.productInfo.productId,
-    quantity: 1,
-  }
-  try {
-    const res = axios.post(`${GLOBAL_URL}/cart/add`, data)
-
-    console.log(res)
-  } catch (e) {
-    console.log(e)
+  if(userLogin.value){
+    // axios통신 부분
+    const data = {
+      memberId: 1,
+      productId: props.productInfo.productId,
+      quantity: 1,
+    }
+    try {
+      const res = axios.post(`${GLOBAL_URL}/cart/add`, data,{
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+        }
+      })
+  
+      console.log(res)
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

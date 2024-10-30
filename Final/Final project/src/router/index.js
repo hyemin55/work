@@ -57,7 +57,7 @@ const router = createRouter({
       component: MypageView,
     },
     {
-      path: '/payment/:idx',
+      path: '/payment/:item',
       name: 'payment',
       component: PaymentView,
     },

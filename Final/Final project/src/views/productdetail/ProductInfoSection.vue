@@ -3,7 +3,7 @@
     <ul id="productInfo">
       <li>브랜드명</li>
       <li>상품명상품명상품명상품명상품명상품명상품명상품명상품명상품명</li>
-      <li>1,222찜 수 <span style="color: red">★</span>별점</li>
+      <li>1,222찜 수 ★별점</li>
       <li>￦ 580,000원</li>
     </ul>
 
@@ -41,7 +41,7 @@ import SalseChart from './SalseChart.vue'
 #productInfoSection {
   /* background-color: aquamarine; */
   width: 50%;
-  margin: 20px 0 25px 0;
+  margin: 25px 0 25px 0;
   /* background-color: yellow; */
 }
 #productInfo {
