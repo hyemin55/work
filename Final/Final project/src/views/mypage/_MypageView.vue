@@ -1,34 +1,25 @@
 <script setup>
-import MyInformation from '@/components/mypage/MyInformation.vue'
-import MyWishlist from '@/components/mypage/MyWishlist.vue'
-import MypageOrderHistory from '@/components/mypage/MypageOrderHistory.vue'
-import MypageReview from '@/components/mypage/MypageReview.vue'
-import MypageSalseHistory from '@/components/mypage/MypageSalseHistory.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from '../../stores/Login'
-import CurrentSituation from './CurrentSituation.vue'
+import MypageInformationView from './MypageInformationView.vue'
+import MypageOrderHistoryView from './MypageOrderHistoryView.vue'
+import MypageSalseHistoryView from './MypageSalseHistoryView.vue'
+import MypageWishlistView from './MypageWishlistView.vue'
+import MypageReviewView from './MypageReviewView.vue'
+import MypageCurrentSituationView from './MypageCurrentSituationView.vue'
 
 const user = useUserStore()
-// const NoprofileImage = ref(user.profileImage)
-const NoprofileImage = computed(() => user.profileImage)
 
-onMounted(() => {
-  if (
-    NoprofileImage.value ===
-    'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg'
-  ) {
-    console.log(NoprofileImage.value)
-    user.profileImage = require('@/img/빵빵덕세안.png')
-  }
-})
+onMounted(() => {})
+const profileImage = sessionStorage.getItem('profileImage')
 
 const selectpage = ref('myOrderHistory')
 const componentMap = {
-  myOrderHistory: MypageOrderHistory,
-  mySalseHistory: MypageSalseHistory,
-  myWishlist: MyWishlist,
-  myReview: MypageReview,
-  myInformation: MyInformation,
+  myOrderHistory: MypageOrderHistoryView,
+  mySalseHistory: MypageSalseHistoryView,
+  myWishlist: MypageWishlistView,
+  myReview: MypageReviewView,
+  myInformation: MypageInformationView,
 }
 const currentComponent = computed(() => componentMap[selectpage.value])
 </script>
@@ -37,7 +28,7 @@ const currentComponent = computed(() => componentMap[selectpage.value])
   <section id="mypage">
     <article id="myInfoNav">
       <div class="nickname">
-        <img :src="user.profileImage" alt="" />
+        <img :src="profileImage" alt="" />
         <p>{{ user.nickName }}</p>
       </div>
       <ul id="myInfoNavList">
@@ -51,7 +42,7 @@ const currentComponent = computed(() => componentMap[selectpage.value])
 
     <main id="rightGroub">
       <article id="currentSituation">
-        <CurrentSituation />
+        <MypageCurrentSituationView />
       </article>
 
       <article id="myDetailInfo">

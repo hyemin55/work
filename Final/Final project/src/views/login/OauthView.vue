@@ -1,38 +1,9 @@
-<style scoped>
-#loginCheck {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100%;
-}
-img {
-  width: 7%;
-  height: auto;
-  animation: rotate 4s infinite linear;
-}
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg); /* 360도 회전 */
-  }
-}
-</style>
-
-<template>
-  <div id="loginCheck">
-    <img src="../../img/p_003.png" alt="" />
-    <!-- <h1>{{ useStore.nickName }}</h1> -->
-  </div>
-</template>
-
 <script setup>
 import { watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { login, loginCheck } from '@/api/KakaoLoginApi'
 import { useUserStore } from '@/stores/Login'
+import LodingView from '@/views/loding/LodingView.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -81,3 +52,11 @@ watchEffect(async () => {
 //   }
 // })
 </script>
+
+<template>
+  <div>
+    <LodingView />
+  </div>
+</template>
+
+<style scoped></style>

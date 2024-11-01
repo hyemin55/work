@@ -8,7 +8,7 @@
   --color-main-gray: rgb(222, 222, 222);
   --color-main-Lgray: rgb(237, 237, 237);
   /* 이외 컬러 설정 */
-  --color-text-gray: rgb(153, 153, 153);
+  --color-text-gray: rgb(148, 148, 148);
   --color-purewhite: rgb(255, 255, 255);
   --color-pureblack: rgb(0, 0, 0);
   /* 메인 너비 설정 */
@@ -16,7 +16,7 @@
 }
 
 @media (max-width: 1280px) {
-  :root{ 
+  :root {
     --main-max-width: 100%;
-}
+  }
 }

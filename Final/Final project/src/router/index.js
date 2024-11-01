@@ -1,16 +1,31 @@
 import CartView from '@/views/CartView.vue'
 import LoginView from '@/views/login/LoginView.vue'
-import MainView from '@/views/mainpage/_MainView.vue'
-import ProductDetailView from '@/views/productdetail/_ProductDetailView.vue'
-import ProductListView from '@/views/ProductListView.vue'
+import MainView from '@/views/main/_MainView.vue'
+import ProductDetailView from '@/views/product/productdetail/_ProductDetailView.vue'
+import ProductListView from '@/views/product/ProductListView.vue'
 import OauthView from '@/views/login/OauthView.vue'
 import MypageView from '@/views/mypage/_MypageView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import PaymentView from '@/views/PaymentView.vue'
+import PaymentView from '@/views/payment/_PaymentView.vue'
+
+const loginRouter = [
+  {
+    path: '/login2',
+    name: 'login2',
+    component: LoginView,
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: OauthView,
+  },
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    ...loginRouter,
+
     {
       path: '/',
       name: 'main',
@@ -27,21 +42,6 @@ const router = createRouter({
       component: ProductListView,
     },
     {
-      path: '/cart',
-      name: 'cart',
-      component: CartView,
-    },
-    {
-      path: '/login2',
-      name: 'login2',
-      component: LoginView,
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: OauthView,
-    },
-    {
       path: '/productsdetail/:idx',
       name: 'productsdetail',
       component: ProductDetailView,
@@ -51,15 +51,21 @@ const router = createRouter({
     //   name: 'productsdetail',
     //   component: () => import('@/views/ProductDetailView.vue'),
     // },
+
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartView,
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: PaymentView,
+    },
     {
       path: '/mypage',
       name: 'mypage',
       component: MypageView,
-    },
-    {
-      path: '/payment/:item',
-      name: 'payment',
-      component: PaymentView,
     },
   ],
 })
