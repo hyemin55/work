@@ -68,6 +68,9 @@ const router = createRouter({
       component: MypageView,
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 } // 모든 라우트 이동 시 스크롤을 맨 위로 이동
+  }
 })
 
 export default router

@@ -4,17 +4,21 @@
 
 <template>
     <section id="pay_money">
-        <div class="pay_money_product">
+        <div class="pay_money_product s">
             <p class="title_text">상품 가격</p>
             <p class="price_text">230,000원</p>
         </div>
-        <div>+</div>
-        <div class="pay_money_delivery">
+
+        <div class="operation_symbol">+</div>
+
+        <div class="pay_money_delivery s">
             <p class="title_text">배송비</p>
             <p class="price_text">3,000원</p>
         </div>
-        <div>=</div>
-        <div class="pay_money_mount">
+
+        <div class="operation_symbol">=</div>
+
+        <div class="pay_money_mount s">
             <p class="title_text">총 결제 금액</p>
             <p class="price_text">233,000원</p>
         </div>
@@ -31,8 +35,12 @@
     justify-content: center;
 }
 #pay_money>div{
-    margin: 0 10px;
+    margin: 0 15px;
 }
+.s p{
+    margin: 0.2rem 0;
+}
+
 .pay_money_product{
     display: flex;
     flex-direction: column;
@@ -55,9 +63,16 @@
 
 .title_text{
     font-size: 2rem;
+    letter-spacing: -0.034rem;
+    color: rgb(44, 44, 44);
 }
 .price_text{
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     font-weight: 600;
+    letter-spacing: -0.034rem;
+    color: rgb(19, 19, 19);
+}
+.operation_symbol{
+    font-size: 2rem;
 }
 </style>

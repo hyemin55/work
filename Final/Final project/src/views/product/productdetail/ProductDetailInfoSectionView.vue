@@ -1,26 +1,63 @@
 <script setup>
+import { GLOBAL_URL } from '@/api/util'
 import router from '@/router'
 import SalseChart from '@/views/product/productdetail/SalseChart.vue'
-import { ref } from 'vue'
+import axios from 'axios'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-const props = defineProps({
-  productId: {
-    type: Object,
-    required: true,
-  },
-  size: {
-    type: Number,
-    required: true,
-  },
+const route = useRoute()
+const idx = ref(route.params.idx)
+const size = ref(route.query.size)
+// console.log('사이즈', size.value)
+const productData = ref([])
+const reviewData = ref(0)
+
+onMounted(async () => {
+  try {
+    const res = await axios.get(
+      `${GLOBAL_URL}/detail/detailProductInfo/${idx.value}`,
+    )
+    const res2 = await axios.get(`${GLOBAL_URL}/detail/detailReviewInfo/1`)
+    if (res.status === 200 && res2.status === 200) {
+      productData.value = res.data
+      // 여기닷! 수정수정필요
+      reviewData.value = res2.data
+      // console.log('리뷰데이터', reviewData.value)
+      // console.log('데이터내용들', productData.value)
+    } else {
+      console.log('실패')
+    }
+  } catch (err) {
+    console.log('실패' + err)
+  }
 })
+
+// const getNewList = async () => {
+//   try {
+//     const res = await axios.get(
+//       `${GLOBAL_URL}/api/products/new?pageNum=${pageNum}&size=${size}`,
+//     )
+//     console.log(res)
+//     if (res.status == 200) {
+//       // New_list.value = res.data
+//       console.log(res.data.length)
+//       // for (let i = 0; i < res.data.length; i++) {
+//       //   slides.value.push(res.data[i].images[0])
+//       // }
+//       slides.value = res.data
+//     }
+//   } catch (e) {
+//     console.log('리스트 못 받아오는 오류에요 = ' + e)
+//   }
+// }
 
 const productOptions = ref(['30ml', '50ml', '100ml'])
 
 const productOptionselec = selectedOption => {
-  console.log(selectedOption)
-  console.log(props.productId)
-  console.log(props.size)
+  // console.log(selectedOption)
+  // console.log(props.productId)
+  // console.log(props.size)
 
   router.push({ path: `/productsdetail/${productId}?size=30` })
 }
@@ -48,21 +85,29 @@ const urlShare = () => {
 
 <template>
   <article id="productInfoSection">
-    <ul id="productInfo">
-      <li>브랜드명</li>
-      <li>상품명상품명상품명상품명상품명상품명상품명상품명상품명상품명</li>
-      <li>1,222찜 수 <span style="color: red">★</span>별점</li>
-      <li>￦ 580,000원</li>
+    <ul id="productInfo" v-for="(list, index) in productData" :key="index">
+      <li>{{ list.brandName }}</li>
+      <li>{{ list.productName }}</li>
+      <li>
+        1,222찜 수
+        <span style="color: red"
+          >★ {{ reviewData.starAverage }} ({{
+            reviewData.reviewCount
+          }}
+          reviews)</span
+        >
+      </li>
+      <li>￦ {{ list.price }}</li>
     </ul>
 
     <p class="OptionSelect">옵션선택</p>
     <div id="productOption">
       <button
-        @click="productOptionselec(Option)"
-        v-for="(Option, index) in productOptions"
+        @click="productOptionselec(size)"
+        v-for="(size, index) in productData"
         :key="index"
       >
-        {{ Option }}
+        {{ size.size }}
       </button>
       <!-- <button>50ml</button>
       <button>100ml</button> -->

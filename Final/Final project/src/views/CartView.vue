@@ -9,6 +9,11 @@ import { useRouter } from 'vue-router'
 import { eventBus } from '@/eventBus'
 // import { storeToRefs } from 'pinia'
 
+// 전체 선택 체크박스 토글
+const toggleAllCheck = () => {
+  cartStore.toggleAllCheck(allChecked.value)
+}
+
 // 로그인 pinia
 const userStore = useUserStore()
 const userLogin = computed(() => userStore.loginCheck)
@@ -25,11 +30,6 @@ const total_amount = computed(() => {
   return Number(deliveryPrice.value + cartStore.totalPrice)
 })
 
-// 전체 선택 체크박스 토글
-const toggleAllCheck = () => {
-  cartStore.toggleAllCheck(allChecked.value)
-}
-
 // 장바구니 삭제
 const deleteToCart = async () => {
   cartStore.removeItem()
@@ -41,10 +41,11 @@ const deleteToCart = async () => {
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
     })
+    cartStore.cartCheckList = []
   }
 }
 
-// 라우터가 이동하면 한번
+// 로그인 실행 (라우터가 이동하면 한번)
 onMounted(async () => {
   await cartLogin()
 })
@@ -54,7 +55,7 @@ eventBus.on('logout', () => {
   cartStore.removeItem()
   sessionStorage.removeItem('isCartFetched')
 })
-
+// 로그인
 const cartLogin = async () => {
   console.log('로그인 체크')
   const token = sessionStorage.getItem('token')
@@ -62,6 +63,8 @@ const cartLogin = async () => {
     console.log('토큰이 없습니다. 로그인 필요')
     return // 토큰이 없으면 중단
   }
+
+  // 이부분 대체 :
   const isCartFetched = sessionStorage.getItem('isCartFetched') === 'true' // 장바구니 로딩 여부 확인
   if (isCartFetched) return // 이미 불러왔다면 중단
 
@@ -102,22 +105,30 @@ const fetchMemberCart = async () => {
 // 결제 하러가기
 const payRouter = useRouter()
 const doPayment = () => {
-  const purchaseProducttDtos = checkList.value.map(item => ({
-    productId: item.productId,
-    quantity: item.quantity,
-    name: item.productName,
-  }))
-  const data = {
-    purchaseProductDtos: purchaseProducttDtos,
-    totalPrice: total_amount.value,
+  if (checkList.value.length > 0) {
+    const purchaseProducttDtos = checkList.value.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      name: item.productName,
+    }))
+    const data = {
+      purchaseProductDtos: purchaseProducttDtos,
+      totalPrice: total_amount.value,
+    }
+    console.log(data)
+
+    payRouter.push({
+      path: '/payment',
+      query: { item: encodeURIComponent(JSON.stringify(data)) },
+    })
+  } else {
+    alert('선택된 상품이 없습니다.')
   }
-  console.log(data)
-  
-  payRouter.push({
-    path: '/payment',
-    query: { item: encodeURIComponent(JSON.stringify(data)) },
-  })
 }
+
+// watchEffect(() => {
+//   checkList.value = route.path === '/';
+// });
 </script>
 
 <template>
@@ -126,48 +137,56 @@ const doPayment = () => {
       <article class="cart_product">
         <ul class="cart_ctroll">
           <li>
-            <input
-              @change="toggleAllCheck"
-              v-model="allChecked"
-              type="checkbox"
-              name="allCheck"
-              id="allCheck"
-            />
+            <label class="product_check_container">
+              <input
+                @change="toggleAllCheck"
+                v-model="allChecked"
+                type="checkbox"
+                name="allCheck"
+                id="allCheck"
+                class="product_check"
+              />
+              <span class="custom-checkmark"></span>
+            </label>
             <label for="allCheck">전체 선택</label>
           </li>
           <li><button @click="deleteToCart">선택 삭제</button></li>
         </ul>
 
         <CartProductComponent
-          v-for="(item) in cartStore.cartItems"
+          v-for="item in cartStore.cartItems"
           :key="item.productId"
           :productInfo="item"
           :isChecked="item.isChecked"
           v-model:isChecked="item.isChecked"
         />
       </article>
+
       <article class="cart_total_price">
-        <div>
-          <h1 class="cart_title">장바구니</h1>
-          <div id="calculate">
-            <ul class="product_price price_list">
-              <li>상품 금액</li>
-              <li>{{ cartStore.totalPrice.toLocaleString() }}원</li>
-            </ul>
-            <ul class="delivery_pirce price_list">
-              <li>배송비</li>
-              <li>{{ deliveryPrice.toLocaleString() }}원</li>
-            </ul>
+        <article>
+          <div>
+            <h1 class="cart_title">장바구니</h1>
+            <div id="calculate">
+              <ul class="product_price price_list">
+                <li>상품 금액</li>
+                <li>{{ cartStore.totalPrice.toLocaleString() }}원</li>
+              </ul>
+              <ul class="delivery_pirce price_list">
+                <li>배송비</li>
+                <li>{{ deliveryPrice.toLocaleString() }}원</li>
+              </ul>
+            </div>
+            <div id="total_amount">
+              <ul class="price_list">
+                <li style="font-weight: 800">총 결제 금액</li>
+                <li>{{ total_amount.toLocaleString() }}원</li>
+              </ul>
+            </div>
+            <button class="payment" @click="doPayment">결제하기</button>
           </div>
-          <div id="total_amount">
-            <ul class="price_list">
-              <li style="font-weight: 800">총 결제 금액</li>
-              <li>{{ total_amount.toLocaleString() }}원</li>
-            </ul>
-          </div>
-          <button class="payment" @click="doPayment">결제하기</button>
-        </div>
+        </article>
       </article>
+
     </article>
 
     <article class="else_cart" v-else>
@@ -181,10 +200,10 @@ const doPayment = () => {
 /* 장바구니 전체설정 */
 #cart_wrapper {
   position: relative;
-  max-width: var(--main-max-width);
-  width: 100%;
   margin: 0 auto;
-  height: calc(100vh - 100px);
+  height: auto;
+  min-height: calc(100vh - 100px);
+  width: var(--main-max-width);
 }
 .if_cart {
   position: relative;
@@ -193,6 +212,7 @@ const doPayment = () => {
   height: 100%;
 }
 .else_cart {
+  position: absolute;
   width: 100%;
   height: 100%;
   display: flex;
@@ -230,55 +250,61 @@ const doPayment = () => {
   }
 }
 
-/* 장바구니 상품 설정 */
+/* 장바구니 상품 설정 (좌측)*/
 .cart_product {
   position: relative;
-  max-width: 768px;
-  width: 60%;
   height: 100%;
-  overflow-y: scroll;
-  background-color: var(--color-main-Lgray);
+  /* background-color: var(--color-main-Lgray); */
+  background-color:#fdf4f1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 768px;
+  min-height: 100vh;
+  padding-bottom: 50px;
+  border-bottom-left-radius: 15px; /* 왼쪽 아래 모서리 */
+  border-bottom-right-radius: 15px; /* 오른쪽 아래 모서리 */
+  /* max-width: 768px;
+  width: 60%; */
   /* justify-content: center; */
 }
 .cart_ctroll {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 630px;
   height: 80px;
-  padding: 20px 69px;
+  font-size: 1.1rem;
 }
-.cart_product::-webkit-scrollbar {
-  width: 0.7rem;
+.cart_ctroll li {
+  display: flex;
+  align-items: center;
 }
-.cart_product::-webkit-scrollbar-track {
-  background: transparent;
+.cart_ctroll label{
+  cursor: pointer;
 }
-.cart_product::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-.cart_product::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+.product_check_container input{
+  margin-right: 8px;
 }
 
-/* 결제금액 설정 */
+
+/* 결제금액 설정 (우측)*/
 .cart_total_price {
   position: relative;
-  max-width: 512px;
-  width: 40%;
+  display: flex;
+  justify-content: center;
+  width: 512px;
+  min-height: 100vh;
+}
+.cart_total_price > article{
+  position: relative;
+  width: 312px;
   height: 100%;
 }
-.cart_total_price > div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -241px;
-  margin-left: -147.5px;
-  width: 295px;
+.cart_total_price > article > div {
+  position: sticky;
+  top: 300px;
+  width: 312px;
   height: 382px;
 }
 .cart_title {
@@ -316,5 +342,31 @@ const doPayment = () => {
   border: 2px solid rgb(146, 146, 146);
   border-radius: 5px;
   font-size: 16px;
+}
+
+/* 체크박스 설정 */
+.product_check {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  transition: all 0.1s;
+  border: solid 1px #818181;
+  border-radius: 0.4rem;
+}
+.product_check:checked {
+  background-color: var(--color-main-bloode); /* 체크 시 배경색 */
+  border: solid 1px #8f8f8f;
+}
+.product_check:checked::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg); /* 체크 모양을 위한 회전 */
 }
 </style>

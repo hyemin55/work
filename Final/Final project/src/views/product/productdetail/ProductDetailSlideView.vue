@@ -17,7 +17,7 @@ const galleryConfig = {
 }
 
 const thumbnailsConfig = {
-  itemsToShow: 5.5,
+  itemsToShow: 6,
   wrapAround: true,
 }
 
@@ -36,8 +36,9 @@ onMounted(async () => {
     console.log(res)
     if (res.status == 200) {
       list.value = res.data
-      console.log(list.value)
-      console.log(list.value.images)
+      // console.log(list.value)
+      // console.log('리스트파일이름' + list.value)
+      // console.log('리스트파일이름' + list.value.images.length)
     }
     return res
   } catch (e) {
@@ -49,9 +50,9 @@ onMounted(async () => {
 <template>
   <article id="productSlide">
     <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
-      <Slide v-for="(image, index) in list" :key="index">
+      <Slide v-for="(image, index) in list.images" :key="index">
         <img
-          :src="`${GLOBAL_URL}/api/file/download/${image[0].filename}`"
+          :src="`${GLOBAL_URL}/api/file/download/${image.filename}`"
           alt=""
           class="carousel_image"
         />
@@ -59,9 +60,9 @@ onMounted(async () => {
     </Carousel>
 
     <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide">
-      <Slide v-for="(image, index) in list" :key="index">
+      <Slide v-for="(image, index) in list.images" :key="index">
         <img
-          :src="`${GLOBAL_URL}/api/file/download/${image[0].filename}`"
+          :src="`${GLOBAL_URL}/api/file/download/${image.filename}`"
           class="carousel_thumbnail"
         />
       </Slide>
@@ -103,7 +104,12 @@ onMounted(async () => {
   /* background-color: brown; */
   border-radius: 15px;
 }
+/* #thumbnails {
+  width: 100%;
+  background-color: antiquewhite;
+} */
 .carousel_thumbnail {
+  /* background-color: rgb(153, 96, 22); */
   cursor: pointer;
   object-fit: cover;
   width: 90%;

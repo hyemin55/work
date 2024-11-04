@@ -1,7 +1,7 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util'
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useCartStore } from '@/stores/CartStore'
 import axios from 'axios'
 import { useUserStore } from '@/stores/Login'
@@ -19,7 +19,6 @@ const addToCart = () => {
   cartStore.addItem(props.productInfo)
 
   if (userLogin.value) {
-    // axios통신 부분
     const data = {
       memberId: 1,
       productId: props.productInfo.productId,
@@ -44,6 +43,13 @@ const addToWishlist = () => {
   redHeart.value = !redHeart.value
 }
 
+// 단위 변경
+// const unit = ref('ml');
+// watch(() => categoryTitle.value, (newTitle) => {
+//   if (newTitle === 'Candle') {unit.value = 'g';}
+//   else {unit.value = 'ml';}
+//   });
+
 // 1. productList에서 axios 통신을 통해 데이테이베이스에서 온 정보, for구문으로 받아온다.
 // 2. defineProps 는 받아온 정보를 사용하는 명령어, router로 오는 정보를 useRoute로 받아오는거랑 같은 맥락이다.
 // 상품리스트에 출력
@@ -64,20 +70,14 @@ const size = ref(props.productInfo.size || '사이즈')
 const reviewCount = ref(props.productInfo.reviewCount || '0')
 
 // useNavigator
-// 4. 클릭 이벤트에 반응하여 경로이동을 한다.
-// 경로 이동을 하는데 클릭한 해당 이미지의 id를 가지고 페이지로 이동을 하는겁니다.
-// 이게 전부입니다.
-// 그런데 어떻게 다 다른 페이지로 이동하느냐고요???
-// 그게 아니죠 다 같은 페이지로 가는게 맞습니다.
-// 같은 페이지로 이동해서 가지고간 다른 id를 가지고 그곳에서 통신을해서
-// 각자 다른 상품들을 불러오는 같은 페이지가 되는 겁니다.
 const router = useRouter()
 const navDetailProduct = () => {
+  console.log('사이즈 값', size.value)
   router.push({
     path: `/productsdetail/${props.productInfo.productId}`,
-    query:{
-      size: size.value
-    }
+    query: {
+      size: size.value,
+    },
   })
 }
 </script>
@@ -113,7 +113,7 @@ const navDetailProduct = () => {
     <div class="product_text">
       <ul>
         <li @click="navDetailProduct" class="product_title">
-          {{ productName }} - {{ size }}ml
+          {{ productName }}ㆍ<span class="size">{{ size }}<span>ml</span></span>
         </li>
         <li class="product_content">{{ content }}</li>
       </ul>
@@ -246,17 +246,14 @@ const navDetailProduct = () => {
   line-height: 1.4rem;
   margin: 7px 0 5px 0;
   color: var(--color-text-gray);
-  /* display: -webkit-box;       
-  -webkit-line-clamp: 2;       
-  -webkit-box-orient: vertical;
-  overflow: hidden;            
-  text-overflow: ellipsis;  */
 }
 .product_price {
-  /* background-color: blueviolet; */
   letter-spacing: -0.034rem;
   font-weight: bold;
   font-size: 1.85rem;
   color: #1f1f1f;
+}
+.size {
+  /* font-weight: 400; */
 }
 </style>

@@ -25,7 +25,6 @@ export const useCartStore = defineStore('cart', {
     // 장바구니 삭제
     removeItem() {
       this.cartItems = this.cartItems.filter(item => !item.isChecked)
-      // this.cartCheckList = [];
       localStorage.setItem('cartItems', JSON.stringify(this.cartItems))
     },
 
@@ -47,6 +46,7 @@ export const useCartStore = defineStore('cart', {
           productName: item.productResDto.productName,
           images: item.productResDto.images,
           price: item.productResDto.price,
+          size: item.productResDto.size,
           quantity: item.quantity || 1, // 기본값 1 설정
           isChecked: true, // 기본 체크 여부
         }
@@ -90,4 +90,5 @@ export const useCartStore = defineStore('cart', {
       )
     },
   },
+  
 })

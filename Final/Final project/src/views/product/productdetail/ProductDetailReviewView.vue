@@ -19,7 +19,6 @@ const LatestHandle = () => {
 <template>
   <article id="detailReview">
     <h1 id="detailReviewTitle">Photo Lists</h1>
-
     <ProductDetailReviewSlide />
 
     <h1 id="detailReviewTitle">Review Lists</h1>

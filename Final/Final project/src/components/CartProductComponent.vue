@@ -4,6 +4,7 @@ import { GLOBAL_URL } from '@/api/util'
 import { useCartStore } from '@/stores/CartStore'
 import axios from 'axios'
 import { useUserStore } from '@/stores/Login'
+import { useRouter } from 'vue-router'
 
 // 로그인 pinia
 const userStore = useUserStore()
@@ -28,7 +29,11 @@ const cart_idx = ref(props.productInfo.productId) // 부모자로 보낼 idx
 const cart_product_name = ref(props.productInfo.productName)
 const cart_product_price = ref(props.productInfo.price) // 이것도
 const cart_quantity = ref(props.productInfo.quantity)
+// 사이즈 수정 필요
+const cart_size = ref(props.productInfo.size)
 const cartCheck = ref(props.isChecked)
+
+console.log(cart_size.value)
 
 onMounted(() => {
   makeCartCheckList()
@@ -60,7 +65,7 @@ const makeCartCheckList = () => {
 
 // 부모에게 상태 전달
 const emit = defineEmits(['update:isChecked'])
-const handleCheckboxChange = () => {
+const handleCheckboxChange = item => {
   emit('update:isChecked', cartCheck.value)
 }
 watch(cartCheck, newValue => {
@@ -73,7 +78,6 @@ const upCount = async () => {
   const data = {
     productId: cart_idx.value,
     quantity: 1,
-    memberId: 1,
   }
   if (userLogin.value) {
     await axios.post(`${GLOBAL_URL}/cartProduct/increment`, data, {
@@ -108,30 +112,46 @@ watch(
     cart_quantity.value = newValue
   },
 )
+
+// 상품으로 이동
+const router = useRouter()
+const moveDetail = () => {
+  router.push({
+    path: `/productsdetail/${props.productInfo.productId}`,
+    query: {
+      size: cart_size.value,
+    },
+  })
+}
 </script>
 
 <template v-for="item in cart" :key="item.idx">
-  <article id="cart_product_component_wrapper">
-    <label class="product_check-container">
-  <input
-    v-model="cartCheck"
-    type="checkbox"
-    name="check"
-    class="product_check"
-    @change="handleCheckboxChange"
-  />
-  <span class="custom-checkmark"></span>
-</label>
+  <article
+    id="cart_product_component_wrapper"
+    :class="{ check: cartCheck, notCheck: !cartCheck }"
+  >
+    <label class="product_check-ccartCheckontainer">
+      <input
+        v-model="cartCheck"
+        type="checkbox"
+        name="check"
+        class="product_check"
+        @change="handleCheckboxChange"
+      />
+      <span class="custom-checkmark"></span>
+    </label>
     <div class="img">
       <img
         :src="`${GLOBAL_URL}/api/file/download/${productInfo.images[0].filename}`"
-        style="height: 90%"
+        @click="moveDetail"
       />
     </div>
     <div class="text">
       <div class="text_box">
-        <p class="title">상품명 : {{ cart_product_name }}</p>
-        <p class="contents">옵션 : 100ml</p>
+        <p class="title" @click="moveDetail">
+          상품명 : {{ cart_product_name }}
+        </p>
+        <p class="contents">옵션 : {{ cart_size }}ml</p>
         <p class="price">{{ cart_product_price.toLocaleString() }}원</p>
       </div>
       <div class="count">
@@ -160,7 +180,7 @@ watch(
   margin: 10px;
   width: 18px;
   height: 18px;
-  appearance: none; 
+  appearance: none;
   transition: all 0.1s;
   border: solid 1px #818181;
   border-radius: 0.4rem;
@@ -189,7 +209,10 @@ watch(
   align-items: center;
   justify-content: center;
 }
-
+.img img {
+  cursor: pointer;
+  height: 90%;
+}
 /* 텍스트 박스 설정 */
 .text {
   display: flex;
@@ -208,8 +231,9 @@ watch(
   font-size: 1.6rem;
   font-weight: 600;
   letter-spacing: -0.034rem;
+  cursor: pointer;
 }
-.contents{
+.contents {
   font-size: 1.3rem;
   font-weight: 400;
   letter-spacing: -0.034rem;
@@ -229,12 +253,28 @@ watch(
 }
 
 button {
-  background-color: #007bff;
+  background-color: var(--color-main-bloode);
+  color: var(--color-main-gray);
   border: none;
   border-radius: 5px;
-  padding: 0px 6px;
-  cursor: pointer;
-  font-size: 2rem;
-}
+  width: 20px;
+  height: 20px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+.check {
+  filter: grayscale(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #0c0c0c;
+}
+.notCheck {
+  filter: grayscale(85%);
+  box-shadow: none;
+  color: var(--color-main-gray);
+}
 </style>

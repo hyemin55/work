@@ -1,12 +1,13 @@
 <script setup>
-import { GLOBAL_URL } from '@/api/util'
+import { GLOBAL_IMP_KEY, GLOBAL_URL } from '@/api/util'
 import PayMethod from '@/views/payment/PayMethodView.vue'
 import PayMoney from '@/views/payment/PayMoneyView.vue'
 import PayProduct from '@/views/payment/PayProductView.vue'
-import PayUserInfo from '@/views/payment/_PayUserInfoView.vue'
+import PayUserInfo from '@/views/payment/PayUserInfoView.vue'
 import axios from 'axios'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+
 // JSON 문자열을 객체로 변환
 // const cartItems = route.params.item ? route.params.item.split(',') : [];
 const route = useRoute()
@@ -21,10 +22,22 @@ const merchant_uid = `IMP${Date.now()}` // 결제외부API 키 (항사 새로이
 // 2. "결제창의 총 상품 금액"과 장바구니의 상품 총가격(purchase 테이블의 totalPrice)"랑 비교 / 하기 위해서 저장한다
 // 사후검증 준비 단계 
 
-
 // 결국 나누어진 컴포넌트에 전역 상태관리를 위해서 
 // "장바구니의 상품 총가격(purchase 테이블의 totalPrice)" 를 store에 저장해서 사용해야 한다.
 
+const purchaseId = ref();
+const purchaseStatus = ref(null);
+
+watchEffect(() => {
+  console.log('Watch triggered:', purchaseStatus.value)
+  if (purchaseStatus.value) {
+    console.log('PAID 상태 감지, 이벤트 발생')
+    alert('결제가 완료되었습니다.')
+    // SSE 연결을 초기화합니다.
+    connectSSE()
+    // window.location.reload()
+  }
+})
 
 // 1번 검증
 onMounted(async () => {
@@ -35,16 +48,16 @@ onMounted(async () => {
     },
   })
   if (res.status == 200) {
+    purchaseId.value = res.data.purchaseId; // 여서 id를 통해서 (purchase 테이블의 totalPrice) 추출
     console.log(res.data)
   } else {
     console.log('failed create order')
   }
   // 2번 검증
-  const purchaseId = res.data.purchaseId; // 여서 id를 통해서 (purchase 테이블의 totalPrice) 추출
   const data = {
     merchant_uid: merchant_uid,
     amount: cartData.totalPrice,
-    purchaseId: purchaseId
+    purchaseId: purchaseId.value
   }
     // 주문 상세 페이지 로드 완료되면 아래 호출
   try {
@@ -59,10 +72,9 @@ onMounted(async () => {
   }
 })
 
-
 const requestPay = async () => {
   const IMP = window.IMP
-  IMP.init('imp25637745')
+  IMP.init(`${GLOBAL_IMP_KEY}`) // 키다
   IMP.request_pay(
     {
       pg: 'html5_inicis',
@@ -83,8 +95,8 @@ const requestPay = async () => {
           merchant_uid: rsp.merchant_uid,
           paid_amount: rsp.paid_amount,
           apply_num: rsp.apply_num,
-          email: email.value,
-          purchaseId: purchaseId
+          // email: email.value,
+          purchaseId: purchaseId.value
         }
         // form.append('imp_uid', rsp.imp_uid)
         // form.append('merchant_uid', rsp.merchant_uid)
@@ -147,7 +159,6 @@ const requestPay = async () => {
                 buyerPhone: rsp.buyer_tel,
                 buyerAddr: rsp.buyer_addr,
                 buyerPostcode: rsp.buyer_postcode,
-                cartId: 1, // 카트 아이디
                 purchaseProductDtos: cartData.purchaseProductDtos // 제품IDs와 수량들
               }
 
@@ -155,7 +166,8 @@ const requestPay = async () => {
               await axios
                 .post(`${GLOBAL_URL}/api/payment/save-purchase-info`, purchaseInfo, {
                   headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${sessionStorage.getItem('token')}`,
                   }
                 })
                 .then((res) => {
@@ -179,7 +191,6 @@ const requestPay = async () => {
     }
   )
 }
-
 // 알림 이벤트 소스 (항시 대기중)
 const connectSSE = () => {
   const sse = new EventSource(`${GLOBAL_URL}/api/notification/payment/completed/subscriber`)
@@ -213,14 +224,17 @@ const connectSSE = () => {
 
     <h2>주문 상품</h2>
     <PayProduct></PayProduct>
-
+    
     <h2>결제금액</h2>
+    <div class="line"></div>
     <PayMoney></PayMoney>
+
+    <div class="line"></div>
 
     <h2>결제수단</h2>
     <PayMethod></PayMethod>
 
-    <button class="pay_btn" type="submit" @click="requestPay">결제하기</button>
+    <div class="btn_case"><button class="pay_btn" type="submit" @click="requestPay">결제하기</button></div>
   </section>
 </template>
 
@@ -231,15 +245,31 @@ const connectSSE = () => {
   margin: 0 auto;
 }
 h2 {
-  margin: 30px 0 10px 0;
+  font-size: 2.2rem;
+  margin: 50px 0 20px 0;
+}
+.btn_case{
+  margin-top: 100px;
+  width: 100%;
+  text-align: center;
 }
 .pay_btn{
     padding: 10px;
-    width: 80px;
-    height: 30px;
-    background-color: antiquewhite;
+    width: 170px;
+    height: 45px;
+    background-color: rgb(240, 240, 240);
     border-radius: 1.2rem;
     text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
-
+.pay_btn:hover{
+  background-color: var(--color-main-bloode);
+  color: #a7ae9c;
+}
+.line{
+  width: 100%;
+  height: 2px;
+  background-color: black;
+}
 </style>

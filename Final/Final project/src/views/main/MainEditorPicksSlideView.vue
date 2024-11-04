@@ -69,7 +69,7 @@ const handleClick = index => {
         @click="handleClick(index)"
       >
         <div class="carousel__item">
-          <img :class="{firstslideImg: index === 0, dfdfdf : index === 1, dfdfdff : index === 2, dfdfdfff : index === 3 }" :src="slide"></img>
+          <img :class="{firstslideImg: index === 0, firstslideImgOne : index === 1, firstslideImgTwo : index === 2 }" :src="slide"></img>
           <!-- <img class="firstslideImg" :src="slide" /> -->
           <!-- <img :class="{lideImg: index === 2}" :src="slide" /> -->
         </div>
@@ -92,7 +92,7 @@ const handleClick = index => {
 }
 
 .Slidebox {
-  padding: 10px;
+  padding: 20px;
   /* background-color: #5f5f5f; */
   
 }
@@ -101,18 +101,17 @@ const handleClick = index => {
   /* background-color: rgb(194, 156, 105); */
   display: flex;
   align-items: flex-end;
-  padding: 20px;
-  /* justify-content: space-around; */
-  /* position: relative;
-
+  /* padding: 20px; */
+  justify-content: center;
+  /* position: relative;*/
   /* background-color: brown; */
   height: 500px;
+  overflow: hidden;
 }
 
 .carousel__item > p {
   position: absolute;
   bottom: 10px; /* 바닥에서의 거리 설정 */
-  left: 10px; /* 왼쪽에서의 거리 설정 */
   color: white; /* 글자 색상 설정 */
   text-align: left;
   font-size: 2.3rem;
@@ -120,20 +119,22 @@ const handleClick = index => {
 }
 
 .firstslideImg {
-  width: 400px; /* 첫 번째 슬라이드 이미지의 너비 조정 */
+  width: 110%; /* 첫 번째 슬라이드 이미지의 너비 조정 */
   height: auto; /* 비율 유지 */
+  background-color: var(--color-main-Lgray);
+  padding: 3%;
 }
 
-.dfdfdf  {
-  width: 250px; /* 나머지 슬라이드 이미지의 너비 조정 */
+.firstslideImgOne  {
+  width: 70%; /* 나머지 슬라이드 이미지의 너비 조정 */
   height: auto; /* 비율 유지 */
-  /* background-color: black; */
+  background-color: var(--color-main-Lgray);
+  padding: 3%;
 }
-.dfdfdff{
-  width: 250px ;
+.firstslideImgTwo{
+  width: 70%;
+  background-color: var(--color-main-Lgray);
+  padding: 3%;
 }
-.dfdfdfff{
-  
-  width: 250px ;
-}
+
 </style>
