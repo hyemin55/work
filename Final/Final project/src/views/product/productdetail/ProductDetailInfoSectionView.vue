@@ -3,7 +3,7 @@ import { GLOBAL_URL } from '@/api/util'
 import router from '@/router'
 import SalseChart from '@/views/product/productdetail/SalseChart.vue'
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -12,19 +12,33 @@ const size = ref(route.query.size)
 // console.log('사이즈', size.value)
 const productData = ref([])
 const reviewData = ref(0)
+const productDataOk = ref([])
 
-onMounted(async () => {
+watchEffect(async () => {
   try {
     const res = await axios.get(
       `${GLOBAL_URL}/detail/detailProductInfo/${idx.value}`,
     )
-    const res2 = await axios.get(`${GLOBAL_URL}/detail/detailReviewInfo/1`)
+    const res2 = await axios.get(
+      `${GLOBAL_URL}/detail/detailReviewInfo/${idx.value}`,
+    )
+    productData.value = res.data
+    reviewData.value = res2.data
     if (res.status === 200 && res2.status === 200) {
-      productData.value = res.data
-      // 여기닷! 수정수정필요
-      reviewData.value = res2.data
-      // console.log('리뷰데이터', reviewData.value)
-      // console.log('데이터내용들', productData.value)
+      // console.log(productData.value.length)
+
+      for (let i = 0; i < productData.value.length; i++) {
+        if (
+          productData.value[i].productId == idx.value &&
+          productData.value[i].size == size.value
+        ) {
+          // 여기닷! 수정수정필요
+          console.log('조건에 맞는 아이는? ', productData.value[i])
+          productDataOk.value = productData.value[i]
+
+          // console.log('데이터내용들', productData.value)
+        }
+      }
     } else {
       console.log('실패')
     }
@@ -33,33 +47,16 @@ onMounted(async () => {
   }
 })
 
-// const getNewList = async () => {
-//   try {
-//     const res = await axios.get(
-//       `${GLOBAL_URL}/api/products/new?pageNum=${pageNum}&size=${size}`,
-//     )
-//     console.log(res)
-//     if (res.status == 200) {
-//       // New_list.value = res.data
-//       console.log(res.data.length)
-//       // for (let i = 0; i < res.data.length; i++) {
-//       //   slides.value.push(res.data[i].images[0])
-//       // }
-//       slides.value = res.data
-//     }
-//   } catch (e) {
-//     console.log('리스트 못 받아오는 오류에요 = ' + e)
-//   }
-// }
-
 const productOptions = ref(['30ml', '50ml', '100ml'])
 
 const productOptionselec = selectedOption => {
-  // console.log(selectedOption)
+  console.log(selectedOption.productId)
   // console.log(props.productId)
   // console.log(props.size)
 
-  router.push({ path: `/productsdetail/${productId}?size=30` })
+  router.push({
+    path: `/productsdetail/${selectedOption.productId}?size=${selectedOption.size}`,
+  })
 }
 
 const BuyNow = () => {}
@@ -81,23 +78,29 @@ const urlShare = () => {
       console.error('URL 복사를 실패했어요ㅠㅡㅠ', err)
     })
 }
+const Average = data => {
+  data = data * 10
+  data = Math.round(data)
+  data = data / 10
+  return data
+}
 </script>
 
 <template>
   <article id="productInfoSection">
-    <ul id="productInfo" v-for="(list, index) in productData" :key="index">
-      <li>{{ list.brandName }}</li>
-      <li>{{ list.productName }}</li>
+    <ul id="productInfo">
+      <li>{{ productDataOk.brandName }}</li>
+      <li>{{ productDataOk.productName }}</li>
       <li>
         1,222찜 수
-        <span style="color: red"
-          >★ {{ reviewData.starAverage }} ({{
+        <span style="color: orange"
+          >★ {{ Average(reviewData.starAverage) }} ({{
             reviewData.reviewCount
           }}
           reviews)</span
         >
       </li>
-      <li>￦ {{ list.price }}</li>
+      <li>￦ {{ productDataOk.price }}</li>
     </ul>
 
     <p class="OptionSelect">옵션선택</p>
@@ -107,10 +110,8 @@ const urlShare = () => {
         v-for="(size, index) in productData"
         :key="index"
       >
-        {{ size.size }}
+        {{ size.size }} ml
       </button>
-      <!-- <button>50ml</button>
-      <button>100ml</button> -->
     </div>
     <div>
       <p>제조일자 : 2024-11-01</p>
