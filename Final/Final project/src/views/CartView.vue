@@ -52,7 +52,7 @@ onMounted(async () => {
 // 로그아웃 시 세션 초기화
 eventBus.on('logout', () => {
   console.log('로그아웃 처리')
-  cartStore.removeItem()
+  cartStore.logOutRemoveItem()
   sessionStorage.removeItem('isCartFetched')
 })
 // 로그인
@@ -63,7 +63,6 @@ const cartLogin = async () => {
     console.log('토큰이 없습니다. 로그인 필요')
     return // 토큰이 없으면 중단
   }
-
   // 이부분 대체 :
   const isCartFetched = sessionStorage.getItem('isCartFetched') === 'true' // 장바구니 로딩 여부 확인
   if (isCartFetched) return // 이미 불러왔다면 중단
@@ -103,26 +102,34 @@ const fetchMemberCart = async () => {
 }
 
 // 결제 하러가기
+
+
 const payRouter = useRouter()
 const doPayment = () => {
-  if (checkList.value.length > 0) {
-    const purchaseProducttDtos = checkList.value.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      name: item.productName,
-    }))
-    const data = {
-      purchaseProductDtos: purchaseProducttDtos,
-      totalPrice: total_amount.value,
-    }
-    console.log(data)
-
-    payRouter.push({
-      path: '/payment',
-      query: { item: encodeURIComponent(JSON.stringify(data)) },
-    })
-  } else {
-    alert('선택된 상품이 없습니다.')
+  if(sessionStorage.getItem('token')){
+    if (checkList.value.length > 0) {
+      const purchaseProducttDtos = checkList.value.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        name: item.productName,
+      }))
+      const data = {
+        purchaseProductDtos: purchaseProducttDtos,
+        totalPrice: total_amount.value,
+      }
+      console.log(data)
+  
+      payRouter.push({
+        path: '/payment',
+        query: { item: encodeURIComponent(JSON.stringify(data)) },
+      })
+    } else {
+      alert('선택된 상품이 없습니다.')
+    }    
+  }
+  else{
+    alert('로그인 후 이용 가능합니다.')
+    payRouter.push({path:'/login2'})
   }
 }
 
@@ -295,6 +302,8 @@ const doPayment = () => {
   justify-content: center;
   width: 512px;
   min-height: 100vh;
+  /* padding-bottom: 174px; */
+  padding-bottom: 230px;
 }
 .cart_total_price > article{
   position: relative;

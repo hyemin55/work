@@ -1,13 +1,23 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import ProductSlide from '@/views/product/productdetail/ProductDetailSlideView.vue'
 import ProductDescription from '@/views/product/productdetail/ProductDescriptionView.vue'
 import ProductDetailReview from '@/views/product/productdetail/ProductDetailReviewView.vue'
 import ProductInfoSection from '@/views/product/productdetail/ProductDetailInfoSectionView.vue'
+import { productDetailStore } from '@/stores/productDetailStore'
 
+const detailStore = productDetailStore()
 const route = useRoute()
 const productId = computed(() => route.params.idx)
+const productSize = computed(() => route.query.size)
+
+// console.log('메인디테일페이지의 productId = ', productId.value)
+// console.log('메인디테일페이지의 productSize = ', productSize.value)
+watchEffect(() => {
+  detailStore.setIdx(productId.value, productSize.value)
+  // console.log('제품아이디 = ', DetailStore.productIdx)
+})
 </script>
 
 <template>

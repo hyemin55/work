@@ -8,7 +8,6 @@ import { useUserStore } from '@/stores/Login'
 
 // 로그인 pinia
 const userStore = useUserStore()
-const userID = computed(() => userStore.userId)
 const userLogin = computed(() => userStore.loginCheck)
 
 // 장바구니 추가
@@ -39,8 +38,11 @@ const addToCart = () => {
 
 // 찜목록 추가
 const redHeart = ref(false)
+const iconClick = ref(false) // 찜하트 css
+
 const addToWishlist = () => {
   redHeart.value = !redHeart.value
+  iconClick.value = !iconClick.value // 찜하트 css
 }
 
 // 단위 변경
@@ -106,6 +108,13 @@ const navDetailProduct = () => {
             class="icon"
             src="@/assets/img/icon/free-icon-font-heart-line.svg"
             alt=""
+            :style="{ display: iconClick ? 'none' : 'flex' }"
+          />
+          <img
+            class="icon"
+            src="@/assets/img/icon/free-icon-font-heart.svg"
+            alt=""
+            :style="{ display: iconClick ? 'flex' : 'none' }"
           />
         </li>
       </ul>
@@ -126,7 +135,7 @@ const navDetailProduct = () => {
               src="@/assets/img/icon/free-icon-font-star.svg"
               alt=""
             />
-            별점
+            4.5
           </span>
           (<span>{{ reviewCount }}</span
           >)
@@ -184,16 +193,17 @@ const navDetailProduct = () => {
   opacity: 0;
 }
 .product_img > ul > li:hover {
-  background-color: var(--color-main-bloode);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: var(--color-main-gray);
+  /* background-color:#fdf4f1; */
+  border: 2px solid rgba(0, 0, 0, 0.05);
 }
 .product_img > ul > li:nth-child(1) {
   margin-right: -7px;
 }
 
 .wish_push.active {
-  background-color: var(--color-main-bloode);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  background-color: var(--color-main-gray);
+  border: 2px solid rgba(0, 0, 0, 0.05);
   opacity: 1;
 }
 

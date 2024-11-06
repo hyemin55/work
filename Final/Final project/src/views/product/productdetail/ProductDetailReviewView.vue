@@ -1,12 +1,14 @@
 <script setup>
-import img1 from '@/assets/img/빵빵덕세안.png'
-import img2 from '@/assets/img/빵빵덕세안핑크.png'
 import { ref } from 'vue'
 import ReviewComponent from '@/components/ReviewComponent.vue'
 import ProductDetailReviewSlide from './ProductDetailReviewSlideView.vue'
+import { productDetailStore } from '@/stores/productDetailStore'
 
 const SortStar = ref(true)
 const Latest = ref(true)
+const detailStore = productDetailStore
+const idx = detailStore.productIdx
+const size = detailStore.productSize
 
 const SortStarHandle = () => {
   SortStar.value = !SortStar.value

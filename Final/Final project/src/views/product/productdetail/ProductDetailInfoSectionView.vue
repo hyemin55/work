@@ -1,44 +1,56 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util'
-import router from '@/router'
 import SalseChart from '@/views/product/productdetail/SalseChart.vue'
 import axios from 'axios'
-import { onMounted, ref, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, watchEffect } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { formatPrice } from '@/FormatPrice'
+import { productDetailStore } from '@/stores/productDetailStore'
+import _ProductDetailView from './_ProductDetailView.vue'
 
 const route = useRoute()
-const idx = ref(route.params.idx)
-const size = ref(route.query.size)
-// console.log('사이즈', size.value)
+// const router = useRouter()
+
 const productData = ref([])
 const reviewData = ref(0)
 const productDataOk = ref([])
+const detailStore = productDetailStore()
+const idx = detailStore.productIdx
+const size = detailStore.productSize
+
+const productOptionselec = sizedata => {
+  // console.log(sizedata.productId)
+  detailStore.setIdx(sizedata.productId, sizedata.size)
+}
 
 watchEffect(async () => {
   try {
-    const res = await axios.get(
-      `${GLOBAL_URL}/detail/detailProductInfo/${idx.value}`,
-    )
-    const res2 = await axios.get(
-      `${GLOBAL_URL}/detail/detailReviewInfo/${idx.value}`,
-    )
+    const res = await axios.get(`${GLOBAL_URL}/detail/detailProductInfo/${idx}`)
+    const res2 = await axios.get(`${GLOBAL_URL}/detail/detailReviewInfo/${idx}`)
     productData.value = res.data
     reviewData.value = res2.data
+    console.log(res2.data.starAverage)
+    console.log(res2.data.reviewCount)
     if (res.status === 200 && res2.status === 200) {
-      // console.log(productData.value.length)
+      // console.log(productData.value)
 
       for (let i = 0; i < productData.value.length; i++) {
         if (
-          productData.value[i].productId == idx.value &&
-          productData.value[i].size == size.value
+          productData.value[i].productId == idx &&
+          productData.value[i].size == size
         ) {
           // 여기닷! 수정수정필요
-          console.log('조건에 맞는 아이는? ', productData.value[i])
+          // console.log('조건에 맞는 아이는? ', productData.value[i])
           productDataOk.value = productData.value[i]
 
           // console.log('데이터내용들', productData.value)
         }
       }
+      console.log('reviewData.value.starAverage', reviewData.value.starAverage)
+      detailStore.setReview(
+        reviewData.value.reviewCount,
+        reviewData.value.starAverage,
+      )
     } else {
       console.log('실패')
     }
@@ -46,18 +58,6 @@ watchEffect(async () => {
     console.log('실패' + err)
   }
 })
-
-const productOptions = ref(['30ml', '50ml', '100ml'])
-
-const productOptionselec = selectedOption => {
-  console.log(selectedOption.productId)
-  // console.log(props.productId)
-  // console.log(props.size)
-
-  router.push({
-    path: `/productsdetail/${selectedOption.productId}?size=${selectedOption.size}`,
-  })
-}
 
 const BuyNow = () => {}
 
@@ -100,17 +100,17 @@ const Average = data => {
           reviews)</span
         >
       </li>
-      <li>￦ {{ productDataOk.price }}</li>
+      <li>{{ formatPrice(productDataOk.price) }}</li>
     </ul>
 
     <p class="OptionSelect">옵션선택</p>
     <div id="productOption">
       <button
-        @click="productOptionselec(size)"
-        v-for="(size, index) in productData"
+        @click="productOptionselec(sizedata)"
+        v-for="(sizedata, index) in productData"
         :key="index"
       >
-        {{ size.size }} ml
+        {{ sizedata.size }} ml
       </button>
     </div>
     <div>

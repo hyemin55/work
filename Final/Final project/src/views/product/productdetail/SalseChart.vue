@@ -1,3 +1,5 @@
+<script setup></script>
+
 <template>
   <figure id="salseChart">
     <h1>시세</h1>
@@ -28,8 +30,6 @@
     </div>
   </figure>
 </template>
-
-<script setup></script>
 
 <style scoped>
 #salseChart {

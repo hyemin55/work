@@ -1,106 +1,100 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util'
+import { productDetailStore } from '@/stores/productDetailStore'
 import axios from 'axios'
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const idx = ref(route.params.idx)
 const ReviewList = ref([])
+const detailStore = productDetailStore()
+const idx = detailStore.productIdx
+const size = detailStore.productSize
 
 const star_list = ['★', '★★', '★★★', '★★★★', '★★★★★']
-// onMounted(async () => {
-//   const res = await axios.get(`${GLOBAL_URL}/detail/review/${idx.value}`)
-// const res = await axios.get(`${GLOBAL_URL}/detail/review/${idx}`)
-// ReviewList.value = res.data
-// console.log('별이 5개 맞아?', ReviewList.value[0].star)
-// })
 
 let flag = 0
-const reviewCount = 61
+// const reviewCount = ref(0)
 const totalPages = ref(10)
+const totalPageGroup = ref(0)
 const pageSize = 5
-const currPage = ref(1)
+const currentPage = ref(1)
 const currentPageGroup = ref(0)
 const startPage = ref(0)
 const endPage = ref(0)
+const reviewCount = ref(80)
 
-totalPages.value = Math.ceil(reviewCount / pageSize)
-// console.log('totalPages = ', totalPages.value)
-const totalPageGroup = Math.floor(totalPages.value / 10)
-// console.log('totalPageGroup = ', totalPageGroup)
-
-startPage.value = currentPageGroup.value * 10 + 1
-console.log('startPage = ', startPage.value)
-
-// 토탈페이지그룹과 현재페이지 중 작은수를 작은 수를 출력
-endPage.value = Math.min(currentPageGroup.value * 10 + 10, totalPages.value)
-// console.log('endPage = ', endPage.value)
+onMounted(async () => {
+  const res = await axios.get(`${GLOBAL_URL}/detail/review/${idx}`)
+  // console.log('순서시작', res.data.length)
+  // console.log('순서시작', res.data)
+  // reviewCount.value = res.data.length
+  totalPages.value = Math.ceil(reviewCount.value / pageSize)
+  totalPageGroup.value = Math.floor(totalPages.value / 10)
+  viewCurrentPage()
+})
 
 // 이전페이지
-const backPage = async currentPage => {
-  console.log(currentPage)
-  currentPageGroup.value = Math.floor((currentPage - 1) / 10)
-  if (currentPageGroup.value > 0) {
-    currentPageGroup.value -= 1
-    console.log('이전페이지 = ', currentPageGroup.value)
-    startPage.value = currentPageGroup.value * 10 + 1
-    endPage.value = Math.min(startPage.value + 9, totalPages.value)
-    const res = await axios.get(
-      `${GLOBAL_URL}/detail/review/${idx.value}?pageNum=${currentPage - 1}`,
-    )
-    ReviewList.value = res.data
-  } else {
+const backPage = async () => {
+  currentPage.value = startPage.value - 10
+  if (currentPageGroup.value <= 0) {
     console.log('첫페이지입니다.')
     alert('첫페이지입니다.')
+    return
   }
+  viewCurrentPage()
 }
 
 // 다음페이지
-const nextPage = async currentPage => {
-  currentPageGroup.value = Math.floor((currentPage - 1) / 10)
-  console.log(currentPageGroup.value)
-  if (currentPageGroup.value < totalPageGroup) {
-    currentPageGroup.value += 1
-    // console.log('currentPageGroup', currentPageGroup.value)
-    startPage.value = currentPageGroup.value * 10 + 1
-    // console.log('startPage', startPage.value)
-    endPage.value = Math.min(startPage.value + 9, totalPages.value)
-    // console.log('endPage', endPage.value)
-    // console.log('다음페이지 = ', currentPageGroup.value)
-    const res = await axios.get(
-      `${GLOBAL_URL}/detail/review/${idx.value}?pageNum=${currentPage - 1}`,
-    )
-    // console.log(res.data)
-    ReviewList.value = res.data
-    // console.log('currentPageGroup 후', currentPageGroup.value)
-    // console.log('startPage 후', startPage.value)
-    // viewCurrentPage(currentPage + 1)
-  } else {
+const nextPage = async () => {
+  currentPage.value = endPage.value + 1
+  console.log('현재페이지그룹', currentPageGroup.value)
+  if (currentPageGroup.value >= totalPageGroup.value) {
     console.log('마지막페이지입니다.')
     alert('마지막페이지입니다.')
+    return
   }
+  viewCurrentPage()
+  // console.log('현재페이지그룹후후후', currentPageGroup.value)
 }
-const viewCurrentPage = async currentPage => {
-  // console.log(currentPage - 1)
-  currentPageGroup.value = Math.floor((currentPage - 1) / 10)
-  console.log('현재페이지', currPage.value)
-  if (currentPageGroup.value == currentPage - 1 && flag) {
+
+// 선택페이지
+const goToPage = page => {
+  if (currentPage.value == page) {
+    console.log('현재페이지입니다.')
+    return
+  }
+  currentPage.value = page
+  viewCurrentPage()
+}
+
+// 현재페이지
+const viewCurrentPage = async () => {
+  currentPageGroup.value = Math.floor((currentPage.value - 1) / 10)
+  // console.log('현재페이지', currentPage.value)
+  // console.log('현재페이지그룹', currentPageGroup.value)
+
+  if (currentPageGroup.value == currentPage.value - 1 && flag) {
     flag = true
-    console.log('처음이라..')
+    // console.log('처음이라..')
     return
   } else {
     const res = await axios.get(
-      `${GLOBAL_URL}/detail/review/${idx.value}?pageNum=${currentPage - 1}`,
+      `${GLOBAL_URL}/detail/review/${idx}?pageNum=${currentPage.value - 1}`,
     )
-    console.log(res.data)
+    // console.log('리뷰리스트', res.data)
     ReviewList.value = res.data
-    // startPage.value = currentPageGroup.value * 10 + 1
+    startPage.value = currentPageGroup.value * 10 + 1
+    endPage.value = Math.min(startPage.value + 9, totalPages.value)
   }
 }
-watchEffect(() => {
-  viewCurrentPage(currPage.value)
-})
+const activePage = pageNum => {
+  if (currentPageGroup.value <= 0) {
+    return currentPage.value === pageNum
+  } else {
+    return currentPage.value - 1 - currentPageGroup.value * 10 === pageNum - 1
+  }
+}
 </script>
 
 <template>
@@ -132,18 +126,27 @@ watchEffect(() => {
     </ul>
   </div>
 
+  <div
+    id="userReviewList"
+    class="border noUserReviewList"
+    v-if="reviewCount == 0 || reviewCount == null"
+  >
+    <img src="@/assets/img/free-icon-font-note-sticky-9798415.svg" alt="" />
+    <p>아직 리뷰가 등록되지 않았어요 ㅠㅡㅠ</p>
+  </div>
+
   <ul id="totalPages">
-    <li @click="backPage(startPage)">이전</li>
+    <li @click="backPage">이전</li>
     <li
       class="totalPages"
       v-for="pageNum in endPage - startPage + 1"
       v-bind:key="pageNum"
-      @click="currPage = pageNum"
-      :class="{ active: viewCurrentPage === pageNum - 1 }"
+      @click="goToPage(startPage + pageNum - 1)"
+      :class="{ active: activePage(pageNum) }"
     >
       {{ startPage + pageNum - 1 }}
     </li>
-    <li @click="nextPage(endPage)">다음</li>
+    <li @click="nextPage">다음</li>
   </ul>
 </template>
 
@@ -158,6 +161,26 @@ watchEffect(() => {
   height: 0.1px;
   width: var(--main-max-width);
   display: flex;
+}
+.noUserReviewList > img {
+  width: 100px;
+  color: var(--color-main-Lgray);
+  filter: grayscale(100%);
+  margin-top: 20px;
+}
+.noUserReviewList::before {
+  position: absolute;
+  content: '';
+  border: 0.5px dashed var(--color-main-Lgray);
+  height: 0.1px;
+  width: var(--main-max-width);
+  display: flex;
+  /* top: 20px; */
+}
+.noUserReviewList {
+  text-align: center;
+  height: 150px;
+  background-color: antiquewhite;
 }
 .userReviewStar {
   font-size: 2rem;
@@ -219,6 +242,9 @@ watchEffect(() => {
   margin-top: 30px;
   /* background-color: rgb(161, 160, 158); */
 }
+#totalPages li {
+  cursor: pointer;
+}
 .totalPages {
   /* background-color: rgb(236, 207, 172); */
   display: flex;
@@ -226,11 +252,11 @@ watchEffect(() => {
   justify-content: center;
   /* width: 10%; */
   /* margin: 0 1%; */
-  cursor: pointer;
   padding: 1%;
 }
-.clickpageNum {
-  color: red;
-  font-size: large;
+.totalPages.active {
+  color: var(--color-main-bloode);
+  font-weight: 600;
+  text-decoration: underline;
 }
 </style>

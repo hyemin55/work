@@ -4,10 +4,13 @@ import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 import axios from 'axios'
 import { GLOBAL_URL } from '@/api/util'
+import { productDetailStore } from '@/stores/productDetailStore'
 const currentSlide = ref(0)
 
 const slideTo = nextSlide => (currentSlide.value = nextSlide)
 const list = ref([])
+const detailStore = productDetailStore()
+const idx = detailStore.productIdx
 
 const galleryConfig = {
   itemsToShow: 1,
@@ -21,19 +24,10 @@ const thumbnailsConfig = {
   wrapAround: true,
 }
 
-const props = defineProps({
-  productId: {
-    type: Object,
-    required: true,
-  },
-})
-
 onMounted(async () => {
   try {
-    const res = await axios.get(
-      `${GLOBAL_URL}/detail/images/${props.productId}`,
-    )
-    console.log(res)
+    const res = await axios.get(`${GLOBAL_URL}/detail/images/${idx}`)
+    // console.log(res)
     if (res.status == 200) {
       list.value = res.data
       // console.log(list.value)

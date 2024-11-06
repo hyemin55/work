@@ -22,11 +22,17 @@ export const useCartStore = defineStore('cart', {
       }
       localStorage.setItem('cartItems', JSON.stringify(this.cartItems))
     },
-    // 장바구니 삭제
+    // 장바구니 삭제(체크가 된것만 삭제하는 로직)
     removeItem() {
       this.cartItems = this.cartItems.filter(item => !item.isChecked)
       localStorage.setItem('cartItems', JSON.stringify(this.cartItems))
     },
+    // 장바구니에 들어있는것 전체삭제
+    logOutRemoveItem() {
+      localStorage.removeItem('cartItems')
+      this.cartItems = [];
+    },
+
 
     // 토글 전체선택
     toggleAllCheck(isChecked) {

@@ -9,7 +9,9 @@ const route = useRoute()
 <template>
   <Header></Header>
 
-  <RouterView class="min-height" />
+  <div class="min-height">
+    <RouterView />
+  </div>
 
   <Footer></Footer>
 </template>

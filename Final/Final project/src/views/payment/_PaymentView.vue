@@ -74,7 +74,8 @@ onMounted(async () => {
 
 const requestPay = async () => {
   const IMP = window.IMP
-  IMP.init(`${GLOBAL_IMP_KEY}`) // 키다
+  IMP.init('imp25637745')
+  // IMP.init(`${GLOBAL_IMP_KEY}`) // 키다
   IMP.request_pay(
     {
       pg: 'html5_inicis',
@@ -193,7 +194,12 @@ const requestPay = async () => {
 }
 // 알림 이벤트 소스 (항시 대기중)
 const connectSSE = () => {
-  const sse = new EventSource(`${GLOBAL_URL}/api/notification/payment/completed/subscriber`)
+  const sse = new EventSource(`${GLOBAL_URL}/api/notification/payment/completed/subscriber`,{
+    headers: {
+        'Content-Type': 'text/event-stream',
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
+  })
   console.log('start sse')
   console.log(sse)
 
@@ -214,8 +220,12 @@ const connectSSE = () => {
     }
   })
 }
-</script>
 
+const payroute = useRoute();
+const payData = JSON.parse(decodeURIComponent(payroute.query.item));
+
+
+</script>
 
 <template>
   <section id="payment_wrapper">
@@ -223,7 +233,7 @@ const connectSSE = () => {
     <PayUserInfo></PayUserInfo>
 
     <h2>주문 상품</h2>
-    <PayProduct></PayProduct>
+    <PayProduct :productInfo="payData"></PayProduct>
     
     <h2>결제금액</h2>
     <div class="line"></div>

@@ -1,33 +1,41 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
 import axios from 'axios';
-import { watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 
-// watchEffect(async()=>{
-//   try{
-//     const res = await axios.post(`${GLOBAL_URL}`, {
-//       header:{
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-//       }
-//     })
-//     console.log("유저 정보", res)
-//   }
-//   catch(error){
-//     console.error("Error:", error)
-//   }
-// })
+const userInfo = ref([]);
+const post = ref();
+
+watchEffect(async()=>{
+  try{
+    const res = await axios.get(`${GLOBAL_URL}/api/payment/buyer-info`, {
+      headers:{
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      }
+    })
+    if(res.status == 200){
+      userInfo.value = res.data    
+      post.value = userInfo.value.buyerAddress.addr + " " + userInfo.value.buyerAddress.postCode
+    }
+  }
+  catch(error){
+    console.error("Error:", error)
+  }
+})
+
 </script>
 
 <template>
   <section id="pay_user_info">
     <form action="#" method="post">
       <div>
-        <p class="info_text" for="recipient"><b>주문자</b> : 강도현</p>
+        <p class="info_text" for="recipient"><b>이름</b> : {{ userInfo.buyerName }}</p>
+        <p><b>이메일</b> : {{ userInfo.buyerEmail }}</p>
       </div>
       
       <div style="display: flex; align-items: end;">
-        <p class="info_text" for="phone"><b>연락처</b> : 010-1101-2130</p>
+        <p class="info_text" for="phone"><b>연락처</b> : {{ userInfo.buyerTel }}</p>
         <span class="safe_number">
           <input type="checkbox" name="safePhone" id="safePhone">
           <label class="pointer" for="safePhone">안심번호</label>
@@ -35,7 +43,7 @@ import { watchEffect } from 'vue';
       </div>
   
       <div style="display: flex; align-items: end;">
-        <p class="info_text" for="address"><b>주소</b> : 그림 컴퓨터어학원</p>
+        <p class="info_text" for="address"><b>주소</b> : {{ post }}</p>
         <p class="pointer chage_adress">
           배송지 변경
         </p>
