@@ -1,89 +1,114 @@
 <script setup>
-import { GLOBAL_URL } from '@/api/util'
-import SalseChart from '@/views/product/productdetail/SalseChart.vue'
-import axios from 'axios'
-import { ref, watchEffect } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { formatPrice } from '@/FormatPrice'
-import { productDetailStore } from '@/stores/productDetailStore'
-import _ProductDetailView from './_ProductDetailView.vue'
+import { GLOBAL_URL } from '@/api/util';
+import SalseChart from '@/views/product/productdetail/SalseChart.vue';
+import axios from 'axios';
+import { ref, watchEffect, watch, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { formatPrice } from '@/FormatPrice';
+import { productDetailStore } from '@/stores/ProductDetailStore';
+import _ProductDetailView from './_ProductDetailView.vue';
 
-const route = useRoute()
+const route = useRoute();
 // const router = useRouter()
 
-const productData = ref([])
-const reviewData = ref(0)
-const productDataOk = ref([])
-const detailStore = productDetailStore()
-const idx = detailStore.productIdx
-const size = detailStore.productSize
+const productData = ref([]);
+const reviewData = ref(0);
+const productDataOk = ref([]);
+const detailStore = productDetailStore();
+const idx = ref(detailStore.productIdx);
+const size = ref(detailStore.productSize);
 
-const productOptionselec = sizedata => {
-  // console.log(sizedata.productId)
-  detailStore.setIdx(sizedata.productId, sizedata.size)
-}
+const emit = defineEmits();
 
-watchEffect(async () => {
+// 1. 클릭한 옵션값을 idx에 담아준다.
+const productOptionSelect = async sizedata => {
+  // console.log(sizedata.productId);
+  // console.log(sizedata);
+  idx.value = sizedata.productId;
+  size.value = sizedata.size;
+};
+
+// 3. 옵션값을 클릭하면 watch에서 추적하는 idx값이 바뀌고 doLoad를 호출한다.
+const doLoad = async () => {
+  // console.log(idx.value);
   try {
-    const res = await axios.get(`${GLOBAL_URL}/detail/detailProductInfo/${idx}`)
-    const res2 = await axios.get(`${GLOBAL_URL}/detail/detailReviewInfo/${idx}`)
-    productData.value = res.data
-    reviewData.value = res2.data
-    console.log(res2.data.starAverage)
-    console.log(res2.data.reviewCount)
-    if (res.status === 200 && res2.status === 200) {
+    const res_product_data = await axios.get(`${GLOBAL_URL}/detail/detailProductInfo/${idx.value}`);
+    const res_review_data = await axios.get(`${GLOBAL_URL}/detail/detailReviewInfo/${idx.value}`);
+
+    productData.value = res_product_data.data;
+    reviewData.value = res_review_data.data;
+
+    // console.log(`res_product_data.data = ${JSON.stringify(res_product_data.data)}`);
+    // console.log(`res_review_data.data = ${JSON.stringify(res_review_data.data)}`);
+
+    if (res_product_data.status === 200 && res_review_data.status === 200) {
       // console.log(productData.value)
-
       for (let i = 0; i < productData.value.length; i++) {
-        if (
-          productData.value[i].productId == idx &&
-          productData.value[i].size == size
-        ) {
-          // 여기닷! 수정수정필요
+        if (productData.value[i].productId == idx.value && productData.value[i].size == size.value) {
           // console.log('조건에 맞는 아이는? ', productData.value[i])
-          productDataOk.value = productData.value[i]
-
-          // console.log('데이터내용들', productData.value)
+          productDataOk.value = productData.value[i];
+          // console.log('데이터내용들', productData.value);
         }
       }
-      console.log('reviewData.value.starAverage', reviewData.value.starAverage)
-      detailStore.setReview(
-        reviewData.value.reviewCount,
-        reviewData.value.starAverage,
-      )
+      // console.log('reviewData.value.starAverage', reviewData.value.starAverage);
+
+      // 통신하고 나서 피니아 업데이트 하면 리뷰 컴포넌트 내용 바뀐다.
+      detailStore.setReview(reviewData.value.reviewCount, reviewData.value.starAverage);
+      // console.log(productDataOk.value.productId);
+      // console.log(productDataOk.value.size);
+      // console.log(sizedata.size);
+      detailStore.setIdx(productDataOk.value.productId, productDataOk.value.size);
+
+      const newStatus = true;
+      emit('onProductInfoLoaded', newStatus);
     } else {
-      console.log('실패')
+      console.log('실패');
     }
   } catch (err) {
-    console.log('실패' + err)
+    console.log('실패' + err);
   }
-})
+};
 
-const BuyNow = () => {}
+const BuyNow = () => {};
 
-const redHeart = ref(false)
+// 찜 클릭 이벤트
+const redHeart = ref(false);
 const addToWishlist = () => {
-  alert('༼ つ ◕_◕ ༽つ 찜~')
-  redHeart.value = !redHeart.value
-}
+  redHeart.value = !redHeart.value;
+  if (redHeart.value == true) alert('༼ つ ◕_◕ ༽つ 찜~');
+};
 
+// URL 공유 클릭 이벤트
 const urlShare = () => {
-  const url = window.location.href
+  const url = window.location.href;
   navigator.clipboard
     .writeText(url)
     .then(() => {
-      alert('URL이 클립보드에 복사되었습니다.')
+      alert('URL이 클립보드에 복사되었습니다.');
     })
     .catch(err => {
-      console.error('URL 복사를 실패했어요ㅠㅡㅠ', err)
-    })
-}
+      console.error('URL 복사를 실패했어요ㅠㅡㅠ', err);
+    });
+};
+
+// 리뷰별점평균을 소수점 1자리만 남긴다.
 const Average = data => {
-  data = data * 10
-  data = Math.round(data)
-  data = data / 10
-  return data
-}
+  data = data * 10;
+  data = Math.round(data);
+  data = data / 10;
+  return data;
+};
+
+// 2. 옵션값을 클릭하면 페이지 리로드를 위해 idx를 추적한다.
+watch(
+  [idx],
+  (newIdx, _) => {
+    doLoad();
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
 
 <template>
@@ -93,25 +118,14 @@ const Average = data => {
       <li>{{ productDataOk.productName }}</li>
       <li>
         1,222찜 수
-        <span style="color: orange"
-          >★ {{ Average(reviewData.starAverage) }} ({{
-            reviewData.reviewCount
-          }}
-          reviews)</span
-        >
+        <span style="color: orange">★ {{ Average(reviewData.starAverage) }} ({{ reviewData.reviewCount }} reviews)</span>
       </li>
       <li>{{ formatPrice(productDataOk.price) }}</li>
     </ul>
 
     <p class="OptionSelect">옵션선택</p>
     <div id="productOption">
-      <button
-        @click="productOptionselec(sizedata)"
-        v-for="(sizedata, index) in productData"
-        :key="index"
-      >
-        {{ sizedata.size }} ml
-      </button>
+      <button @click="productOptionSelect(sizedata)" v-for="(sizedata, index) in productData" :key="index">{{ sizedata.size }} ml</button>
     </div>
     <div>
       <p>제조일자 : 2024-11-01</p>
@@ -124,23 +138,11 @@ const Average = data => {
         <img src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" />
         장바구니 추가
       </button>
-      <button
-        class="wish_push"
-        :class="{ active: redHeart }"
-        @click.stop="addToWishlist"
-      >
-        <img
-          class="icon"
-          src="@/assets/img/icon/free-icon-font-heart-line.svg"
-          alt=""
-        />
+      <button class="wish_push" :class="{ active: redHeart }" @click.stop="addToWishlist">
+        <img class="icon" src="@/assets/img/icon/free-icon-font-heart-line.svg" alt="" />
       </button>
       <button class="wish_push" @click="urlShare">
-        <img
-          src="@/assets/img/icon/free-icon-font-share-3917574.png"
-          class="icon"
-          alt=""
-        />
+        <img src="@/assets/img/icon/free-icon-font-share-3917574.png" class="icon" alt="" />
       </button>
     </div>
 
@@ -153,7 +155,7 @@ const Average = data => {
 #productInfoSection {
   /* background-color: aquamarine; */
   width: 50%;
-  margin: 20px 0 25px 0;
+  margin: 20px 0 25px 30px;
   /* background-color: yellow; */
 }
 #productInfo {

@@ -1,56 +1,38 @@
 <script setup>
-import 'vue3-carousel/dist/carousel.css'
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import { ref } from 'vue'
-import img1 from '@/assets/img/빵빵덕세안.png'
-import img2 from '@/assets/img/빵빵덕세안핑크.png'
+import 'vue3-carousel/dist/carousel.css';
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+import { ref, watch, watchEffect } from 'vue';
+import { productDetailStore } from '@/stores/ProductDetailStore';
+import axios from 'axios';
+import { GLOBAL_URL } from '@/api/util';
 
-const slides = ref([
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-  img1,
-  img2,
-])
+const detailStore = productDetailStore();
+const idx = ref(detailStore.productIdx);
+const slides = ref([]);
+
+const reviewImgsData = async () => {
+  console.log(idx.value);
+  const reviewImageList = await axios.get(`${GLOBAL_URL}/detail/reviewImageList/${idx.value}`);
+  // console.log('reviewImgsData', reviewImageList.data);
+  // console.log('reviewImgsData', reviewImageList.data.length);
+  slides.value = reviewImageList.data;
+};
+watchEffect(() => {
+  idx;
+  reviewImgsData();
+});
 
 const config = {
   itemsToShow: 7.5,
   snapAlign: 'start',
   wrapAround: true,
-}
+};
 </script>
 
 <template>
   <Carousel v-bind="config" id="ReviewSlide">
     <Slide v-for="(slide, index) in slides" :key="index">
-      <div class="carousel__item"><img :src="slide" alt="" /></div>
+      <div class="carousel__item"><img :src="`${GLOBAL_URL}/api/file/download/${slide.filename}`" alt="" /></div>
     </Slide>
 
     <template #addons>
@@ -67,6 +49,7 @@ const config = {
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+  /* background-color: aqua; */
 }
 .carousel__item {
   /* background-color: aqua; */
@@ -74,6 +57,7 @@ const config = {
   width: 150px;
   border: 0.5px solid var(--color-main-Lgray);
   border-radius: 10px;
+  gap: 10px;
 }
 .carousel__item > img {
   padding: 3px;

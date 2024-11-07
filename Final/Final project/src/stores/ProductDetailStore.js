@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const productDetailStore = defineStore('productDetailStore', {
   state: () => ({
@@ -9,17 +9,17 @@ export const productDetailStore = defineStore('productDetailStore', {
   }),
   actions: {
     setIdx(idx, size) {
-      this.productIdx = idx
-      this.productSize = size
-      console.log('피니아스토어의 this.productIdx = ', this.productIdx)
-      console.log('피니아스토어의 this.productIdx = ', this.productSize)
+      this.productIdx = idx;
+      this.productSize = size;
+      console.log('피니아스토어의 this.productIdx = ', this.productIdx);
+      console.log('피니아스토어의 this.productSize = ', this.productSize);
     },
     setReview(reviewCount, starAverage) {
-      this.reviewCount = reviewCount
-      this.starAverage = starAverage.toFixed(1)
+      this.reviewCount = reviewCount;
+      this.starAverage = Number(starAverage.toFixed(1));
 
-      console.log('피니아스토어의 this.reviewCount = ', this.reviewCount)
-      console.log('피니아스토어의 this.starAverage = ', this.starAverage)
+      console.log('피니아스토어의 this.reviewCount = ', this.reviewCount);
+      console.log('피니아스토어의 this.starAverage = ', this.starAverage);
     },
   },
-})
+});

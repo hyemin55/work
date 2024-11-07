@@ -158,8 +158,8 @@ const handleClick = index => {
   filter: saturate(0.5);
 }
 .Slidebox:hover .carousel__item > img {
-  /* transition: opacity 0.3s ease, visibility 0s; 상세 정보가 바로 보이도록 설정 */
-  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease, visibility 0s; /*상세 정보가 바로 보이도록 설정*/
+  background-color: rgba(0, 0, 0, 0.4);
 }
 .firstslideImg {
   width: 110%; /* 첫 번째 슬라이드 이미지의 너비 조정 */

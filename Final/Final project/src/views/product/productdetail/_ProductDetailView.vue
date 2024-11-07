@@ -1,23 +1,27 @@
 <script setup>
-import { computed, watchEffect } from 'vue'
-import { useRoute } from 'vue-router'
-import ProductSlide from '@/views/product/productdetail/ProductDetailSlideView.vue'
-import ProductDescription from '@/views/product/productdetail/ProductDescriptionView.vue'
-import ProductDetailReview from '@/views/product/productdetail/ProductDetailReviewView.vue'
-import ProductInfoSection from '@/views/product/productdetail/ProductDetailInfoSectionView.vue'
-import { productDetailStore } from '@/stores/productDetailStore'
+import { computed, ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+import ProductSlide from '@/views/product/productdetail/ProductDetailSlideView.vue';
+import ProductDescription from '@/views/product/productdetail/ProductDescriptionView.vue';
+import ProductDetailReview from '@/views/product/productdetail/ProductDetailReviewView.vue';
+import ProductInfoSection from '@/views/product/productdetail/ProductDetailInfoSectionView.vue';
+import { productDetailStore } from '@/stores/ProductDetailStore';
 
-const detailStore = productDetailStore()
-const route = useRoute()
-const productId = computed(() => route.params.idx)
-const productSize = computed(() => route.query.size)
+const detailStore = productDetailStore();
+const route = useRoute();
+const productId = computed(() => route.params.idx);
+const productSize = computed(() => route.query.size);
 
-// console.log('메인디테일페이지의 productId = ', productId.value)
-// console.log('메인디테일페이지의 productSize = ', productSize.value)
-watchEffect(() => {
-  detailStore.setIdx(productId.value, productSize.value)
-  // console.log('제품아이디 = ', DetailStore.productIdx)
-})
+const isProductInfoLoaded = ref(false); // 상태 변수
+
+// ProductInfoSection이 로드 완료된 후 호출되는 메소드
+const handleProductInfoLoaded = newStatus => {
+  isProductInfoLoaded.value = newStatus;
+  console.log(isProductInfoLoaded.value);
+};
+
+//
+detailStore.setIdx(productId.value, productSize.value);
 </script>
 
 <template>
@@ -26,10 +30,14 @@ watchEffect(() => {
   <section id="product">
     <main id="productMain">
       <ProductSlide :productId="productId" />
-      <ProductInfoSection />
+
+      <!-- ProductInfoSection이 로드되었을 때 나머지 컴포넌트를 렌더링 -->
+      <ProductInfoSection @onProductInfoLoaded="handleProductInfoLoaded" />
     </main>
-    <ProductDescription id="ProductDescription" />
-    <ProductDetailReview id="ProductDetailReview" />
+
+    <!-- 조건부 렌더링: ProductInfoSection이 로드되면 나머지 컴포넌트를 렌더링 -->
+    <ProductDescription v-if="isProductInfoLoaded" id="ProductDescription" />
+    <ProductDetailReview v-if="isProductInfoLoaded" id="ProductDetailReview" />
   </section>
 </template>
 

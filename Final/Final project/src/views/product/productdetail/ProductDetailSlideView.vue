@@ -1,64 +1,57 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { Carousel, Slide, Navigation } from 'vue3-carousel'
-import 'vue3-carousel/dist/carousel.css'
-import axios from 'axios'
-import { GLOBAL_URL } from '@/api/util'
-import { productDetailStore } from '@/stores/productDetailStore'
-const currentSlide = ref(0)
+import { onMounted, ref } from 'vue';
+import { Carousel, Slide, Navigation } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css';
+import axios from 'axios';
+import { GLOBAL_URL } from '@/api/util';
+import { productDetailStore } from '@/stores/ProductDetailStore';
+const currentSlide = ref(0);
 
-const slideTo = nextSlide => (currentSlide.value = nextSlide)
-const list = ref([])
-const detailStore = productDetailStore()
-const idx = detailStore.productIdx
+const slideTo = nextSlide => (currentSlide.value = nextSlide);
+const list = ref([]);
+const detailStore = productDetailStore();
+const idx = detailStore.productIdx;
 
 const galleryConfig = {
   itemsToShow: 1,
   mouseDrag: false,
   touchDrag: false,
   wrapAround: false,
-}
+};
 
 const thumbnailsConfig = {
   itemsToShow: 6,
   wrapAround: true,
-}
+};
 
 onMounted(async () => {
   try {
-    const res = await axios.get(`${GLOBAL_URL}/detail/images/${idx}`)
+    const res = await axios.get(`${GLOBAL_URL}/detail/images/${idx}`);
     // console.log(res)
     if (res.status == 200) {
-      list.value = res.data
+      list.value = res.data;
       // console.log(list.value)
       // console.log('리스트파일이름' + list.value)
       // console.log('리스트파일이름' + list.value.images.length)
     }
-    return res
+    return res;
   } catch (e) {
-    console.error('실패', e)
+    console.error('실패', e);
   }
-})
+});
 </script>
 
 <template>
   <article id="productSlide">
     <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
       <Slide v-for="(image, index) in list.images" :key="index">
-        <img
-          :src="`${GLOBAL_URL}/api/file/download/${image.filename}`"
-          alt=""
-          class="carousel_image"
-        />
+        <img :src="`${GLOBAL_URL}/api/file/download/${image.filename}`" alt="" class="carousel_image" />
       </Slide>
     </Carousel>
-
-    <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide">
+    <!-- :autoplay="2000" -->
+    <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide" :pause-autoplay-on-hover="true" :mouse-drag="false">
       <Slide v-for="(image, index) in list.images" :key="index">
-        <img
-          :src="`${GLOBAL_URL}/api/file/download/${image.filename}`"
-          class="carousel_thumbnail"
-        />
+        <img :src="`${GLOBAL_URL}/api/file/download/${image.filename}`" class="carousel_thumbnail" />
       </Slide>
 
       <template #addons>
@@ -71,46 +64,51 @@ onMounted(async () => {
 <style scoped>
 /* 왼쪽 슬라이드 구역 */
 #productSlide {
-  margin: 20px 1.5% 25px 0;
   width: 50%;
   height: 700px;
+  margin: 20px 5px 25px 0;
   text-align: center;
 }
+/* 보여지는 슬라이드의 메인사진 1장 */
 #gallery {
   width: 100%;
-  height: 550px;
-  padding: 15px 0;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 0.5px solid var(--color-main-Lgray);
   border-radius: 20px;
   /* background-color: antiquewhite; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .carousel_image {
+  padding: 1%;
+  width: 100%;
+  height: 550px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: auto;
+  border-radius: 20px;
   object-fit: cover;
   /* background-color: brown; */
-  border-radius: 15px;
 }
-/* #thumbnails {
+
+/* 메인아래 보여지는 슬라이드의 사진 여러장 */
+#thumbnails {
   width: 100%;
-  background-color: antiquewhite;
-} */
+  height: auto;
+  /* background-color: antiquewhite; */
+}
+
 .carousel_thumbnail {
-  /* background-color: rgb(153, 96, 22); */
-  cursor: pointer;
-  object-fit: cover;
   width: 90%;
   height: 90px;
   margin: 20px 0;
   padding: 5%;
   border: 0.5px solid var(--color-main-Lgray);
   border-radius: 20px;
+  object-fit: cover;
+  cursor: pointer;
+  /* background-color: rgb(153, 96, 22); */
 }
 </style>

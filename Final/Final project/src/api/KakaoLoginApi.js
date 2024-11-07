@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GLOBAL_URL } from './util'
+import { GLOBAL_URL } from '@/api/util'
 
 export const login = async code => {
   try {
