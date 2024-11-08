@@ -1,71 +1,62 @@
 <script setup>
-import { GLOBAL_URL } from '@/api/util';
 import SalseChart from '@/views/product/productdetail/SalseChart.vue';
-import axios from 'axios';
-import { ref, watchEffect, watch, nextTick } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { formatPrice } from '@/FormatPrice';
-import { productDetailStore } from '@/stores/ProductDetailStore';
-import _ProductDetailView from './_ProductDetailView.vue';
+import _ProductDetailView from '@/views/product/productdetail/_ProductDetailView.vue';
+import { getProductData, getReviewData } from '@/api/productDetail';
 
 const route = useRoute();
-// const router = useRouter()
+const router = useRouter();
 
 const productData = ref([]);
-const reviewData = ref(0);
+const reviewData = ref(null);
 const productDataOk = ref([]);
-const detailStore = productDetailStore();
-const idx = ref(detailStore.productIdx);
-const size = ref(detailStore.productSize);
 
-const emit = defineEmits();
+const idx = ref(route.params.idx);
+const size = ref(route.query.size);
+
+// const emit = defineEmits();
 
 // 1. 클릭한 옵션값을 idx에 담아준다.
-const productOptionSelect = async sizedata => {
-  // console.log(sizedata.productId);
-  // console.log(sizedata);
-  idx.value = sizedata.productId;
-  size.value = sizedata.size;
+const productOptionSelect = item => {
+  console.log('item', item.productId);
+  console.log('item', item.size);
+  router.push({
+    name: 'productsdetail',
+    params: { idx: item.productId },
+    query: { size: item.size },
+  });
 };
 
 // 3. 옵션값을 클릭하면 watch에서 추적하는 idx값이 바뀌고 doLoad를 호출한다.
 const doLoad = async () => {
-  // console.log(idx.value);
+  // console.log(`doLoad = ${idx.value}`);
   try {
-    const res_product_data = await axios.get(`${GLOBAL_URL}/detail/detailProductInfo/${idx.value}`);
-    const res_review_data = await axios.get(`${GLOBAL_URL}/detail/detailReviewInfo/${idx.value}`);
+    productData.value = await getProductData(idx.value);
+    reviewData.value = await getReviewData(idx.value);
 
-    productData.value = res_product_data.data;
-    reviewData.value = res_review_data.data;
+    // console.log('productData 값 : ', productData.value.data[0].productId);
+    // console.log('reviewData 값 : ', reviewData.value.length);
 
-    // console.log(`res_product_data.data = ${JSON.stringify(res_product_data.data)}`);
-    // console.log(`res_review_data.data = ${JSON.stringify(res_review_data.data)}`);
-
-    if (res_product_data.status === 200 && res_review_data.status === 200) {
-      // console.log(productData.value)
-      for (let i = 0; i < productData.value.length; i++) {
-        if (productData.value[i].productId == idx.value && productData.value[i].size == size.value) {
-          // console.log('조건에 맞는 아이는? ', productData.value[i])
-          productDataOk.value = productData.value[i];
-          // console.log('데이터내용들', productData.value);
+    if (productData.value.status === 200 && reviewData.value.status === 200) {
+      // console.log('productData.value.status === 200', productData.value);
+      for (let i = 0; i < productData.value.data.length; i++) {
+        // console.log('조건에 맞는 아이는? ', productData.value.data[i].size);
+        if (productData.value.data[i].productId == idx.value && productData.value.data[i].size == size.value) {
+          productDataOk.value = productData.value.data[i];
+          // console.log('데이터내용들', productDataOk.value);
         }
       }
-      // console.log('reviewData.value.starAverage', reviewData.value.starAverage);
+      // console.log('reviewData.value', reviewData.value);
 
-      // 통신하고 나서 피니아 업데이트 하면 리뷰 컴포넌트 내용 바뀐다.
-      detailStore.setReview(reviewData.value.reviewCount, reviewData.value.starAverage);
-      // console.log(productDataOk.value.productId);
-      // console.log(productDataOk.value.size);
-      // console.log(sizedata.size);
-      detailStore.setIdx(productDataOk.value.productId, productDataOk.value.size);
-
-      const newStatus = true;
-      emit('onProductInfoLoaded', newStatus);
+      // const newStatus = true;
+      // emit('onProductInfoLoaded', newStatus);
     } else {
-      console.log('실패');
+      console.log('실패1');
     }
   } catch (err) {
-    console.log('실패' + err);
+    console.log('실패2' + err);
   }
 };
 
@@ -99,16 +90,11 @@ const Average = data => {
   return data;
 };
 
-// 2. 옵션값을 클릭하면 페이지 리로드를 위해 idx를 추적한다.
-watch(
-  [idx],
-  (newIdx, _) => {
-    doLoad();
-  },
-  {
-    immediate: true,
-  },
-);
+watchEffect(() => {
+  idx.value = route.params.idx;
+  size.value = route.query.size;
+  doLoad();
+});
 </script>
 
 <template>
@@ -116,16 +102,16 @@ watch(
     <ul id="productInfo">
       <li>{{ productDataOk.brandName }}</li>
       <li>{{ productDataOk.productName }}</li>
-      <li>
+      <li v-if="reviewData">
         1,222찜 수
-        <span style="color: orange">★ {{ Average(reviewData.starAverage) }} ({{ reviewData.reviewCount }} reviews)</span>
+        <span style="color: orange">★ {{ Average(reviewData.data.starAverage) }} ({{ reviewData.data.reviewCount }} reviews)</span>
       </li>
       <li>{{ formatPrice(productDataOk.price) }}</li>
     </ul>
 
     <p class="OptionSelect">옵션선택</p>
     <div id="productOption">
-      <button @click="productOptionSelect(sizedata)" v-for="(sizedata, index) in productData" :key="index">{{ sizedata.size }} ml</button>
+      <button @click="productOptionSelect(size)" v-for="(size, index) in productData.data" :key="index">{{ size.size }} ml</button>
     </div>
     <div>
       <p>제조일자 : 2024-11-01</p>

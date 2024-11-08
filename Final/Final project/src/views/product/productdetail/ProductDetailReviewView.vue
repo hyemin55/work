@@ -1,14 +1,17 @@
 <script setup>
-import { nextTick, ref, watch, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import ReviewComponent from '@/components/ReviewComponent.vue';
-import ProductDetailReviewSlide from './ProductDetailReviewSlideView.vue';
-import { productDetailStore } from '@/stores/ProductDetailStore';
+import ProductDetailReviewSlide from '@/views/product/productdetail/ProductDetailReviewSlideView.vue';
+import { useRoute } from 'vue-router';
+import { getstarCounting } from '@/api/productDetail';
 
+const route = useRoute();
 const SortStar = ref(true);
 const Latest = ref(true);
-const detailStore = productDetailStore();
-const idx = ref(detailStore.productIdx);
+const idx = ref(route.params.idx);
 const reviewCount = ref(0);
+
+const starCountData = ref({});
 
 const SortStarHandle = () => {
   SortStar.value = !SortStar.value;
@@ -17,27 +20,39 @@ const LatestHandle = () => {
   Latest.value = !Latest.value;
 };
 
-// rating, reviewCount
-const ratingData = () => {};
-
 // 리뷰 평균 점수 관리
-const rating = ref(3.7); // 예: 소수점 첫째 자리까지의 평균 점수
-const newRating = ref(detailStore.starAverage);
-console.log('newRating = ', newRating.value);
-
+const starAverage = ref(0);
+// console.log('idx.value', idx.value);
 const circumference = 2 * Math.PI * 45; // 원 둘레 (r = 45)
 
-// 별 개수 계산
-const fullStars = Math.floor(rating.value); // 정수 별 개수
-const hasHalfStar = rating.value % 1 !== 0; // 소수점이 있을 때 반 별 표시 여부
+// 총 별 개수 계산
+const fullStars = Math.floor(starAverage.value); // 정수 별 개수
+const hasHalfStar = starAverage.value % 1 !== 0; // 소수점이 있을 때 반 별 표시 여부
 const emptyStars = () => {
   const totalStars = fullStars.value + (hasHalfStar.value ? 1 : 0);
   return Math.max(5 - totalStars, 0); // 최소 0으로 설정
 }; // 빈 별 개수
 
-watchEffect(async () => {
-  reviewCount.value = detailStore.reviewCount;
-  await nextTick();
+// 별점별 리뷰수 계산
+const starCounting = async () => {
+  const starCountingData = await getstarCounting(idx.value);
+  // console.log('starCountingData.value.data', starCountingData);
+  starCountData.value = starCountingData.data;
+  // console.log('starCountData.value', starCountData.value.starAverage);
+  starAverage.value = starCountData.value.starAverage;
+  reviewCount.value = starCountData.value.reviewCount;
+};
+
+const Average = data => {
+  data = data * 10;
+  data = Math.round(data);
+  data = data / 10;
+  return data;
+};
+
+watchEffect(() => {
+  idx.value = route.params.idx;
+  starCounting();
 });
 </script>
 
@@ -59,14 +74,14 @@ watchEffect(async () => {
             stroke-width="5"
             fill="none"
             stroke-dasharray="283"
-            :stroke-dashoffset="circumference - circumference * (rating / 5)"
+            :stroke-dashoffset="circumference - circumference * (starAverage / 5)"
             style="transition: stroke-dashoffset 0.5s ease"
           />
         </svg>
-        <div class="progress-text">{{ rating.toFixed(1) }}</div>
+        <div class="progress-text">{{ Average(starAverage) }}</div>
       </div>
 
-      <div class="starRating">
+      <div class="starAverage">
         <div>
           <span v-for="n in fullStars" :key="'full' + n">★</span>
           <span v-if="hasHalfStar">☆</span>
@@ -79,27 +94,27 @@ watchEffect(async () => {
         <li>
           5.0 <span>★</span>
           <div>bar</div>
-          별점별리뷰수
+          별점별리뷰수 {{ starCountData.fiveStarCount }}
         </li>
         <li>
           4.0 <span>★</span>
           <div>bar</div>
-          별점별리뷰수
+          별점별리뷰수 {{ starCountData.fourStarCount }}
         </li>
         <li>
           3.0 <span>★</span>
           <div>bar</div>
-          별점별리뷰수
+          별점별리뷰수 {{ starCountData.threeStarCount }}
         </li>
         <li>
           2.0 <span>★</span>
           <div>bar</div>
-          별점별리뷰수
+          별점별리뷰수 {{ starCountData.twoStarCount }}
         </li>
         <li>
           1.0 <span>★</span>
           <div>bar</div>
-          별점별리뷰수
+          별점별리뷰수 {{ starCountData.oneStarCount }}
         </li>
       </ul>
     </div>
@@ -137,6 +152,8 @@ watchEffect(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 20px 0 50px 0;
+  /* background-color: #ffa500; */
 }
 /* 원형차트 */
 .progress-wrapper {
@@ -156,7 +173,7 @@ watchEffect(async () => {
 }
 
 /* 총 리뷰수 & 별점 */
-.starRating {
+.starAverage {
   width: 15%;
   /* background-color: antiquewhite; */
   font-size: 1.5em;
@@ -169,12 +186,16 @@ watchEffect(async () => {
 }
 #starCounting {
   width: 75%;
+  line-height: 30px;
+  font-size: 1.4rem;
 }
 #starCounting > li {
   display: flex;
   align-items: center;
   justify-content: left;
+  gap: 5px;
 }
+/* Review Lists section */
 #ShowReview {
   height: 60px;
   display: flex;

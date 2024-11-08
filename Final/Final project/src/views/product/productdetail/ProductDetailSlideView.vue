@@ -2,15 +2,16 @@
 import { onMounted, ref } from 'vue';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
-import axios from 'axios';
+import { useRoute } from 'vue-router';
+import { getSlideImages } from '@/api/productDetail';
 import { GLOBAL_URL } from '@/api/util';
-import { productDetailStore } from '@/stores/ProductDetailStore';
+
+const route = useRoute();
+const idx = ref(route.params.idx);
 const currentSlide = ref(0);
 
 const slideTo = nextSlide => (currentSlide.value = nextSlide);
 const list = ref([]);
-const detailStore = productDetailStore();
-const idx = detailStore.productIdx;
 
 const galleryConfig = {
   itemsToShow: 1,
@@ -26,20 +27,21 @@ const thumbnailsConfig = {
 
 onMounted(async () => {
   try {
-    const res = await axios.get(`${GLOBAL_URL}/detail/images/${idx}`);
-    // console.log(res)
-    if (res.status == 200) {
-      list.value = res.data;
-      // console.log(list.value)
+    const slideImages = await getSlideImages(idx.value);
+    // console.log('slideImages', slideImages);
+    if (slideImages.status == 200) {
+      list.value = slideImages.data;
+      // console.log('list.value', list.value);
       // console.log('리스트파일이름' + list.value)
       // console.log('리스트파일이름' + list.value.images.length)
     }
-    return res;
+    return slideImages;
   } catch (e) {
     console.error('실패', e);
   }
 });
 </script>
+0
 
 <template>
   <article id="productSlide">

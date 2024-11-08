@@ -1,16 +1,15 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import ProductSlide from '@/views/product/productdetail/ProductDetailSlideView.vue';
 import ProductDescription from '@/views/product/productdetail/ProductDescriptionView.vue';
 import ProductDetailReview from '@/views/product/productdetail/ProductDetailReviewView.vue';
 import ProductInfoSection from '@/views/product/productdetail/ProductDetailInfoSectionView.vue';
-import { productDetailStore } from '@/stores/ProductDetailStore';
 
-const detailStore = productDetailStore();
 const route = useRoute();
-const productId = computed(() => route.params.idx);
-const productSize = computed(() => route.query.size);
+
+const productId = ref(route.params.idx);
+const productSize = ref(route.query.size);
 
 const isProductInfoLoaded = ref(false); // 상태 변수
 
@@ -20,8 +19,10 @@ const handleProductInfoLoaded = newStatus => {
   console.log(isProductInfoLoaded.value);
 };
 
-//
-detailStore.setIdx(productId.value, productSize.value);
+watchEffect(() => {
+  productId.value = route.params.idx;
+  productSize.value = route.query.size;
+});
 </script>
 
 <template>
@@ -34,10 +35,10 @@ detailStore.setIdx(productId.value, productSize.value);
       <!-- ProductInfoSection이 로드되었을 때 나머지 컴포넌트를 렌더링 -->
       <ProductInfoSection @onProductInfoLoaded="handleProductInfoLoaded" />
     </main>
-
+    <!-- v-if="isProductInfoLoaded" id="ProductDescription" -->
     <!-- 조건부 렌더링: ProductInfoSection이 로드되면 나머지 컴포넌트를 렌더링 -->
-    <ProductDescription v-if="isProductInfoLoaded" id="ProductDescription" />
-    <ProductDetailReview v-if="isProductInfoLoaded" id="ProductDetailReview" />
+    <ProductDescription />
+    <ProductDetailReview />
   </section>
 </template>
 

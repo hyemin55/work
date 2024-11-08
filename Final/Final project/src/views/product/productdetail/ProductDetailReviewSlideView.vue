@@ -1,32 +1,30 @@
 <script setup>
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
-import { ref, watch, watchEffect } from 'vue';
-import { productDetailStore } from '@/stores/ProductDetailStore';
-import axios from 'axios';
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+import { getReviewImageList } from '@/api/productDetail';
 import { GLOBAL_URL } from '@/api/util';
 
-const detailStore = productDetailStore();
-const idx = ref(detailStore.productIdx);
+const route = useRoute();
+const idx = ref(route.params.idx);
 const slides = ref([]);
 
 const reviewImgsData = async () => {
-  console.log(idx.value);
-  const reviewImageList = await axios.get(`${GLOBAL_URL}/detail/reviewImageList/${idx.value}`);
-  // console.log('reviewImgsData', reviewImageList.data);
-  // console.log('reviewImgsData', reviewImageList.data.length);
+  const reviewImageList = await getReviewImageList(idx.value);
   slides.value = reviewImageList.data;
 };
-watchEffect(() => {
-  idx;
-  reviewImgsData();
-});
 
 const config = {
   itemsToShow: 7.5,
   snapAlign: 'start',
   wrapAround: true,
 };
+
+watchEffect(() => {
+  idx;
+  reviewImgsData();
+});
 </script>
 
 <template>
