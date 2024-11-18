@@ -15,7 +15,6 @@ const payProductMoney = ref(props.productInfo.totalPrice || '상품총금액');
 // const payTotal = ref( Number(payProductMoney+payDelivery) )
 
 const list = ref()
-
 watchEffect(async()=>{
     const data = payProductInfo.value.map(item => ({
         productId: item.productId,
@@ -39,12 +38,10 @@ watchEffect(async()=>{
         console.log(error);
     }
 })
-
 </script>
 
 <template>
     <section id="pay_product">
-
         <article class="pay_product_set" v-for="(item) in list" :key="item.productId">
             <div class="pay_product_compnents">
                 <div class="pay_product_img">
@@ -53,18 +50,18 @@ watchEffect(async()=>{
                 </div>
                 <div class="pay_product_content">
                     <ul>
-                        <li><b>상품이름</b> : {{ item.productName }}</li>
-                        <li class="pro_content"><b>상세</b> : {{ item.content }}</li>
-                        <li><b>옵션</b> : {{ item.size }} / <b>수량</b> : {{ item.quantity }}개</li>
+                        <li><b>상품이름</b> : <b>{{ item.productName }}</b></li>
+                        <li class="pro_content">상세 : {{ item.content }}</li>
+                        <li><b>옵션 : {{ item.size }}</b> / <b>수량 : {{ item.quantity }}개</b></li>
                     </ul>
-                    <p>가격 : {{ item.price }}원</p>
+                    <p>가격 : {{ item.price.toLocaleString() }}원</p>
                 </div>
                 <div class="line"></div>
             </div>
         </article>
 
         <article class="pay_product_total_prcie">
-            <p>총 상품 금액 : {{payProductMoney}} 원</p>
+            <p>총 상품 금액 : {{payProductMoney.toLocaleString()}} 원</p>
         </article>
     </section>
 </template>
@@ -78,7 +75,7 @@ watchEffect(async()=>{
     width: 100%;
     position: relative;
     border-radius: 5px;
-    background-color: var(--color-main-Lgray);
+    background-color: var(--color-main-pink);
 }
 /* 상품 컴포넌트 설정 */
 .pay_product_compnents{
@@ -94,7 +91,7 @@ watchEffect(async()=>{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(255, 246, 242);
+    background-color: #fff;
 }
 .pay_product_img img{
     height: 90%;
@@ -107,24 +104,28 @@ watchEffect(async()=>{
     width: calc(100% - 145px);
     background-color: #fff;
 }
-
-
 .pay_product_content ul{
     margin-left: 30px;
 }
 .pay_product_content ul li{
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     letter-spacing: -0.034rem;
     margin: 10px 0;
     font-weight: 400;
 }
 .pay_product_content p{
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     letter-spacing: -0.034rem;
     font-weight: 600;
     margin-right: 30px;
 }
 .pro_content{
+    max-width: 450px;
+    /* width: 50%; */
+    white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+    overflow: hidden;    /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘친 텍스트를 '...'으로 표시 */
+    color: var(--color-text-gray);
 }
 
 /* 총가격 설정 */

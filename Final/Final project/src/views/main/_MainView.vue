@@ -1,23 +1,27 @@
 <template>
   <section id="main_wrapper">
     <article id="main_video">
-      <!-- <video autoplay muted loop src="../../img/main.mp4"></video> -->
+      <video autoplay muted loop src="@/assets/img/main.mp4"></video>
     </article>
 
-    <MainBestView></MainBestView>
-    <MainListView></MainListView>
-    <MainPromotionBannerView></MainPromotionBannerView>
-    <MainEditorView></MainEditorView>
-    <MainNewView></MainNewView>
+    <MainBestView />
+    <MainListView />
+    <MainPromotionBannerView />
+    <MainEditorView />
+    <MainNewView />
   </section>
 </template>
 
 <script setup>
-import MainBestView from './MainBestView.vue'
-import MainEditorView from './MainEditorView.vue'
-import MainListView from './MainListView.vue'
-import MainNewView from './MainNewView.vue'
-import MainPromotionBannerView from './MainPromotionBannerView.vue'
+import { defineAsyncComponent } from 'vue';
+import MainBestView from './MainBestView.vue';
+import MainListView from './MainListView.vue';
+import MainPromotionBannerView from './MainPromotionBannerView.vue';
+import MainEditorView from './MainEditorView.vue';
+import MainNewView from './MainNewView.vue';
+
+// const MainEditorView = defineAsyncComponent(() => import('./MainEditorView.vue'));
+// const MainNewView = defineAsyncComponent(() => import('./MainNewView.vue'));
 
 // main_editor_list
 // const editor_images = [
@@ -52,11 +56,12 @@ import MainPromotionBannerView from './MainPromotionBannerView.vue'
 #main_video {
   width: 100%;
   height: 100vh;
-  background-color: rgb(35, 138, 74);
+  /* background-color: rgb(35, 138, 74); */
 }
 #main_video video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border: 1px solid white;
 }
 </style>

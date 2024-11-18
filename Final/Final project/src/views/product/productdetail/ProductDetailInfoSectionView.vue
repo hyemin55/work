@@ -1,11 +1,15 @@
 <script setup>
-import SalseChart from '@/views/product/productdetail/SalseChart.vue';
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { formatPrice } from '@/FormatPrice';
 import _ProductDetailView from '@/views/product/productdetail/_ProductDetailView.vue';
-import { getProductData, getReviewData } from '@/api/productDetail';
-
+import { getProductData, getReviewData } from '@/api/productDetailApi';
+import ProductDetailSalseChartViewVue from './ProductDetailSalseChartView.vue';
+import { useCartStore } from '@/stores/CartStore';
+import { useUserStore } from '@/stores/Login';
+import axios from 'axios';
+import { GLOBAL_URL } from '@/api/util';
+import { fetchMemeberCart, mergeMemberCart } from '@/api/cartApi';
 const route = useRoute();
 const router = useRouter();
 
@@ -16,12 +20,17 @@ const productDataOk = ref([]);
 const idx = ref(route.params.idx);
 const size = ref(route.query.size);
 
+const cartStore = useCartStore();
+
+// 로그인 pinia
+const userStore = useUserStore();
+const userLogin = computed(() => userStore.loginCheck);
 // const emit = defineEmits();
 
 // 1. 클릭한 옵션값을 idx에 담아준다.
 const productOptionSelect = item => {
-  console.log('item', item.productId);
-  console.log('item', item.size);
+  // console.log('item', item.productId);
+  // console.log('item', item.size);
   router.push({
     name: 'productsdetail',
     params: { idx: item.productId },
@@ -48,10 +57,13 @@ const doLoad = async () => {
           // console.log('데이터내용들', productDataOk.value);
         }
       }
-      // console.log('reviewData.value', reviewData.value);
+      console.log('reviewData.value', reviewData.value);
 
       // const newStatus = true;
       // emit('onProductInfoLoaded', newStatus);
+    } else if (productData.value.status == 500) {
+      console.log(productData.value.status);
+      router.push({ name: 'main' });
     } else {
       console.log('실패1');
     }
@@ -59,8 +71,47 @@ const doLoad = async () => {
     console.log('실패2' + err);
   }
 };
-
 const BuyNow = () => {};
+
+// console.log(productDataOk);
+
+// 장바구니 추가
+const addToCart = async () => {
+  const data = {
+    productId: Number(idx.value),
+    productName: productDataOk.value.productName,
+    price: productDataOk.value.price,
+    brandName: productDataOk.value.brandName,
+    size: productDataOk.value.size,
+    images: [productDataOk.value.mainImage],
+    mainImage: productDataOk.value.mainImage,
+    quantity: 1,
+  };
+
+  cartStore.addItem(data);
+  alert('장바구니에 담았습니다.');
+
+  if (userLogin.value) {
+    try {
+      const res = axios.post(`${GLOBAL_URL}/cart/add`, data, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+        },
+      });
+      console.log(res);
+      const pushData = cart.value.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      }));
+      await mergeMemberCart(pushData);
+      const fetchRes = await fetchMemeberCart();
+      // 스토어에서 장바구니 업데이트(store 랜더링)
+      cartStore.updateCart(fetchRes.data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
 
 // 찜 클릭 이벤트
 const redHeart = ref(false);
@@ -81,7 +132,9 @@ const urlShare = () => {
       console.error('URL 복사를 실패했어요ㅠㅡㅠ', err);
     });
 };
-
+const isselectedSize = size => {
+  return route.query.size === size.size.toString() && route.params.idx === size.productId.toString();
+};
 // 리뷰별점평균을 소수점 1자리만 남긴다.
 const Average = data => {
   data = data * 10;
@@ -111,16 +164,17 @@ watchEffect(() => {
 
     <p class="OptionSelect">옵션선택</p>
     <div id="productOption">
-      <button @click="productOptionSelect(size)" v-for="(size, index) in productData.data" :key="index">{{ size.size }} ml</button>
+      <button @click="productOptionSelect(size)" v-for="(size, index) in productData.data" :key="index" :class="{ selectedSize: isselectedSize(size) }">{{ size.size }} ml</button>
     </div>
-    <div>
+    <!-- <div>
       <p>제조일자 : 2024-11-01</p>
       <p>유통기한 : 2029-11-01</p>
-    </div>
+    </div> -->
 
     <div class="addButtonGroub">
       <button class="addToCart BuyNow" @click="BuyNow">바로 구매하기</button>
-      <button class="addToCart">
+      <button class="addToCart" @click="addToCart">
+        <!-- <button class="addToCart"> -->
         <img src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" />
         장바구니 추가
       </button>
@@ -132,7 +186,7 @@ watchEffect(() => {
       </button>
     </div>
 
-    <SalseChart />
+    <ProductDetailSalseChartViewVue />
   </article>
 </template>
 
@@ -180,7 +234,7 @@ watchEffect(() => {
   border-radius: 10px;
   cursor: pointer;
 }
-#productOption button:hover {
+button.selectedSize {
   background-color: var(--color-main-bloode);
   color: white;
   border: 0.5px solid var(--color-main-bloode);

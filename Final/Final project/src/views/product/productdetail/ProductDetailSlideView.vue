@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 import { useRoute } from 'vue-router';
-import { getSlideImages } from '@/api/productDetail';
+import { getSlideImages } from '@/api/productDetailApi';
 import { GLOBAL_URL } from '@/api/util';
 
 const route = useRoute();
@@ -35,17 +35,15 @@ onMounted(async () => {
       // console.log('리스트파일이름' + list.value)
       // console.log('리스트파일이름' + list.value.images.length)
     }
-    return slideImages;
   } catch (e) {
     console.error('실패', e);
   }
 });
 </script>
-0
 
 <template>
   <article id="productSlide">
-    <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide">
+    <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide" :autoplay="3000">
       <Slide v-for="(image, index) in list.images" :key="index">
         <img :src="`${GLOBAL_URL}/api/file/download/${image.filename}`" alt="" class="carousel_image" />
       </Slide>
@@ -68,7 +66,7 @@ onMounted(async () => {
 #productSlide {
   width: 50%;
   height: 700px;
-  margin: 20px 5px 25px 0;
+  margin: 20px 0px 25px 0;
   text-align: center;
 }
 /* 보여지는 슬라이드의 메인사진 1장 */

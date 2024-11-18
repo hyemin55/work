@@ -1,10 +1,14 @@
-const { defineStore } = require('pinia')
+import { defineStore } from 'pinia'
 
 export const usePayMentStore = defineStore('payment', {
   state: () => ({
-    productidx: ref([]),
+    payProduct: ref([]),
   }),
   actions: {
-    productScan() {},
+    payProductScan(item) {
+      this.payProduct.push(item);
+    },
   },
+
+
 })

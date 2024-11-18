@@ -1,104 +1,144 @@
 <script setup>
-import { GLOBAL_URL } from '@/api/util';
-import axios from 'axios';
-import { ref, watchEffect } from 'vue';
+import { GLOBAL_URL } from "@/api/util";
+import axios from "axios";
+import { ref, watchEffect } from "vue";
 
 const userInfo = ref([]);
 const post = ref();
 
-watchEffect(async()=>{
-  try{
+watchEffect(async () => {
+  try {
     const res = await axios.get(`${GLOBAL_URL}/api/payment/buyer-info`, {
-      headers:{
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      }
-    })
-    if(res.status == 200){
-      userInfo.value = res.data    
-      post.value = userInfo.value.buyerAddress.addr + " " + userInfo.value.buyerAddress.postCode
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
+    if (res.status == 200) {
+      userInfo.value = res.data;
+      post.value =
+        userInfo.value.buyerAddress.addr + " " + userInfo.value.buyerAddress.postCode;
     }
+  } catch (error) {
+    console.error("Error:", error);
   }
-  catch(error){
-    console.error("Error:", error)
-  }
-})
-
+});
 </script>
 
 <template>
   <section id="pay_user_info">
     <form action="#" method="post">
-      <div>
-        <p class="info_text" for="recipient"><b>이름</b> : {{ userInfo.buyerName }}</p>
-        <p><b>이메일</b> : {{ userInfo.buyerEmail }}</p>
-      </div>
-      
-      <div style="display: flex; align-items: end;">
-        <p class="info_text" for="phone"><b>연락처</b> : {{ userInfo.buyerTel }}</p>
-        <span class="safe_number">
-          <input type="checkbox" name="safePhone" id="safePhone">
-          <label class="pointer" for="safePhone">안심번호</label>
-        </span>
-      </div>
-  
-      <div style="display: flex; align-items: end;">
-        <p class="info_text" for="address"><b>주소</b> : {{ post }}</p>
-        <p class="pointer chage_adress">
-          배송지 변경
-        </p>
-      </div>
+      <article>
+        <div class="title_box">
+          <h1>주문자 정보</h1>
+        </div>
 
-      <div>
-        <label class="info_text" for="request"><b>택배 요청사항</b> : </label>
-        <select id="request" name="request" class="styled-select">
-          <option value="signature">부재시 문앞에 놔주세요.</option>
-          <option value="none">부재시 경비실 앞에 놔주세요.</option>
-          <option value="urgent">택배보관함에 보관해주세요.</option>
-          <option value="fragile">배송전에 연락주세요.</option>
-          <option value="other">직접입력</option>
-        </select>
-      </div>
+        <div class="info_box">
+          <p><b>주문자</b> : <b>{{ userInfo.buyerName || "홍길동" }}</b></p>
+          <p>
+            이메일 : {{ userInfo.buyerEmail }}
+            <span>
+              <input type="checkbox" name="emailcheck" id="emailcheck" />
+              <label class="pointer" for="emailcheck">수신동의</label>
+            </span>
+          </p>
+          <p for="phone">
+            연락처 : {{ userInfo.buyerTel }}
+            <span>
+              <input type="checkbox" name="safePhone" id="safePhone" />
+              <label class="pointer" for="safePhone">안심번호</label>
+            </span>
+          </p>
+        </div>
+      </article>
+
+      <article>
+        <div class="title_box">
+          <h1>배송지 정보</h1>
+        </div>
+        <div class="info_box">
+          <p for="address">
+            <b>주소</b> : <b>{{ post }}</b>
+            <span>
+              <label class="pointer">배송지 변경</label>
+            </span>
+          </p>
+          <p>
+            <label for="request">배송 요청사항 : </label>
+            <select id="request" name="request" class="styled-select">
+              <option value="signature">부재시 문앞에 놔주세요.</option>
+              <option value="none">부재시 경비실 앞에 놔주세요.</option>
+              <option value="urgent">택배보관함에 보관해주세요.</option>
+              <option value="fragile">배송전에 연락주세요.</option>
+              <option value="other">직접입력</option>
+            </select>
+
+            <span>
+              <input type="checkbox" name="nextorder" id="nextorder" />
+              <label class="pointer" for="nextorder">다음 주문 시에 사용</label>
+            </span>
+          </p>
+        </div>
+      </article>
     </form>
   </section>
 </template>
 
 <style scoped>
-#pay_user_info{
+/* 전체설정 */
+#pay_user_info {
   width: 100%;
-  height: 180px; /* 높이 임시 설정 */
+  height: 300px; /* 높이 임시 설정 */
+  /* background-color: #ddd; */
 }
-#pay_user_info form{
-  /* margin-left: 30px; */
-}
-.info_text{
-  font-size: 1.9rem;
-}
-form > div {
-  margin-bottom: 20px;
-  font-size: 15px;
-}
-.pointer{
-  cursor: pointer;
-}
-
-
-.safe_number{
-  font-size: 1rem;
-  margin-left: 30px;
+#pay_user_info article{
   display: flex;
-  align-items: center;
+  border-bottom: 1px solid #dddddd;
 }
-.chage_adress{
-  font-size: 1rem;
-  margin-left: 30px;
+#pay_user_info article:nth-child(1){
+  height: 160px;
+}
+#pay_user_info article:nth-child(2){
+  height: 140px;
 }
 
+/* 텍스트박스 설정 */
+.title_box{
+  width: 200px;
+}
+.title_box>h1{
+  font-size: 2.2rem;
+  letter-spacing: -0.034rem;
+  padding: 25px 0 0 25px;
+}
+
+/* 인포박스 설정 */
+.info_box{
+  font-size: 1.5rem;
+  /* letter-spacing: -0.034rem; */
+  padding: 27px 0 0 20px;
+  color: #121212;
+}
+.info_box>p{
+  margin-bottom: 20px;
+}
+
+
+span{
+  margin-left: 30px;
+}
+.pointer {
+  cursor: pointer;
+  color: var(--color-text-gray);
+  margin-left: 3px;
+  letter-spacing: -0.034rem;
+  font-size: 1.5rem;
+}
 /* select_input */
 .styled-select {
   width: 250px;
   padding: 0.7rem;
-  font-size: 1rem;
+  font-size: 1.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: #f9f9f9;

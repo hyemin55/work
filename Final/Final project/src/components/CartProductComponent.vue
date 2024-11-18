@@ -155,9 +155,9 @@ const moveDetail = () => {
         <p class="price">{{ cart_product_price.toLocaleString() }}원</p>
       </div>
       <div class="count">
-        <button @click="upCount">+</button>
-        <p>수량 : {{ cart_quantity }}</p>
         <button @click="downCount">-</button>
+        <p>수량 : {{ cart_quantity }}</p>
+        <button @click="upCount">+</button>
       </div>
     </div>
   </article>
@@ -187,13 +187,13 @@ const moveDetail = () => {
 }
 .product_check:checked {
   background-color: var(--color-main-bloode); /* 체크 시 배경색 */
-  border: solid 1px #8f8f8f;
+  border: solid 1px var(--color-main-bloode);
 }
 .product_check:checked::before {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 6px;
+  top: 2.5px;
+  left: 6.5px;
   width: 4px;
   height: 8px;
   border: solid white;

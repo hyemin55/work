@@ -1,25 +1,40 @@
+<script setup>
+import Aos from 'aos';
+import 'aos/dist/aos.css';
+import { onMounted, watchEffect } from 'vue';
+
+onMounted(()=>{
+    Aos.init({
+      duration: 1000, 
+      once: true,  
+    });
+  })
+</script>
+
 <template>
   <article id="promotion_banner">
     <div class="promotion_banner_size">
-      <img
+      <img 
         class="promotion_banner_logo"
         src="@/assets/img/logo_text.png"
         alt=""
       />
       <p class="promotion_banner_text">
-        지난 추억의 잔향을 나누고,
+        <span data-aos="fade-right">지난 추억의 잔향을 나누고,</span>
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        새 이야기의 향기를 품어보세요
+        <span data-aos="fade-left">새 이야기의 향기를 품어보세요</span>
       </p>
       <!-- to 나중에 판매페이지로 바꿔야함 -->
-      <RouterLink to="/" class="promotion_banner_link"
+      <RouterLink to="/" class="promotion_banner_link" 
+      data-aos="fade-right" 
+      data-aos-offset="50"
+      data-aos-delay="600"
         >바로 판매하기 →</RouterLink
       >
     </div>
   </article>
 </template>
 
-<script setup></script>
 
 <style scoped>
 /* ====promotion_banner==== */
@@ -46,7 +61,10 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  left: 0;
+  left: 0; 
+}
+.promotion_banner_text span{
+  display: inline-block;
   font-size: 3.6rem;
   font-family: var(--font-family-pretendard-bold);
   color: var(--color-main-Lgray);
@@ -55,7 +73,8 @@
   position: absolute;
   right: 0;
   top: 50%;
-  transform: translateY(-50%);
+  margin-top: -27px;
+  /* transform: translateY(-50%); */
   color: var(--color-main-bloode);
   font-family: var(--font-family-pretendard-bold);
   font-size: 2rem;

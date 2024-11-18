@@ -1,5 +1,6 @@
 <script setup>
 import { GLOBAL_IMP_KEY, GLOBAL_URL } from '@/api/util'
+import { usePayMentStore } from '@/stores/PayMentStore'
 import PayMethod from '@/views/payment/PayMethodView.vue'
 import PayMoney from '@/views/payment/PayMoneyView.vue'
 import PayProduct from '@/views/payment/PayProductView.vue'
@@ -7,6 +8,11 @@ import PayUserInfo from '@/views/payment/PayUserInfoView.vue'
 import axios from 'axios'
 import { computed, onMounted, ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
+
+// 결제 pinia
+// const payMentStore = usePayMentStore()
+// const payinfo = computed(() => payMentStore.payProduct)
+
 
 // JSON 문자열을 객체로 변환
 // const cartItems = route.params.item ? route.params.item.split(',') : [];
@@ -81,7 +87,8 @@ const requestPay = async () => {
       pg: 'html5_inicis',
       pay_method: 'card',
       merchant_uid: merchant_uid,
-      name: cartData.purchaseProductDtos.map((item) => item.name).join(','),
+      // name: cartData.purchaseProductDtos.map((item) => item.name).join(','),
+      name: 'test',
       amount: cartData.totalPrice,
       buyer_email: 'kdh7313@naver.com',
       buyer_name: '김태영',
@@ -220,16 +227,14 @@ const connectSSE = () => {
     }
   })
 }
-
 const payroute = useRoute();
 const payData = JSON.parse(decodeURIComponent(payroute.query.item));
-
-
 </script>
+
 
 <template>
   <section id="payment_wrapper">
-    <h2>주문자 정보</h2>
+    <h1>결제하기</h1>
     <PayUserInfo></PayUserInfo>
 
     <h2>주문 상품</h2>
@@ -237,7 +242,7 @@ const payData = JSON.parse(decodeURIComponent(payroute.query.item));
     
     <h2>결제금액</h2>
     <div class="line"></div>
-    <PayMoney></PayMoney>
+    <PayMoney :productInfo="payData"></PayMoney>
 
     <div class="line"></div>
 
@@ -253,6 +258,12 @@ const payData = JSON.parse(decodeURIComponent(payroute.query.item));
   max-width: 1064px;
   width: 100%;
   margin: 0 auto;
+}
+h1{
+  font-size: 4rem;
+  font-weight: 400;
+  padding: 50px 0 20px 0;
+  border-bottom: 2px #000 solid;
 }
 h2 {
   font-size: 2.2rem;

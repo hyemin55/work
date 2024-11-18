@@ -1,4 +1,13 @@
 <script setup>
+import { ref } from 'vue';
+
+const props = defineProps({
+  productInfo: {
+    type: Object,
+    required: true,
+  },
+})
+const payProductMoney = ref(props.productInfo.totalPrice || '상품총금액');
 
 </script>
 
@@ -6,21 +15,21 @@
     <section id="pay_money">
         <div class="pay_money_product s">
             <p class="title_text">상품 가격</p>
-            <p class="price_text">230,000원</p>
+            <p class="price_text">{{ payProductMoney.toLocaleString() }}원</p>
         </div>
 
         <div class="operation_symbol">+</div>
 
         <div class="pay_money_delivery s">
             <p class="title_text">배송비</p>
-            <p class="price_text">3,000원</p>
+            <p class="price_text">0원</p>
         </div>
 
         <div class="operation_symbol">=</div>
 
         <div class="pay_money_mount s">
             <p class="title_text">총 결제 금액</p>
-            <p class="price_text">233,000원</p>
+            <p class="price_text">{{ payProductMoney.toLocaleString() }}원</p>
         </div>
     </section>
 </template>

@@ -74,8 +74,12 @@ const router = createRouter({
     },
   ],
   scrollBehavior(to, from, savedPosition) {
-    return { top: 0 }; // 모든 라우트 이동 시 스크롤을 맨 위로 이동
+    // 뒤로가기나 새로고침이 아닌 경우(savedPosition이 있으면 해당 위치로 복원)
+    if (savedPosition) {
+      return savedPosition;
+    }
+    // 모든 라우트 이동 시 스크롤을 맨 위로 이동
+    return { top: 0 };
   },
 });
-
 export default router;

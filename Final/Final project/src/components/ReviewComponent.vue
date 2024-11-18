@@ -1,17 +1,25 @@
 <script setup>
-import { getReviewsData, getViewCurrentPage } from '@/api/productDetail';
+import { getViewCurrentPage } from '@/api/productDetailApi';
 import { GLOBAL_URL } from '@/api/util';
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
+
+const props = defineProps({
+  // 받아오는props의 정의 방법
+  reviewCount: {
+    type: Number,
+    required: true,
+  },
+});
 
 const route = useRoute();
 const idx = ref(route.params.idx);
 const currentPage = ref(1);
 const totalPages = ref(10);
 const currentPageGroup = ref(0);
-const reviewCount = ref(60);
 
-const reviewList = ref([]);
+const reviewCount = ref(props.reviewCount);
+const reviewList = ref([null]);
 let flag = 0;
 const totalPageGroup = ref(0);
 const pageSize = 5;
@@ -43,6 +51,7 @@ const nextPage = () => {
 
 // 선택페이지
 const goToPage = page => {
+  console.log('page', page);
   if (currentPage.value == page) {
     console.log('현재페이지입니다.');
     return;
@@ -58,14 +67,12 @@ const viewCurrentPage = async () => {
     flag = true;
     return;
   } else {
-    console.log(idx.value);
-    console.log(currentPage.value);
-    const reviewList = await getViewCurrentPage(idx.value, currentPage.value - 1);
-    console.log('reviewsData.data 옵션선택시', reviewList);
+    reviewList.value = await getViewCurrentPage(idx.value, currentPage.value - 1);
     totalPages.value = Math.ceil(reviewCount.value / pageSize);
     totalPageGroup.value = Math.floor(totalPages.value / 10);
     startPage.value = currentPageGroup.value * 10 + 1;
     endPage.value = Math.min(startPage.value + 9, totalPages.value);
+    // console.log(reviewCount.value);
   }
 };
 
@@ -78,35 +85,28 @@ const activePage = pageNum => {
   }
 };
 
-// idx를 ref로 했는데 피니아에서 바뀐 데이터가 실시간으로 변경되지 않아
-// 피니아의 idx변화값을 바로 추적해 강제로 idx와 reviewCount의 값을 변경함
-// watch(
-//   () => [detailStore.productIdx, detailStore.reviewCount],
-//   ([newIdx, newreviewCount]) => {
-//     idx.value = newIdx;
-//     reviewCount.value = newreviewCount;
-//     // console.log('reviewCount idx바뀐후 = ', reviewCount.value);
-//     // console.log('startPage', startPage.value);
-//     viewCurrentPage();
-//   },
-//   { immediate: true },
-// );
-
+// 없어도 잘 돌아간다.....
 // 처음 렌더링 시 받아올 데이터.
-onMounted(async () => {
-  reviewList.value = await getReviewsData(idx.value);
-  console.log('reviewsData.data 로딩 시', reviewList.value.data);
-  totalPages.value = Math.ceil(reviewCount.value / pageSize);
-  totalPageGroup.value = Math.floor(totalPages.value / 10);
-  startPage.value = currentPageGroup.value * 10 + 1;
-  endPage.value = Math.min(startPage.value + 9, totalPages.value);
-});
+// onMounted(async () => {
+//   console.log(reviewCount.value);
+//   reviewCount.value = props.reviewCount;
+//   reviewList.value = await getReviewsData(idx.value);
+//   totalPages.value = Math.ceil(reviewCount.value / pageSize);
+//   totalPageGroup.value = Math.floor(totalPages.value / 10);
+//   startPage.value = currentPageGroup.value * 10 + 1;
+//   endPage.value = Math.min(startPage.value + 9, totalPages.value);
+//   console.log(reviewCount.value);
+// });
 
 // 주소줄의 idx값이 바뀌면 리뷰리스트와 페이지네이션 변경을 위해 재통신 필요.
-watch(() => {
-  idx.value = route.params.idx;
-  viewCurrentPage();
-});
+watch(
+  () => [route.params.idx, props.reviewCount], // source로 배열을 사용하여 다중 변수를 추적
+  ([newIdx, newReviewCount]) => {
+    idx.value = newIdx;
+    reviewCount.value = newReviewCount;
+    viewCurrentPage();
+  },
+);
 </script>
 
 <template>
@@ -134,17 +134,19 @@ watch(() => {
     </p>
   </div>
 
-  <div id="userReviewList" class="border noUserReviewList" v-if="reviewCount == 0 || reviewCount == null">
-    <img src="@/assets/img/free-icon-font-note-sticky-9798415.svg" alt="" />
-    <p>아직 리뷰가 등록되지 않았어요 ㅠㅡㅠ</p>
-  </div>
+  <template v-if="reviewCount == 0 || reviewCount == null">
+    <div id="userReviewList" class="border noUserReviewList">
+      <img src="@/assets/img/free-icon-font-note-sticky-9798415.svg" alt="" />
+      <p>아직 리뷰가 등록되지 않았어요 ㅠㅡㅠ</p>
+    </div>
+  </template>
 
   <ul id="totalPages">
-    <li @click="backPage()">이전</li>
+    <li @click="backPage">이전</li>
     <li class="totalPages" v-for="pageNum in endPage - startPage + 1" v-bind:key="pageNum" @click="goToPage(startPage + pageNum - 1)" :class="{ active: activePage(pageNum) }">
       {{ startPage + pageNum - 1 }}
     </li>
-    <li @click="nextPage()">다음</li>
+    <li @click="nextPage">다음</li>
   </ul>
 </template>
 
@@ -162,8 +164,6 @@ watch(() => {
 }
 .noUserReviewList > img {
   width: 100px;
-  color: var(--color-main-Lgray);
-  filter: grayscale(100%);
   margin-top: 20px;
 }
 .noUserReviewList::before {
@@ -178,7 +178,9 @@ watch(() => {
 .noUserReviewList {
   text-align: center;
   height: 150px;
-  background-color: antiquewhite;
+  font-size: 1.4rem;
+  line-height: 40px;
+  /* background-color: antiquewhite; */
 }
 .userReviewStar {
   font-size: 2rem;

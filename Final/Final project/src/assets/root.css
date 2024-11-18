@@ -7,6 +7,8 @@
   --color-main-red: rgb(147, 33, 33);
   --color-main-gray: rgb(222, 222, 222);
   --color-main-Lgray: rgb(237, 237, 237);
+
+  --color-main-pink: #fdf4f1;
   /* 이외 컬러 설정 */
   --color-text-gray: rgb(148, 148, 148);
   --color-purewhite: rgb(255, 255, 255);
