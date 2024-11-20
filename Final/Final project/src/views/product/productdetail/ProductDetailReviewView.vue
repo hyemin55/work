@@ -62,6 +62,7 @@ watchEffect(() => {
   idx.value = route.params.idx;
   starCounting();
 });
+
 </script>
 
 <template>

@@ -1,40 +1,39 @@
 <script setup>
-import { GLOBAL_URL } from '@/api/util';
-import CartProductComponent from '@/components/CartProductComponent.vue';
-import { useCartStore } from '@/stores/CartStore';
-import { useUserStore } from '@/stores/Login';
-import axios from 'axios';
-import { computed, ref, watchEffect, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { eventBus } from '@/eventBus';
-import { usePayMentStore } from '@/stores/PayMentStore';
-import { fetchMemeberCart, mergeMemberCart } from '@/api/cartApi';
+import { GLOBAL_URL } from '@/api/util'
+import CartProductComponent from '@/components/CartProductComponent.vue'
+import { useCartStore } from '@/stores/CartStore'
+import { useUserStore } from '@/stores/Login'
+import axios from 'axios'
+import { computed, ref, watchEffect, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { eventBus } from '@/eventBus'
+import { usePayMentStore } from '@/stores/PayMentStore'
 // import { storeToRefs } from 'pinia'
 
 // 전체 선택 체크박스 토글
 const toggleAllCheck = () => {
-  cartStore.toggleAllCheck(allChecked.value);
-};
+  cartStore.toggleAllCheck(allChecked.value)
+}
 
 // 로그인 pinia
-const userStore = useUserStore();
-const userLogin = computed(() => userStore.loginCheck);
+const userStore = useUserStore()
+const userLogin = computed(() => userStore.loginCheck)
 
 // 장바구니 pinia
-const cartStore = useCartStore();
-const cart = computed(() => cartStore.cartItems);
-const checkList = computed(() => cartStore.cartCheckList);
-const allChecked = ref(true);
+const cartStore = useCartStore()
+const cart = computed(() => cartStore.cartItems)
+const checkList = computed(() => cartStore.cartCheckList)
+const allChecked = ref(true)
 
 // 장바구니 계산
-const deliveryPrice = ref(0);
+const deliveryPrice = ref(0)
 const total_amount = computed(() => {
-  return Number(deliveryPrice.value + cartStore.totalPrice);
-});
+  return Number(deliveryPrice.value + cartStore.totalPrice)
+})
 
 // 장바구니 삭제
 const deleteToCart = async () => {
-  cartStore.removeItem();
+  cartStore.removeItem()
   if (userLogin.value) {
     await axios.delete(`${GLOBAL_URL}/cart/remove`, {
       data: cartStore.cartCheckList,
@@ -42,78 +41,97 @@ const deleteToCart = async () => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
       },
-    });
-    cartStore.cartCheckList = [];
+    })
+    cartStore.cartCheckList = []
   }
-};
+}
 
 // 로그인 실행 (라우터가 이동하면 한번)
 onMounted(async () => {
-  await cartLogin();
-});
+  await cartLogin()
+})
 // 로그아웃 시 세션 초기화
 eventBus.on('logout', () => {
-  console.log('로그아웃 처리');
-  cartStore.logOutRemoveItem();
-  sessionStorage.removeItem('isCartFetched');
-});
+  console.log('로그아웃 처리')
+  cartStore.logOutRemoveItem()
+  sessionStorage.removeItem('isCartFetched')
+})
 // 로그인
 const cartLogin = async () => {
-  console.log('로그인 체크');
-  const token = sessionStorage.getItem('token');
+  console.log('로그인 체크')
+  const token = sessionStorage.getItem('token')
   if (!token) {
-    console.log('토큰이 없습니다. 로그인 필요');
-    return; // 토큰이 없으면 중단
+    console.log('토큰이 없습니다. 로그인 필요')
+    return // 토큰이 없으면 중단
   }
   // 이부분 대체 :
-  const isCartFetched = sessionStorage.getItem('isCartFetched') === 'true'; // 장바구니 로딩 여부 확인
-  if (isCartFetched) return; // 이미 불러왔다면 중단
+  const isCartFetched = sessionStorage.getItem('isCartFetched') === 'true' // 장바구니 로딩 여부 확인
+  if (isCartFetched) return // 이미 불러왔다면 중단
 
   if (token) {
-    console.log('로그인 여부 저장');
-    const pushData = cart.value.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-    }));
-    await mergeMemberCart(pushData); // 장바구니 데이터 합치기
-    const fetchRes = await fetchMemeberCart();
-    sessionStorage.setItem('isCartFetched', 'true');
-    // 스토어에서 장바구니 업데이트(store 랜더링)
-    cartStore.updateCart(fetchRes.data);
+    console.log('로그인 여부 저장')
+    await fetchMemberCart() // 장바구니 데이터 불러오기
+    sessionStorage.setItem('isCartFetched', 'true')
   }
-};
+}
 
-console.log('로그인 완료');
+console.log('로그인 완료')
+const fetchMemberCart = async () => {
+  const pushData = cart.value.map(item => ({
+    productId: item.productId,
+    quantity: item.quantity,
+  }))
+  try {
+    // 비회원 + 로그인 장바구니 합치기
+    await axios.post(`${GLOBAL_URL}/cart/merge`, pushData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    })
+    // 로그인한 사용자의 바구니를 가져온다.
+    const res = await axios.get(`${GLOBAL_URL}/cartProduct/select`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    })
+    // 스토어에서 장바구니 업데이트(store 랜더링)
+    cartStore.updateCart(res.data)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 // const payMentStore = usePayMentStore();
 // 결제 하러가기
-const payRouter = useRouter();
+const payRouter = useRouter()
 const doPayment = () => {
-  if (sessionStorage.getItem('token')) {
+  if(sessionStorage.getItem('token')){
     if (checkList.value.length > 0) {
       const purchaseProducttDtos = checkList.value.map(item => ({
         productId: item.productId,
         quantity: item.quantity,
         name: item.productName,
-      }));
+      }))
       const data = {
         purchaseProductDtos: purchaseProducttDtos,
         totalPrice: total_amount.value,
-      };
+      }
       // payMentStore.payProductScan(data)
-
+      
       payRouter.push({
         path: '/payment',
         query: { item: encodeURIComponent(JSON.stringify(data)) },
-      });
+      })
     } else {
-      alert('선택된 상품이 없습니다.');
-    }
-  } else {
-    alert('로그인 후 이용 가능합니다.');
-    payRouter.push({ path: '/login2' });
+      alert('선택된 상품이 없습니다.')
+    }    
   }
-};
+  else{
+    alert('로그인 후 이용 가능합니다.')
+    payRouter.push({path:'/login2'})
+  }
+}
 
 // watchEffect(() => {
 //   checkList.value = route.path === '/';
@@ -127,7 +145,14 @@ const doPayment = () => {
         <ul class="cart_ctroll">
           <li>
             <label class="product_check_container">
-              <input @change="toggleAllCheck" v-model="allChecked" type="checkbox" name="allCheck" id="allCheck" class="product_check" />
+              <input
+                @change="toggleAllCheck"
+                v-model="allChecked"
+                type="checkbox"
+                name="allCheck"
+                id="allCheck"
+                class="product_check"
+              />
               <span class="custom-checkmark"></span>
             </label>
             <label for="allCheck">전체 선택</label>
@@ -135,7 +160,13 @@ const doPayment = () => {
           <li><button @click="deleteToCart">선택 삭제</button></li>
         </ul>
 
-        <CartProductComponent v-for="item in cartStore.cartItems" :key="item.productId" :productInfo="item" :isChecked="item.isChecked" v-model:isChecked="item.isChecked" />
+        <CartProductComponent
+          v-for="item in cartStore.cartItems"
+          :key="item.productId"
+          :productInfo="item"
+          :isChecked="item.isChecked"
+          v-model:isChecked="item.isChecked"
+        />
       </article>
 
       <article class="cart_total_price">
@@ -162,6 +193,7 @@ const doPayment = () => {
           </div>
         </article>
       </article>
+
     </article>
 
     <article class="else_cart" v-else>
@@ -230,7 +262,7 @@ const doPayment = () => {
   position: relative;
   height: 100%;
   /* background-color: var(--color-main-Lgray); */
-  background-color: var(--color-main-pink);
+  background-color:var(--color-main-pink);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -255,12 +287,13 @@ const doPayment = () => {
   display: flex;
   align-items: center;
 }
-.cart_ctroll label {
+.cart_ctroll label{
   cursor: pointer;
 }
-.product_check_container input {
+.product_check_container input{
   margin-right: 8px;
 }
+
 
 /* 결제금액 설정 (우측)*/
 .cart_total_price {
@@ -272,7 +305,7 @@ const doPayment = () => {
   /* padding-bottom: 174px; */
   padding-bottom: 230px;
 }
-.cart_total_price > article {
+.cart_total_price > article{
   position: relative;
   width: 312px;
   height: 100%;

@@ -7,6 +7,7 @@ import { getReviewImageList } from '@/api/productDetailApi';
 import { GLOBAL_URL } from '@/api/util';
 import ProductPhotoModalView from './ProductPhotoModalView.vue';
 
+
 const route = useRoute();
 const idx = ref(route.params.idx);
 const slides = ref([]);
@@ -25,8 +26,7 @@ function closeModal() {
 
 const reviewImgsData = async () => {
   const reviewImageList = await getReviewImageList(idx.value);
-  slides.value = reviewImageList;
-  console.log(slides.value);
+  slides.value = reviewImageList.data;
 };
 
 const config = {
@@ -36,7 +36,7 @@ const config = {
 };
 
 watchEffect(() => {
-  idx.value;
+  idx;
   reviewImgsData();
 });
 </script>
@@ -49,7 +49,7 @@ watchEffect(() => {
     </template>
     <template v-else>
       <Slide v-for="(slide, index) in slides" :key="index">
-        <div class="carousel__item"><img :src="`${GLOBAL_URL}/api/file/download/${slide.filename}`" alt="" @click="openModal(slide.filename)" /></div>
+        <div class="carousel__item"><img :src="`${GLOBAL_URL}/api/file/download/${slide.filename}`" alt="" @click="openModal(slide.filename)"/></div>
       </Slide>
     </template>
     <template #addons>

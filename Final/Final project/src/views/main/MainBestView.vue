@@ -39,6 +39,7 @@ onBeforeUnmount(() => {
 })
 </script>
 
+
 <template>
   <article id="main_best">
     <h1>BEST</h1>
@@ -65,7 +66,6 @@ onBeforeUnmount(() => {
             <li v-else>Loading...</li>
           </ul>
         </div>
-
       </div>
 
       <div class="best_right_box">

@@ -35,11 +35,13 @@ onMounted(async () => {
       // console.log('리스트파일이름' + list.value)
       // console.log('리스트파일이름' + list.value.images.length)
     }
+    return slideImages;
   } catch (e) {
     console.error('실패', e);
   }
 });
 </script>
+0
 
 <template>
   <article id="productSlide">
