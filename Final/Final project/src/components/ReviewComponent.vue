@@ -144,6 +144,8 @@ watch(
     <li @click="backPage">이전</li>
     <li class="totalPages" v-for="pageNum in endPage - startPage + 1" v-bind:key="pageNum" @click="goToPage(startPage + pageNum - 1)" :class="{ active: activePage(pageNum) }">
       {{ startPage + pageNum - 1 }}
+      {{ startPage }}
+      {{ pageNum }}
     </li>
     <li @click="nextPage">다음</li>
   </ul>

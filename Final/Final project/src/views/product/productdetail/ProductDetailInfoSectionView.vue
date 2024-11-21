@@ -156,18 +156,19 @@ watchEffect(() => {
     </div> -->
 
     <div class="addButtonGroub">
+      <button class="addToCart Sell​​Now">바로 판매하기</button>
       <button class="addToCart BuyNow" @click="BuyNow">바로 구매하기</button>
       <!-- <button class="addToCart" @click="addToCart"> -->
-      <button class="addToCart">
-        <img src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" />
-        장바구니 추가
+      <button>
+        <img class="icon" src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" />
       </button>
-      <button class="wish_push" :class="{ active: redHeart }" @click.stop="addToWishlist">
-        <img class="icon" src="@/assets/img/icon/free-icon-font-heart-line.svg" alt="" />
+      <button>
+        <img class="icon" :class="{ active: redHeart }" @click.stop="addToWishlist" src="@/assets/img/icon/free-icon-font-heart-line.svg" alt="" />
       </button>
-      <button class="wish_push" @click="urlShare">
-        <img src="@/assets/img/icon/free-icon-font-share-3917574.png" class="icon" alt="" />
-      </button>
+      <!-- 슬라이드 이미지 우측하단으로 이동하기 -->
+      <!-- <button>
+          <img class="icon" @click="urlShare" src="@/assets/img/icon/free-icon-font-share-3917574.png" alt="" />
+        </button> -->
     </div>
 
     <ProductDetailSalseChartViewVue />
@@ -206,8 +207,9 @@ watchEffect(() => {
 }
 #productOption {
   display: flex;
+  justify-content: left;
   align-items: center;
-  gap: 25px;
+  gap: 2%;
   /* width: 70%; */
   font-size: 1.4rem;
   /* background-color: aquamarine; */
@@ -230,52 +232,57 @@ button.selectedSize {
 } */
 .addButtonGroub {
   display: flex;
-  justify-content: space-between;
-  margin: 25px 0;
+  justify-content: left;
+  margin: 15px 0;
   height: 45px;
-  width: 80%;
+  width: 100%;
   /* background-color: brown; */
   gap: 2%;
 }
 .addToCart {
+  /* background-color: antiquewhite; */
   width: 35%;
-  height: 100%;
+  height: auto;
   border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-main-gray);
   font-size: 1.6rem;
+  font-family: 'Pretendard-SemiBold';
+}
+.Sell​​Now {
+  background-color: orange;
 }
 .BuyNow {
   background-color: var(--color-main-bloode);
   color: white;
-  font-family: 'Pretendard-SemiBold';
 }
-.addToCart > img {
+/* .addToCart > img {
   width: 15%;
   margin-right: 5px;
-  /* background-color: antiquewhite; */
-}
+  background-color: antiquewhite;
+} */
 .wish_push {
-  height: 100%;
-  width: 9%;
-  /* background-color: rgb(173, 143, 104); */
-  border-radius: 50%;
-  border: 0.5px solid var(--color-main-gray);
-}
-.icon {
   width: 100%;
   height: auto;
-  /* border-radius: 50%; */
-  padding: 15%;
+  background-color: aqua;
+}
+.icon {
+  text-align: center;
+  border: 0.5px solid var(--color-main-gray);
+  width: 25%;
+  /* background-color: antiquewhite; */
+  height: auto;
+  border-radius: 50%;
+  padding: 4%;
   transition: filter 0.4s;
 }
-.wish_push.active {
+.icon.active {
   background-color: var(--color-main-bloode);
   border: 0.5px solid var(-color-main-bloode);
 }
-.wish_push.active .icon {
-  filter: brightness(0) saturate(100%) invert(1);
-}
+/* .wish_push.active .icon {
+  filter: brightness(0) saturate(100%) invert(0.5);
+} */
 </style>

@@ -1,7 +1,7 @@
 <template>
   <section id="main_wrapper">
     <article id="main_video">
-      <video autoplay muted loop src="@/assets/img/main.mp4"></video>
+      <!-- <video autoplay muted loop src="@/assets/img/main.mp4"></video> -->
     </article>
 
     <MainBestView />
@@ -56,7 +56,7 @@ import MainNewView from './MainNewView.vue';
 #main_video {
   width: 100%;
   height: 100vh;
-  /* background-color: rgb(35, 138, 74); */
+  background-color: rgb(35, 138, 74);
 }
 #main_video video {
   width: 100%;
