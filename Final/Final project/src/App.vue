@@ -1,9 +1,14 @@
 <script setup>
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import Header from './components/layoutnav/Header.vue';
-import Footer from './components/layoutnav/Footer.vue';
+import Header from '@/components/layoutnav/Header.vue';
+import Footer from '@/components/layoutnav/Footer.vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
+import AdminHeader from '@/components/admin/AdminHeader.vue';
+import { useUserStore } from '@/stores/Login';
+import MainAdminView from './views/admin/_MainAdminView.vue';
 
+const role = useUserStore();
+console.log(role.nickName);
 const route = useRoute();
 
 // window height의 높이에서 scrollTop 을 뺀 값을 변수로 잡아서
@@ -29,19 +34,30 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <Header></Header>
+  <div>
+    <div v-if="role.nickName === '민이♡'">
+      <div>
+        <AdminHeader></AdminHeader>
+        <MainAdminView />
+      </div>
+    </div>
 
-  <div class="min-height">
-    <RouterView />
-  </div>
+    <div v-else>
+      <Header></Header>
 
-  <Footer></Footer>
+      <div class="min-height">
+        <RouterView />
+      </div>
 
-  <div class="scroll_btn pagaUp" v-if="isScrolled" @click="pageUp">
-    <img src="../src/assets/img/icon/up.svg" alt="" />
-  </div>
-  <div class="scroll_btn pagaDown" v-if="isScrolled" @click="pageDown">
-    <img src="../src/assets/img/icon/up.svg" alt="" />
+      <Footer></Footer>
+    </div>
+
+    <div class="scroll_btn pagaUp" v-if="isScrolled" @click="pageUp">
+      <img src="@/assets/img/icon/up.svg" alt="" />
+    </div>
+    <div class="scroll_btn pagaDown" v-if="isScrolled" @click="pageDown">
+      <img src="@/assets/img/icon/up.svg" alt="" />
+    </div>
   </div>
 </template>
 

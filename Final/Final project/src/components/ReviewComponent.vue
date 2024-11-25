@@ -1,7 +1,7 @@
 <script setup>
 import { getViewCurrentPage } from '@/api/productDetailApi';
 import { GLOBAL_URL } from '@/api/util';
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -72,6 +72,7 @@ const viewCurrentPage = async () => {
     totalPageGroup.value = Math.floor(totalPages.value / 10);
     startPage.value = currentPageGroup.value * 10 + 1;
     endPage.value = Math.min(startPage.value + 9, totalPages.value);
+    // console.log(reviewCount.value);
   }
 };
 
@@ -165,8 +166,6 @@ watch(
 }
 .noUserReviewList > img {
   width: 100px;
-  color: var(--color-main-Lgray);
-  filter: grayscale(100%);
   margin-top: 20px;
 }
 .noUserReviewList::before {

@@ -102,6 +102,8 @@ const toggleSearch = () => {
           <li><router-link to="/mypage">마이페이지</router-link></li>
           <li class="noCursor">&nbsp;|&nbsp;</li>
           <li>고객센터</li>
+          <li class="noCursor">&nbsp;|&nbsp;</li>
+          <li><router-link to="/mainadmin">관리자</router-link></li>
         </ul>
       </template>
       <template v-else>

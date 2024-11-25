@@ -9,17 +9,16 @@ import { useUserStore } from '@/stores/Login';
 // import { getProductData, getReviewData, getReviewImageList, getSlideImages, getstarCounting } from '@/api/productDetail';
 
 // 로그인 pinia
-const userStore = useUserStore();
+const userStore = useUserStore(); 
 const userLogin = computed(() => userStore.loginCheck);
 
 // 장바구니 추가
 const cartStore = useCartStore();
 const addToCart = () => {
-  console.log('장바구니 추가');
-  // alert("장바구니에 담았습니다.")
+  
+  alert("장바구니에 담았습니다.")
   console.log('props.productInfo', props.productInfo);
   cartStore.addItem(props.productInfo);
-
   if (userLogin.value) {
     const data = {
       productId: props.productInfo.productId,
@@ -99,6 +98,12 @@ const navDetailProduct = () => {
     },
   });
 };
+
+const popup = document.querySelector('.cart_pop')
+// const popup_close = document.querySelector('.cart_pop_close')
+
+ 
+
 </script>
 
 <template>
@@ -138,6 +143,12 @@ const navDetailProduct = () => {
 </template>
 
 <style scoped>
+.cart_pop{
+  width: 500px;
+  height: 500px;
+  background-color: antiquewhite;
+}
+
 /* 전체설정 */
 .products {
   max-width: 305px;
