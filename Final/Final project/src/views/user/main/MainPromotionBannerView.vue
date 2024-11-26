@@ -29,8 +29,7 @@ onMounted(()=>{
       data-aos="fade-right" 
       data-aos-offset="50"
       data-aos-delay="600"
-        >바로 판매하기 →</RouterLink
-      >
+        >바로 판매하기 →</RouterLink>
     </div>
   </article>
 </template>
@@ -43,7 +42,7 @@ onMounted(()=>{
   margin: 0 auto;
   height: 189px;
   display: flex;
-  margin: 10% 0;
+  margin: 200px 0;
 }
 .promotion_banner_size {
   position: relative;
@@ -74,15 +73,19 @@ onMounted(()=>{
   right: 0;
   top: 50%;
   margin-top: -27px;
-  /* transform: translateY(-50%); */
+  transform: translateY(-50%);
   color: var(--color-main-bloode);
   font-family: var(--font-family-pretendard-bold);
   font-size: 2rem;
   padding: 15px 0 15px 15px;
 }
-@media (max-width: 300px) {
+@media (max-width: 630px) {
   .promotion_banner_text {
     display: none;
+  }
+  .promotion_banner_link{
+    font-size: 4rem;
+    margin-top: 0px;
   }
 }
 </style>

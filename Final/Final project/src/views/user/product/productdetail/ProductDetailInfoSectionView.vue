@@ -59,7 +59,7 @@ const doLoad = async () => {
           // console.log('데이터내용들', productDataOk.value);
         }
       }
-      console.log('reviewData.value', reviewData.value);
+      // console.log('reviewData.value', reviewData.value);
 
       // const newStatus = true;
       // emit('onProductInfoLoaded', newStatus);
@@ -281,5 +281,10 @@ button.selectedSize {
 .icon_box.active {
   background-color: orange;
   border: 0.5px solid var(-color-main-bloode);
+}
+@media (max-width: 630px) {
+  #productInfoSection {
+    width: 100%;
+  }
 }
 </style>

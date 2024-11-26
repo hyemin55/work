@@ -1,11 +1,12 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
-import ProductComponent from '@/components/ProductComponent.vue';
+import ProductComponent from '@/components/user/ProductComponent.vue';
 import { useInfiniteQuery } from '@tanstack/vue-query';
 import axios from 'axios';
 import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import { onBeforeRouteLeave, useRoute } from 'vue-router';
-// ../../product/productFilter.vue
+import ProductFilter from '@/views/user/product/productFilter.vue';
+
 // const sortedList = ref([])  // 정렬된 리스트
 const sortTitle = ref('추천순 ⇅');
 const hiddenItem = ref(0);
@@ -89,18 +90,40 @@ const sortList = (order, index) => {
       sortTitle.value = '추천순 ⇅';
   } // sortedList.value = [...list.value]  // 기본적으로 원래 순서로 돌아감
 };
+
+const filterData = [
+  {
+    id: 1,
+    title: '새상품',
+    content: ['새상품만 보기'],
+  },
+  {
+    id: 2,
+    title: '브랜드',
+    content: ['브랜드1', '브랜드2', '브랜드3', '브랜드4', '브랜드5', '브랜드6'],
+  },
+  {
+    id: 3,
+    title: '성별',
+    content: ['남성용', '여성용'],
+  },
+  {
+    id: 4,
+    title: '용량',
+    content: ['100ml 이상', '100ml~50ml', '50ml 이하'],
+  },
+  {
+    id: 5,
+    title: '지속시간',
+    content: ['파르푕', '오드파르푕', '오드뜨왈렛', '오드코롱'],
+  },
+];
 </script>
 
 <template>
   <section id="product_wrapper" class="scroll-target">
     <article class="product_gnb">
       <h1 class="product_category_title">{{ categoryTitle }}</h1>
-      <ul class="product_category">
-        <li><router-link to="/">전체상품</router-link></li>
-        <li><router-link to="/">남성향수</router-link></li>
-        <li><router-link to="/">여성향수</router-link></li>
-        <li><router-link to="/">등등</router-link></li>
-      </ul>
 
       <div class="product_dropdown">
         <p class="product_mount">총 '{{ totalDataLength }}개' 제품</p>
@@ -118,7 +141,15 @@ const sortList = (order, index) => {
     </article>
 
     <article class="product_list" v-if="list && list.pages && list.pages[0]">
-      <ProductComponent v-for="product in list.pages.flatMap(page => page.data)" :key="product.productId" :productInfo="product" />
+      <div class="product_fillter">
+        <form class="product_fillter_form">
+          <ProductFilter v-for="filterData in filterData" :key="filterData.id" :filterInfo="filterData"> </ProductFilter>
+        </form>
+      </div>
+
+      <div class="product_list_grid">
+        <ProductComponent v-for="product in list.pages.flatMap(page => page.data)" :key="product.productId" :productInfo="product" />
+      </div>
     </article>
 
     <h1 class="loadingUi" ref="loadingUi" v-if="hasNextPage">
@@ -148,14 +179,6 @@ const sortList = (order, index) => {
   font-family: var(--font-JacquesFrancois);
   font-size: 2.8rem;
 }
-.product_category {
-  display: flex;
-  margin-top: 2rem;
-}
-.product_category li {
-  font-size: 1.4rem;
-  margin: 0 1rem;
-}
 
 /* dropdown 메뉴 설정 */
 .product_dropdown {
@@ -172,7 +195,6 @@ const sortList = (order, index) => {
 .sort_container {
   cursor: pointer;
 }
-
 .product_sort {
   display: none;
   position: absolute; /* 드롭다운 위치 조정 */
@@ -214,13 +236,33 @@ const sortList = (order, index) => {
   height: 100%;
   width: auto;
 }
+
 /* 상품 리스트 설정 */
 .product_list {
   width: 100%;
+  display: flex;
+}
+.product_fillter {
+  position: relative;
+  width: 325px;
+  height: auto;
+}
+.product_fillter_form {
+  position: sticky;
+  top: 200px;
+  width: 305px;
+  height: 700px;
+  background-color: #e9e9e9;
+  /* background-color: indianred; */
+}
+.product_list_grid {
+  width: calc(100% - 325px);
+  height: auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
+
 /* 미디어쿼리 구간 */
 @media (max-width: 630px) {
   .product_list {

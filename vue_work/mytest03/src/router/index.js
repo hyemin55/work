@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
 import ComputedView from '@/views/ComputedView.vue'
 import RefView from '@/views/RefReactiveView.vue'
+import KeepAliveView from '@/views/KeepAliveView.vue'
 
 
 const router = createRouter({
@@ -30,6 +31,11 @@ const router = createRouter({
       path: '/ref',
       name: 'ref',
       component:RefView
+    },
+    {
+      path: '/keepAlive',
+      name: 'keepAlive',
+      component: KeepAliveView
     },
   ]
 })

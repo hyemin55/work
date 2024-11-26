@@ -6,8 +6,10 @@ import SecondChild from '@/components/SecondChild.vue'
 <template>
   <main>
     <h1>연습용</h1>
+    <br>
     <FirstChild />
     <SecondChild />
+    <CountPlus />
   </main>
 </template>
 

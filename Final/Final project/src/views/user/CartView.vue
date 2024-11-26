@@ -1,6 +1,6 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
-import CartProductComponent from '@/components/CartProductComponent.vue';
+import CartProductComponent from '@/components/user/CartProductComponent.vue';
 import { useCartStore } from '@/stores/CartStore';
 import { useUserStore } from '@/stores/Login';
 import axios from 'axios';

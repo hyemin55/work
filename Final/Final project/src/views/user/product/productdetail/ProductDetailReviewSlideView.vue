@@ -44,7 +44,6 @@ watchEffect(() => {
 <template>
   <Carousel v-bind="config" id="ReviewSlide">
     <template v-if="slides.length == 0 || slides.length == null">
-      {{ slides.length }}
       <p>아직 등록된 사진이 없어요ㅠㅡㅠ</p>
     </template>
     <template v-else>

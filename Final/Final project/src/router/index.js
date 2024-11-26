@@ -8,8 +8,14 @@ import MypageView from '@/views/user/mypage/_MypageView.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import PaymentView from '@/views/user/payment/_PaymentView.vue';
 import NotFoundPage from '@/views/loding/NotFoundPage.vue';
-import MainAdminView from '@/views/admin/_MainAdminView.vue';
 import { useUserStore } from '@/stores/Login';
+import AnnouncementView from '@/views/admin/announcementVIew.vue';
+import OrderManagementView from '@/views/admin/OrderManagementView.vue';
+import ProductManagementView from '@/views/admin/ProductManagementView.vue';
+import ReviewManagementView from '@/views/admin/ReviewManagementView.vue';
+import StatisticsView from '@/views/admin/StatisticsView.vue';
+import UserManagementView from '@/views/admin/UserManagementView.vue';
+import _MainDashboardView from '@/views/admin/_MainDashboardView.vue';
 
 const loginRouters = [
   {
@@ -24,10 +30,55 @@ const loginRouters = [
   },
 ];
 
+const adminRouters = [
+  {
+    path: '/',
+    meta: { nickName: '민이♡' }, // 공통 meta
+    children: [
+      {
+        path: '/mainDashboard',
+        name: 'mainDashboard',
+        component: _MainDashboardView,
+      },
+      {
+        path: 'announcement',
+        name: 'announcement',
+        component: AnnouncementView,
+      },
+      {
+        path: 'orderManagement',
+        name: 'orderManagement',
+        component: OrderManagementView,
+      },
+      {
+        path: 'productManagement',
+        name: 'productManagement',
+        component: ProductManagementView,
+      },
+      {
+        path: 'reviewManagement',
+        name: 'reviewManagement',
+        component: ReviewManagementView,
+      },
+      {
+        path: 'statistics',
+        name: 'statistics',
+        component: StatisticsView,
+      },
+      {
+        path: 'userManagement',
+        name: 'userManagement',
+        component: UserManagementView,
+      },
+    ],
+  },
+];
+
 const routers = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...loginRouters,
+    ...adminRouters,
     {
       path: '/',
       name: 'main',
@@ -73,12 +124,6 @@ const routers = createRouter({
       path: '/:catchAll(.*)', // catch-all 경로를 정규 표현식으로 설정
       component: NotFoundPage,
     },
-    {
-      path: '/mainadmin',
-      name: 'mainadmin',
-      component: MainAdminView,
-      meta: { nickName: '민이♡' },
-    },
   ],
   scrollBehavior(to, from, savedPosition) {
     // 뒤로가기나 새로고침이 아닌 경우(savedPosition이 있으면 해당 위치로 복원)
@@ -89,12 +134,12 @@ const routers = createRouter({
     return { top: 0 };
   },
 });
-routers.beforeEach((to, from, next) => {
-  const userStore = useUserStore();
-  const userRole = userStore.nickName;
-  if (to.meta.nickName && to.meta.nickName !== userRole) {
-    return next('/main');
-  }
-  next();
-});
+// routers.beforeEach((to, from, next) => {
+//   const userStore = useUserStore();
+//   const userRole = userStore.nickName;
+//   if (to.meta.nickName && to.meta.nickName !== '민이♡') {
+//     return next('/main');
+//   }
+//   next();
+// });
 export default routers;

@@ -44,7 +44,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onActivated, onDeactivated, ref } from 'vue'
+
 
 const con = ref(false)
 const message = ref('')
@@ -65,6 +66,14 @@ const age = ref(0)
 const incrementAge=()=>{
   age.value += 1
 }
+
+onActivated(() => {
+  console.log('컴포넌트가 활성화됨');
+});
+
+onDeactivated(() => {
+  console.log('컴포넌트가 비활성화됨');
+});
 </script>
 
 <style>

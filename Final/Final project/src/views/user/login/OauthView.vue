@@ -16,14 +16,14 @@ watchEffect(async () => {
     let res = await login(route.query.code);
     if (!res.status.toString().startsWith('2')) return;
     res = await loginCheck();
+    console.log(res.data);
     if (res.status.toString().startsWith('2')) {
-      console.log(res.data);
-      await useStore.login(res.data);
+      useStore.login(res.data);
       console.log(res.data);
     }
     // if사용해 role 권한이 admin이면 관리자페이지로 푸시
     if (res.data.nickName === '민이♡') {
-      await router.push({ name: 'mainadmin' });
+      await router.push({ name: 'mainDashboard' });
     } else if (res.data.role === '검수자') {
       await router.push({ name: 'main' });
     } else {

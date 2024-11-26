@@ -1,6 +1,6 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { ref, watchEffect, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import Chart from 'chart.js/auto';
@@ -18,24 +18,28 @@ let sortTotalSaleTradeList = [];
 const doLode = async () => {
   try {
     const response = await axios.get(`${GLOBAL_URL}/detail/chart/${idx.value}`);
-    // console.log(response.data);
+    console.log(response);
     totalSalseList.value = response.data;
+    console.log(totalSalseList.value);
     // console.log(response.data[0].tradeCompletedDate);
-    displayedList.value = totalSalseList.value.slice(0, showMore.value);
-
-    // Call by Reference vs call by value
-    //  sortTotalSaleTradeList.reverse();를 하면 totalSalseList과 같은 곳을 바라보기때문에
-    // JSON.stringify로 문자열로 바꾼뒤 다시 JSON.parse로 객채를 만들어 sortTotalSaleTradeList가 다른곳을 바라보게 만든다.
-    sortTotalSaleTradeList = JSON.parse(JSON.stringify(totalSalseList.value));
-    sortTotalSaleTradeList.reverse();
-
     if (totalSalseList.value.length > 0) {
+      displayedList.value = totalSalseList.value.slice(0, showMore.value);
+
+      // Call by Reference vs call by value
+      //  sortTotalSaleTradeList.reverse();를 하면 totalSalseList과 같은 곳을 바라보기때문에
+      // JSON.stringify로 문자열로 바꾼뒤 다시 JSON.parse로 객채를 만들어 sortTotalSaleTradeList가 다른곳을 바라보게 만든다.
+      sortTotalSaleTradeList = JSON.parse(JSON.stringify(totalSalseList.value));
+      sortTotalSaleTradeList.reverse();
+
       initializeChart();
-    } else {
-      console.warn('No transaction history found.');
     }
   } catch (error) {
-    console.error('오류가 발생했습니다:', error.message);
+    if (error.status === 404) {
+      console.warn('No transaction history found.');
+      return (totalSalseList.value.length = 0);
+    } else {
+      console.error('오류가 발생했습니다:', error);
+    }
   }
 };
 

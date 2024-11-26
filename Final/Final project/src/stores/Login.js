@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import image1234 from '@/assets/img/빵빵덕세안.png'
+import { defineStore } from 'pinia';
+import image1234 from '@/assets/img/빵빵덕세안.png';
 
 export const useUserStore = defineStore('member', {
   state: () => ({
@@ -15,37 +15,33 @@ export const useUserStore = defineStore('member', {
   actions: {
     login(data) {
       // 백엔드와 통신 성공 시 true로 바꿔준다.
-      this.loginCheck = true
-      this.userId = data.userId
-      this.nickName = data.nickName
-      this.thumbnail = data.thumbnail
-      this.profileImage = data.profileImage
-      this.email = data.email
-      this.snsType = data.snsType
+      this.loginCheck = true;
+      this.userId = data.userId;
+      this.nickName = data.nickName;
+      this.thumbnail = data.thumbnail;
+      this.profileImage = data.profileImage;
+      this.email = data.email;
+      this.snsType = data.snsType;
 
-      if (
-        this.profileImage ===
-          'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg' ||
-        null
-      ) {
-        this.profileImage = image1234
+      if (this.profileImage === 'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg' || null) {
+        this.profileImage = image1234;
       }
-
-      sessionStorage.setItem('nickName', this.nickName)
-      sessionStorage.setItem('profileImage', this.profileImage)
+      console.log(sessionStorage.getItem('token'));
+      sessionStorage.setItem('nickName', this.nickName);
+      sessionStorage.setItem('profileImage', this.profileImage);
     },
 
     logout() {
-      this.loginCheck = false
-      this.nickName = ''
-      this.thumbnail = ''
-      this.profileImage = ''
-      this.email = ''
-      this.userId = ''
-      this.snsType = ''
-      sessionStorage.removeItem('token')
-      sessionStorage.removeItem('nickName')
-      sessionStorage.removeItem('profileImage')
+      this.loginCheck = false;
+      this.nickName = '';
+      this.thumbnail = '';
+      this.profileImage = '';
+      this.email = '';
+      this.userId = '';
+      this.snsType = '';
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('nickName');
+      sessionStorage.removeItem('profileImage');
     },
   },
-})
+});

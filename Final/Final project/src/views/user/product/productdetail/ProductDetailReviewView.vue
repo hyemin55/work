@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watchEffect } from 'vue';
-import ReviewComponent from '@/components/ReviewComponent.vue';
+import ReviewComponent from '@/components/user/ReviewComponent.vue';
 import ProductDetailReviewSlide from '@/views/user/product/productdetail/ProductDetailReviewSlideView.vue';
 import { useRoute } from 'vue-router';
 import { getstarCounting } from '@/api/productDetailApi';

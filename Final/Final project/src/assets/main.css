@@ -40,7 +40,7 @@ button {
   text-decoration: none;
   box-sizing: border-box;
 }
-input[type="checkbox"] {
+input[type='checkbox'] {
   cursor: pointer;
 }
 
@@ -48,7 +48,14 @@ input[type="checkbox"] {
   width: 1280px;
   margin: 0 auto;
 }
-
+.MainAdmin {
+  height: auto;
+  min-height: calc(100vh - 70px);
+  width: calc(100vw - 200px);
+  margin: 70px 0 0 200px;
+  padding: 10px 0 0 10px;
+  /* background-color: brown; */
+}
 /* @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);

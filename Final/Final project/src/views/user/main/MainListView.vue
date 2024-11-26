@@ -17,7 +17,7 @@
 
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
-import ProductComponent from '@/components/ProductComponent.vue';
+import ProductComponent from '@/components/user/ProductComponent.vue';
 import axios from 'axios';
 import { ref, watchEffect } from 'vue';
 
@@ -59,7 +59,7 @@ watchEffect(() => {
   position: absolute;
   width: 70vw;
   left: 0;
-  top: 0;
+  top: -50px;
   height: 0.2px;
   background-color: var(--color-main-bloode);
 }
@@ -69,21 +69,22 @@ watchEffect(() => {
   width: 70vw;
   right: 0;
   height: 0.2px;
-  bottom: 0;
+  bottom: -50px;
   background-color: var(--color-main-bloode);
 }
 #main_product_list {
   /* background-color: #F3EED9; */
   position: relative;
   margin: 0 auto;
-  height: 600px;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 .expanded {
-  height: 1060px !important;
+  height: auto;
+  /* height: 1060px !important; */
 }
 .main_product_list_btn_box {
   display: flex;
@@ -95,6 +96,7 @@ watchEffect(() => {
 .main_product_list_btn {
   height: 45px;
   width: 13%;
+  min-width: 100px;
   font-size: 1.5rem;
   margin: 10px 0;
   padding: 1%;
@@ -111,5 +113,12 @@ watchEffect(() => {
   grid-template-columns: repeat(4, 1fr);
   gap: 2%;
   padding: 15px 0;
+}
+@media (max-width: 630px) {
+  .main_product_Com,
+.main_add_product_Com {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+  }
 }
 </style>

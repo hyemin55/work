@@ -70,4 +70,9 @@ watchEffect(() => {
   display: flex;
   margin-top: -20px;
 }
+@media (max-width: 630px) {
+  #productMain {
+    flex-direction: column;
+  }
+}
 </style>

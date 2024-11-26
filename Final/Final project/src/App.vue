@@ -1,11 +1,11 @@
 <script setup>
-import { RouterLink, RouterView, useRoute } from 'vue-router';
-import Header from '@/components/layoutnav/Header.vue';
-import Footer from '@/components/layoutnav/Footer.vue';
+import { RouterView, useRoute } from 'vue-router';
+import Header from '@/components/user/layoutnav/Header.vue';
+import Footer from '@/components/user/layoutnav/Footer.vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import AdminHeader from '@/components/admin/AdminHeader.vue';
+import AdminHeader from '@/components/admin/layoutnav/AdminHeader.vue';
 import { useUserStore } from '@/stores/Login';
-import MainAdminView from './views/admin/_MainAdminView.vue';
+import Adminnav from './components/admin/layoutnav/Adminnav.vue';
 
 const role = useUserStore();
 console.log(role.nickName);
@@ -38,7 +38,10 @@ onBeforeUnmount(() => {
     <div v-if="role.nickName === '민이♡'">
       <div>
         <AdminHeader></AdminHeader>
-        <MainAdminView />
+        <div class="adminLayout">
+          <Adminnav></Adminnav>
+          <RouterView class="MainAdmin" />
+        </div>
       </div>
     </div>
 
@@ -62,6 +65,9 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.adminLayout {
+  display: flex;
+}
 .min-height {
   min-height: calc(100vh - 320px);
 }

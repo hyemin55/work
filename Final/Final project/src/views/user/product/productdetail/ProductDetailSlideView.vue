@@ -62,7 +62,9 @@ onMounted(async () => {
           <img :src="`${GLOBAL_URL}/api/file/download/${image.filename}`" alt="" class="carousel_image" />
         </Slide>
       </Carousel>
-      <img class="icon" @click="urlShare" src="@/assets/img/icon/free-icon-font-share-3917574.png" alt="" />
+      <div class="icon_box">
+        <img class="icon" @click="urlShare" src="@/assets/img/icon/free-icon-font-share-3917574.png" alt="" />
+      </div>
     </div>
 
     <!-- :autoplay="2000" -->
@@ -97,19 +99,28 @@ onMounted(async () => {
   border-radius: 20px;
   /* background-color: antiquewhite; */
 }
-.iconPosition{
+.iconPosition {
   position: relative;
 }
-.icon{
+.icon_box {
   position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px solid var(--color-main-gray);
+  border-radius: 50%;
   bottom: 20px;
   right: 3%;
-  width: 6%;
   border: 0.5px solid var(--color-main-Lgray);
   background-color: var(--color-main-Lgray);
-  border-radius: 50%;
-  padding: 0.5%;
   cursor: pointer;
+  border-radius: 50%;
+}
+.icon {
+  width: 70%;
+  height: auto;
 }
 .carousel_image {
   padding: 1%;
@@ -140,5 +151,10 @@ onMounted(async () => {
   object-fit: cover;
   cursor: pointer;
   /* background-color: rgb(153, 96, 22); */
+}
+@media (max-width: 630px) {
+  #productSlide {
+    width: 100%;
+  }
 }
 </style>
