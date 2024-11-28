@@ -10,6 +10,7 @@ export const useUserStore = defineStore('member', {
     email: '',
     userId: '',
     snsType: '',
+    role: '',
   }),
   //   data를 받아오면 위의 상태안에 값을 넣고 레이아웃네비뷰의 watchEffect로 다시 넘겨준다.
   actions: {
@@ -22,6 +23,7 @@ export const useUserStore = defineStore('member', {
       this.profileImage = data.profileImage;
       this.email = data.email;
       this.snsType = data.snsType;
+      this.role = data.role;
 
       if (this.profileImage === 'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg' || null) {
         this.profileImage = image1234;

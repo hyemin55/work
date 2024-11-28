@@ -147,7 +147,7 @@ const toggleSearch = () => {
   display: flex;
   flex-direction: column;
   /* position: fixed; */
-  z-index: 999;
+  z-index: 900;
   top: 0;
   left: 0;
   transition: background-color 0.2s ease;

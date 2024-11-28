@@ -45,7 +45,7 @@ const goreview= ()=>{
 
       <div class="history_product">
         <div class="history_product_img">
-          <img src="../assets/img/d003.png" alt="" />
+          <img src="@/assets/img/d003.png" alt="" />
         </div>
         <ul class="history_product_text">
           <li>상품명 : </li>

@@ -14,11 +14,13 @@
 <script setup>
 import { useUserStore } from '@/stores/Login';
 import { onBeforeMount, onMounted, onUpdated } from 'vue';
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const useStore = useUserStore();
 
 const logout = () => {
   useStore.logout();
+  router.push({ name: 'main' });
 };
 // onMounted(() => {
 //   useStore.nickName === '민이♡';
@@ -26,7 +28,7 @@ const logout = () => {
 // });
 
 onMounted(() => {
-  console.log(useStore.nickName);
+  console.log('AdminHeader', useStore.nickName);
 });
 </script>
 

@@ -2,6 +2,7 @@
 import { getBestProducts } from '@/api/mainApi';
 import { GLOBAL_URL } from '@/api/util';
 import { onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
+import router from '@/router';
 
 const bestListRef = ref([]);
 const bestListImagesRef = ref([]);
@@ -27,6 +28,13 @@ const nextchangeIdx = () => {
 };
 const prevchangeIdx = () => {
   currentIdxRef.value = (currentIdxRef.value - 1 + 3) % 3;
+};
+const navDetailProduct = (productId, size) => {
+  console.log(productId, size);
+  router.push({
+    path: `/productsdetail/${productId}`,
+    query: { size: size },
+  });
 };
 
 watchEffect(() => {
@@ -58,14 +66,18 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="best_product">
-          <img class="best_product_img" :src="`${GLOBAL_URL}/api/file/download/${bestListImagesRef[currentIdxRef]}`" alt="" />
+          <img
+            class="best_product_img"
+            @click="navDetailProduct(bestListRef[currentIdxRef].productId, bestListRef[currentIdxRef].size)"
+            :src="`${GLOBAL_URL}/api/file/download/${bestListImagesRef[currentIdxRef]}`"
+            alt=""
+          />
           <ul class="best_left_text">
             <li class="best_brand_name" v-if="bestListRef.length > 0">{{ bestListRef[currentIdxRef].brandName }}</li>
             <li class="best_product_name" v-if="bestListRef.length > 0">{{ bestListRef[currentIdxRef].productName }}</li>
             <li v-else>Loading...</li>
           </ul>
         </div>
-
       </div>
 
       <div class="best_right_box">
@@ -140,6 +152,7 @@ onBeforeUnmount(() => {
 .best_product_img {
   width: 100%;
   height: auto;
+  cursor: pointer;
 }
 .best_left_text {
   text-align: center;

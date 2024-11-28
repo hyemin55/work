@@ -5,8 +5,8 @@ import home_2 from '@/assets/img/p_003.png';
 import home_3 from '@/assets/img/빵빵덕세안.png';
 import home_4 from '@/assets/img/빵빵덕토끼.png';
 import home_5 from '@/assets/img/빵빵덕세안.png';
-
 import Queue from 'queue-fifo';
+import router from '@/router';
 
 const slides = ref([home_1, home_2, home_3, home_4, home_5]);
 
@@ -26,7 +26,6 @@ const handleClick = index => {
   // 클릭한 슬라이드의 index에 따른 로직 추가
 
   console.log('queuepeek', queue.peek());
-  //
   if (queue.peek() == index) return;
   while (queue.peek() != index) {
     queue.enqueue(queue.dequeue());
@@ -43,13 +42,21 @@ const handleClick = index => {
       console.warn(`Invalid index: ${index}`);
     }
   }
-
   image_list = [];
   for (let i = 0; i < slides.value.length; i++) {
     queue.enqueue(i);
     image_list.push(slides.value[i]);
   }
 };
+
+// 자세히보기를 클릭했을 때 넘겨줄 idx와 size이다.
+// const navDetailProduct = (productId,size) => {
+//   console.log(productId,size);
+//   router.push({
+//     path: `/productsdetail/${productId}`,
+//     query: { size: size },
+//   });
+// };
 </script>
 
 <template>
@@ -76,6 +83,7 @@ const handleClick = index => {
         <p>프리지아 오드코롱</p>
         <p>풍부한 꽃향기와 함께 신비로운 느낌의 오 드 퍼퓸. 마시멜로처럼 부드럽고 포근한 느낌을 줍니다.</p>
         <p>자세히 보러가기 →</p>
+        <!-- <p @click="navDetailProduct(slide)">자세히 보러가기 →</p> -->
       </div>
     </div>
   </div>

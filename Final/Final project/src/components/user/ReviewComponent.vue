@@ -1,9 +1,11 @@
 <script setup>
 import { getViewCurrentPage } from '@/api/productDetailApi';
 import { GLOBAL_URL } from '@/api/util';
+import { useUserStore } from '@/stores/Login';
+import axios from 'axios';
 import { ref, watch, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-
+const useStore = useUserStore();
 const props = defineProps({
   // 받아오는props의 정의 방법
   reviewCount: {
@@ -26,6 +28,19 @@ const pageSize = 5;
 const startPage = ref(0);
 const endPage = ref(0);
 const star_list = ['★', '★★', '★★★', '★★★★', '★★★★★'];
+const GoodIcon = ref(true);
+
+// 도움돼요
+const GoodIconState = async reviewId => {
+  console.log(reviewId);
+  if (!useStore.loginCheck) {
+    alert('로그인이 필요한 기능입니다.');
+    return;
+  }
+  const reviewListRes = await axios.get(`${GLOBAL_URL}/detail/favorite/${idx.value}`);
+  console.log(reviewListRes.data);
+  GoodIcon.value = ([reviewIdShow]) => {};
+};
 
 // 이전페이지
 const backPage = () => {
@@ -85,19 +100,6 @@ const activePage = pageNum => {
   }
 };
 
-// 없어도 잘 돌아간다.....
-// 처음 렌더링 시 받아올 데이터.
-// onMounted(async () => {
-//   console.log(reviewCount.value);
-//   reviewCount.value = props.reviewCount;
-//   reviewList.value = await getReviewsData(idx.value);
-//   totalPages.value = Math.ceil(reviewCount.value / pageSize);
-//   totalPageGroup.value = Math.floor(totalPages.value / 10);
-//   startPage.value = currentPageGroup.value * 10 + 1;
-//   endPage.value = Math.min(startPage.value + 9, totalPages.value);
-//   console.log(reviewCount.value);
-// });
-
 // 주소줄의 idx값이 바뀌면 리뷰리스트와 페이지네이션 변경을 위해 재통신 필요.
 watch(
   () => [route.params.idx, props.reviewCount], // source로 배열을 사용하여 다중 변수를 추적
@@ -111,18 +113,28 @@ watch(
 
 <template>
   <div id="userReviewList" class="border" v-for="(list, index) in reviewList.data" :key="index">
-    <ul class="userInfo">
-      <li>
-        <img :src="`${list.memberDetailReviewResDto.profileImage}`" alt="" class="userInfoImg" />
-      </li>
-      <div class="userInfoNicknameAndUserReviewStar">
-        <li class="userInfoNickname">
-          {{ list.memberDetailReviewResDto.nickName }}
+    <ul class="userInfoAndGood">
+      <div class="userInfo">
+        <li>
+          <img :src="`${list.memberDetailReviewResDto.profileImage}`" alt="" class="userInfoImg" />
         </li>
-        <p class="userReviewStar">
-          {{ star_list[list.star - 1] }} <span style="color: #333; font-size: 1.5rem">{{ list.star }}</span>
-        </p>
+        <div class="userInfoNicknameAndUserReviewStar">
+          <li class="userInfoNickname">
+            {{ list.memberDetailReviewResDto.nickName }}
+          </li>
+          <p class="userReviewStar">
+            {{ star_list[list.star - 1] }} <span style="color: #333; font-size: 1.5rem">{{ list.star }}</span>
+          </p>
+        </div>
       </div>
+      <li class="reviewGoodIcon" v-if="GoodIcon" @click="GoodIconState(list.reviewId)">
+        <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766584.svg" alt="" />
+        {{ list.favoriteCount }} 도움되요
+      </li>
+      <li class="reviewGoodIcon" v-else @click="GoodIconState(list.reviewId)">
+        <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766580.svg" alt="" />
+        {{ list.favoriteCount }} 도움되요
+      </li>
     </ul>
 
     <div class="userReviewImgs">
@@ -189,6 +201,25 @@ watch(
   color: orange;
   /* margin-top: 20px; */
 }
+.reviewGoodIcon {
+  width: 10%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  padding: 0.5%;
+  gap: 10%;
+  font-size: 1.5rem;
+  border: 0.5px solid var(--color-main-gray);
+  border-radius: 30px;
+  cursor: pointer;
+  /* background-color: antiquewhite; */
+}
+.reviewGoodIcon > img {
+  width: auto;
+  height: 100%;
+}
 .userReviewImgs {
   display: flex;
   align-items: center;
@@ -226,14 +257,21 @@ watch(
   margin: 10px 0;
   color: var(--color-text-gray);
 }
+.userInfoAndGood {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  width: auto;
+  margin: 25px 0 7px 0;
+  /* background-color: aqua; */
+}
 .userInfo {
   display: flex;
   align-items: center;
   justify-content: left;
-  height: 50px;
-  width: auto;
+  height: 100%;
   gap: 10px;
-  margin: 25px 0 7px 0;
   /* background-color: aqua; */
 }
 .userInfoImg {

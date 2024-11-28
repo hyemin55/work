@@ -24,12 +24,12 @@ const wishDelete = ()=>{
 
       <div class="product_box">
         <div class="img_box">
-          <img src="../../assets/img/빵빵덕복숭아.png" alt="" />
+          <img src="@/assets/img/빵빵덕복숭아.png" alt="" />
         </div>
         <ul class="content_box">
           <li>상품명 :</li>
           <li>가격 :</li>
-          <li>수량 :</li>
+          <li>옵션 :</li>
         </ul>
       </div>
       <div class="btn">

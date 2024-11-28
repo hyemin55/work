@@ -4,6 +4,11 @@
   </article>
 </template>
 
-<script setup></script>
+<script setup>
+import { useUserStore } from '@/stores/Login';
+
+const useStore = useUserStore();
+console.log('MainDashboard', useStore.nickName);
+</script>
 
 <style scoped></style>

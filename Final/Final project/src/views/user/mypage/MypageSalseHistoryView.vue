@@ -1,6 +1,12 @@
 <script setup>
 import HistoryProduct from '@/components/user/HistoryProduct.vue';
+import SaleProductModal from '@/components/user/SaleProductModal.vue';
 import { ref } from 'vue';
+
+const saleModal = ref(false)
+const showModal = ()=>{
+  saleModal.value = !saleModal.value
+}
 
 const props = ref({
   text01: '판매신청',
@@ -12,12 +18,14 @@ const props = ref({
 <template>
   <div class="dfd">
     <h1 class="orderHistory_title">전체 판매 내역</h1>
-    <h2 class="salesApplication">
-      판매 신청하러 가기
-      <img src="../../assets/img/wing_money.gif" alt="" />
+    <h2 @click="showModal" class="salesApplication">
+      판매 신청하기
+      <img src="@/assets/img/wing_money.gif" alt="" />
     </h2>
   </div>
   <HistoryProduct :propstext="props" :showBtn="false"></HistoryProduct>
+
+  <SaleProductModal v-if="saleModal" @closeModal="showModal"/>
 </template>
 
 <style scoped>

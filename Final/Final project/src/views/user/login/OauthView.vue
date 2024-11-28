@@ -11,23 +11,28 @@ const useStore = useUserStore();
 
 // 받은 인가코드로 토큰받아오기
 watchEffect(async () => {
+  if (useStore.loginCheck) return;
   // console.log('code = ', route.query.code)
   if (route.query.code) {
+    // if()
     let res = await login(route.query.code);
     if (!res.status.toString().startsWith('2')) return;
     res = await loginCheck();
+    useStore.login(res.data); //스토어 등록
     console.log(res.data);
     if (res.status.toString().startsWith('2')) {
-      useStore.login(res.data);
       console.log(res.data);
-    }
+    } else return;
     // if사용해 role 권한이 admin이면 관리자페이지로 푸시
     if (res.data.nickName === '민이♡') {
-      await router.push({ name: 'mainDashboard' });
+      console.log('관리자페이지로이동');
+      router.push({ name: 'mainDashboard' });
     } else if (res.data.role === '검수자') {
-      await router.push({ name: 'main' });
+      console.log('검수자페이지로이동');
+      router.push({ name: 'main' });
     } else {
-      await router.push({ name: 'main' });
+      console.log('유저페이지로이동');
+      router.push({ name: 'main' });
     }
   }
 });

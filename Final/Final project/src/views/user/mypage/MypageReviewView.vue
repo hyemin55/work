@@ -20,7 +20,7 @@ const correction =()=>{
 
         <div class="review_content">
           <div class="img_box">
-            <img src="../../assets/img/c008.png" alt="">
+            <img src="@/assets/img/c008.png" alt="">
           </div>
           <div class="text_box">
             <p class="text_content">리뷰의 내용</p>

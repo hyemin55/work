@@ -4,13 +4,15 @@ import { ref } from 'vue';
 const save = ()=>{
   console.log("작성저장")
 }
-
 const profileImage = sessionStorage.getItem('profileImage')
-
-const fileUpload = ref();
+const inputFile = ref();
 const change_profile_image = ()=>{
-  fileUpload.value.click();
+  inputFile.value.click();
 }
+const imageUpload = ()=>{
+  console.log('사진업로드')
+}
+
 </script>
 
 
@@ -25,7 +27,7 @@ const change_profile_image = ()=>{
         </div>
         <p @click="change_profile_image">프로필 사진변경</p>
 
-        <input type="file" style="display: none;" ref="fileUpload">
+        <input @change="imageUpload" type="file" style="display: none;" ref="inputFile">
       </div>
 
       <div class="user_info">
@@ -48,12 +50,12 @@ const change_profile_image = ()=>{
           </div>
           <div class="form-group">
             <label for="email">이메일</label>
-            <input type="email" id="email" value="abcdefhijk@naver.com" />
+            <input type="email" id="email" value="abcdefhijk@naver.com" readonly/>
             <!-- <small class="email_small">카카오 계정입니다.</small> -->
           </div>
           <div class="form-group">
             <label for="gender">성별</label>
-            <input type="text" id="gender" value="여" />
+            <input type="text" id="gender" value="여" readonly/>
           </div>
 
           <button @click.prevent="save" type="submit" class="info_save_btn">저정하기</button>

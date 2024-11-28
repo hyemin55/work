@@ -26,7 +26,16 @@
   </article>
 </template>
 
-<script setup></script>
+<script setup>
+import { useUserStore } from '@/stores/Login';
+import { watch } from 'vue';
+
+const useStore = useUserStore();
+console.log('Adminnav', useStore.nickName);
+watch(useStore.nickName, _new => {
+  console.log(_new);
+});
+</script>
 
 <style scoped>
 #Adminnav {
