@@ -24,12 +24,12 @@ watchEffect(async () => {
       console.log(res.data);
     } else return;
     // if사용해 role 권한이 admin이면 관리자페이지로 푸시
-    if (res.data.nickName === '민이♡') {
+    if (res.data.role === 'ADMIN') {
       console.log('관리자페이지로이동');
       router.push({ name: 'mainDashboard' });
-    } else if (res.data.role === '검수자') {
+    } else if (res.data.nickName === '민이♡') {
       console.log('검수자페이지로이동');
-      router.push({ name: 'main' });
+      router.push({ name: 'mainInspectionList' });
     } else {
       console.log('유저페이지로이동');
       router.push({ name: 'main' });

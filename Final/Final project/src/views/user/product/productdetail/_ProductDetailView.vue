@@ -61,7 +61,7 @@ watchEffect(() => {
   height: auto;
   /* background-color: antiquewhite; */
 }
-.sectionLine::after {
+.sectionLine::before {
   position: absolute;
   content: '';
   border: 0.5px solid var(--color-main-Lgray);

@@ -8,7 +8,7 @@
 import { useUserStore } from '@/stores/Login';
 
 const useStore = useUserStore();
-console.log('MainDashboard', useStore.nickName);
+console.log('MainDashboard', useStore.role);
 </script>
 
 <style scoped></style>

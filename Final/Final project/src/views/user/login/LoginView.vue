@@ -2,8 +2,8 @@
 const kakaoLogin = () => {
   window.Kakao.Auth.authorize({
     redirectUri: 'http://localhost:5173/login',
-  })
-}
+  });
+};
 
 // const kakaoLogout = () => {
 //   localStorage.removeItem('token')
@@ -16,19 +16,13 @@ const kakaoLogin = () => {
     <article id="login_box">
       <h1 class="login_box_h1">Sign in</h1>
       <div class="login_box_btn" @click="kakaoLogin()">
-        <a id="kakao-login-btn">
-          <img src="@/assets/img/btn_kakao.svg" />카카오로 시작하기
-        </a>
+        <a id="kakao-login-btn"> <img src="@/assets/img/btn_kakao.svg" />카카오로 시작하기 </a>
       </div>
       <div class="login_box_btn" @click="kakaoLogin()">
-        <a id="kakao-login-btn">
-          <img src="@/assets/img/btn_naver.svg" />네이버로 시작하기
-        </a>
+        <a id="kakao-login-btn"> <img src="@/assets/img/btn_naver.svg" />네이버로 시작하기 </a>
       </div>
       <div class="login_box_btn" @click="kakaoLogin()">
-        <a id="kakao-login-btn">
-          <img src="@/assets/img/btn_google.svg" />구글로 시작하기
-        </a>
+        <a id="kakao-login-btn"> <img src="@/assets/img/btn_google.svg" />구글로 시작하기 </a>
       </div>
     </article>
   </section>

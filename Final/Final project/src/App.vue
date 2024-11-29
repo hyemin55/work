@@ -5,7 +5,8 @@ import Footer from '@/components/user/layoutnav/Footer.vue';
 import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue';
 import AdminHeader from '@/components/admin/layoutnav/AdminHeader.vue';
 import { useUserStore } from '@/stores/Login';
-import Adminnav from '@/components/admin/layoutnav/Adminnav.vue';
+import AdminNav from '@/components/admin/layoutnav/AdminNav.vue';
+import AppraiserNav from './components/appraiser/layoutnav/AppraiserNav.vue';
 
 const data = useUserStore();
 // console.log(role.nickName);
@@ -35,11 +36,21 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
+    <div v-if="data.role === 'ADMIN'">
+      <div>
+        <AdminHeader></AdminHeader>
+        <div class="adminLayout">
+          <AdminNav></AdminNav>
+          <RouterView class="MainAdmin" />
+        </div>
+      </div>
+    </div>
+
     <div v-if="data.nickName === '민이♡'">
       <div>
         <AdminHeader></AdminHeader>
         <div class="adminLayout">
-          <Adminnav></Adminnav>
+          <AppraiserNav></AppraiserNav>
           <RouterView class="MainAdmin" />
         </div>
       </div>

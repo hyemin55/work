@@ -41,6 +41,8 @@ export const useUserStore = defineStore('member', {
       this.email = '';
       this.userId = '';
       this.snsType = '';
+      this.role = '';
+      console.log(this.role);
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('nickName');
       sessionStorage.removeItem('profileImage');

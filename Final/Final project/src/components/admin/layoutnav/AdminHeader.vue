@@ -3,7 +3,8 @@
     <nav id="header">
       <img src="@/assets/img/logo_text_white.png" alt="" />
       <ul class="header_nav">
-        <li><a href="/" target="_blank" rel="noopener noreferrer">사이트로 이동</a></li>
+        <!-- <li><a href="/" target="_blank" rel="noopener noreferrer">사이트로 이동</a></li> -->
+        <li><a href="/" rel="noopener noreferrer">사이트로 이동</a></li>
         <li><img src="@/assets/img/icon/free-icon-font-refresh-3917293.svg" alt="" /></li>
         <li @click="logout">LOGOUT</li>
       </ul>
@@ -20,6 +21,7 @@ const useStore = useUserStore();
 
 const logout = () => {
   useStore.logout();
+  // eventBus.emit('logout');
   router.push({ name: 'main' });
 };
 // onMounted(() => {
@@ -28,7 +30,7 @@ const logout = () => {
 // });
 
 onMounted(() => {
-  console.log('AdminHeader', useStore.nickName);
+  console.log('AdminHeader', useStore.role);
 });
 </script>
 
@@ -79,6 +81,7 @@ onMounted(() => {
 .header_nav li:nth-child(3) {
   background-color: var(--color-main-pink);
   border-radius: 10px;
+  cursor: pointer;
 }
 
 @keyframes spin {

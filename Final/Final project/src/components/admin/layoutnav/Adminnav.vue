@@ -24,6 +24,20 @@
       >
     </ul>
   </article>
+
+  <article id="Adminnav" v-if="appraiserRole === '민이♡'">
+    <ul>
+      <RouterLink to="/mainDashboard"
+        ><li><img src="@/assets/img/icon/free-icon-font-clipboard-list-7857488.svg" alt="" />판매신청목록</li></RouterLink
+      >
+      <RouterLink to="/reviewManagement"
+        ><li><img src="@/assets/img/icon/free-icon-font-clipboard-list-7857488.svg" alt="" />승인목록</li></RouterLink
+      >
+      <RouterLink to="/orderManagement"
+        ><li><img src="@/assets/img/icon/free-icon-font-clipboard-list-7857488.svg" alt="" />반려목록</li></RouterLink
+      >
+    </ul>
+  </article>
 </template>
 
 <script setup>
@@ -31,8 +45,10 @@ import { useUserStore } from '@/stores/Login';
 import { watch } from 'vue';
 
 const useStore = useUserStore();
-console.log('Adminnav', useStore.nickName);
-watch(useStore.nickName, _new => {
+const appraiserRole = ref(useStore.nickName);
+const adminRole = ref(useStore.role);
+console.log('Adminnav', useStore.role);
+watch(useStore.role, _new => {
   console.log(_new);
 });
 </script>
