@@ -1,0 +1,2296 @@
+{
+	"info": {
+		"_postman_id": "de348208-eb2e-49d2-9b0f-f1aac2508717",
+		"name": "mac msa api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20118389"
+	},
+	"item": [
+		{
+			"name": "apigateway",
+			"item": [
+				{
+					"name": "http://localhost:8080/user-service/env",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlMjNjN2FjNi0xMmRhLTQwNzgtODZhNy05ODg0ZmRhNGRlYTMiLCJleHAiOjE3Mjc3ODMzMjQsImlhdCI6MTcyNzY5NjkyNH0.AXVVm-2DroDKHS4s-ltlNApOVxFoVEWjM3fjw2U2naww_ixfsCUCPURreocG-1FYeJY4NGe2tVEfAoLp1u1gtw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/user-service/env",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user-service",
+								"env"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/user-service/users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/user-service/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user-service",
+								"users"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/user-service/users/{{userId}}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/user-service/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user-service",
+								"users",
+								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/user-service/add-user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user-service/add-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user-service",
+								"add-user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/user-service/login",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user-service/login?email=aaa@naver.com&password=123456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user-service",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "aaa@naver.com"
+								},
+								{
+									"key": "password",
+									"value": "123456"
+								},
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/first/test",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/first/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"first",
+								"test"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/second/test",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/second/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"second",
+								"test"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8080/second/test",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/second/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"second",
+								"test"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "주문정보 저장하기",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"001-2\",\n    \"qty\":\"10\",\n    \"unitPrice\":\"1000\",\n    \"totalPrice\":10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{apigateway-service-port}}/order-service/{{userId}}/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{apigateway-service-port}}",
+							"path": [
+								"order-service",
+								"{{userId}}",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "주문정보 가져오기",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"productId\",\n    \"qty\":\"10\",\n    \"unitPrice\":\"1000\",\n    \"totalPrice\":10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order-service/{{userId}}/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order-service",
+								"{{userId}}",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "userservice",
+			"item": [
+				{
+					"name": "actuator",
+					"item": [
+						{
+							"name": "메트릭확인하기",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/actuator/metrics",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"actuator",
+										"metrics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "메트릭확인하기prometheus",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/actuator/prometheus",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"actuator",
+										"prometheus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "메트릭확인하기user.cata",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/actuator/system.cpu.usage",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"actuator",
+										"system.cpu.usage"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "유저서비스 env 호출하기",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/env",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"env"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저서비스 사용자 전체조회",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저서비스 사용자 조회( 주문 )",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"users",
+								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저서비스 catalog 서비스 테스트",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/cata",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"cata"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저서비스 사용자 추가",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/add-user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"add-user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "유저서비스 사용자 로그인",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aaa@naver.com\",\n    \"name\":\"홍길동\",\n    \"password\":\"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/login?email=aaa@naver.com&password=123456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "aaa@naver.com"
+								},
+								{
+									"key": "password",
+									"value": "123456"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "configserver",
+			"item": [
+				{
+					"name": "데이터암호화",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "1234",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/encrypt",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"encrypt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "데이터복호화",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "AQAf1Tno00nADSM3uQ4Ng6sRTX4QKU80SQvCQ4rFpvvsFbrgto7R5Qn3Mptb9weviIrwXOTXiOc2xCgGUtAQob0d7ro8vUyAqw+TqCGe2LscZRHYNyvWjsLt3NDYuuvRKKGShNoJhD8rzE9eVhqqlUPNDG6Mebw8uA+8ixmkewAP0zakD1Y/5b5ioGWxeu5AxwWeujJUrqEKWqANci20q1npgVxLsbIYIXeBOG8rWIy6JOYEdMr2vZO/WHPuUVOiqD46/UESKZ+qV5mXBX/f32PxItTy2SRyPZytBKYB913cJ2VE81Gad5No6G29VC3qQu7QXalVfe5IWJK/HDEOBb3/mzQ1DVIcIYusWD85rmhv2m3lMiARAj+Ivd6HuzXMR6w=",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/decrypt",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"decrypt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:{{user-service-port}}/actuator/health",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							},
+							{
+								"key": "user",
+								"value": "password",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:{{user-service-port}}/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{user-service-port}}",
+							"path": [
+								"actuator",
+								"health"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8888/autuator/refresh",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							},
+							{
+								"key": "user",
+								"value": "password",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:20010/autuator/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20010",
+							"path": [
+								"autuator",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "config서버 userservice jpa가져오기",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							},
+							{
+								"key": "user",
+								"value": "password",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8888/user-service/docker",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"user-service",
+								"docker"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "config서버 userservice jpa가져오기 Copy",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							},
+							{
+								"key": "user",
+								"value": "password",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8888/apigateway-server/docker",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"apigateway-server",
+								"docker"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8888/order-service/jpa",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "gildong",
+								"type": "text"
+							},
+							{
+								"key": "user",
+								"value": "password",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8888/order-service/jpa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"order-service",
+								"jpa"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "firstservice",
+			"item": [
+				{
+					"name": "/first/test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{first-service-port}}/first/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{first-service-port}}",
+							"path": [
+								"first",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orderservice",
+			"item": [
+				{
+					"name": "주문정보 저장하기",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"CATALOG-001\",\n    \"qty\":\"10\",\n    \"unitPrice\":\"1000\",\n    \"totalPrice\":10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{order-service-port}}/{{userId}}/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{order-service-port}}",
+							"path": [
+								"{{userId}}",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "주문정보 가져오기",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"productId\",\n    \"qty\":\"10\",\n    \"unitPrice\":\"1000\",\n    \"totalPrice\":10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{order-service-port}}/{{userId}}/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{order-service-port}}",
+							"path": [
+								"{{userId}}",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "secondeservice",
+			"item": [
+				{
+					"name": "second/test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{second-service-port}}/second/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{second-service-port}}",
+							"path": [
+								"second",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "k8s",
+			"item": [
+				{
+					"name": "firstservice",
+					"item": [
+						{
+							"name": "first.hellomh.site/first/test",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "first.hellomh.site/first/test",
+									"host": [
+										"first",
+										"hellomh",
+										"site"
+									],
+									"path": [
+										"first",
+										"test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "localhost:20010/first/test",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:20010/first/test",
+									"host": [
+										"localhost"
+									],
+									"port": "20010",
+									"path": [
+										"first",
+										"test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "http://first.hellomh.site/second/message?second-request=qweqwe",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "second-request",
+										"value": "qwerqwer",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://first.hellomh.site/second/message?second-request=qweqwe",
+									"protocol": "http",
+									"host": [
+										"first",
+										"hellomh",
+										"site"
+									],
+									"path": [
+										"second",
+										"message"
+									],
+									"query": [
+										{
+											"key": "second-request",
+											"value": "qweqwe"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "secondservice",
+					"item": [
+						{
+							"name": "second.hellomh.site/second/test",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://second.hellomh.site/second/test",
+									"protocol": "http",
+									"host": [
+										"second",
+										"hellomh",
+										"site"
+									],
+									"path": [
+										"second",
+										"test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "http://second.hellomh.site/second/message?second-request=qweqwe",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "second-request",
+										"value": "qwerqwer",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://first.hellomh.site/second/message?second-request=qweqwe",
+									"protocol": "http",
+									"host": [
+										"first",
+										"hellomh",
+										"site"
+									],
+									"path": [
+										"second",
+										"message"
+									],
+									"query": [
+										{
+											"key": "second-request",
+											"value": "qweqwe"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "localhost:20020/second/message",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "second-request",
+										"value": "qwer",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:20020/second/message",
+									"host": [
+										"localhost"
+									],
+									"port": "20020",
+									"path": [
+										"second",
+										"message"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "localhost:20020/second/test",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "second-request",
+										"value": "qwer",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:20020/second/test",
+									"host": [
+										"localhost"
+									],
+									"port": "20020",
+									"path": [
+										"second",
+										"test"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "userservice",
+					"item": []
+				},
+				{
+					"name": "actuator",
+					"item": [
+						{
+							"name": "actuator/metrics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:20010/actuator/metrics",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "20010",
+									"path": [
+										"actuator",
+										"metrics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "메트릭확인prometheus",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:20010/actuator/prometheus",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "20010",
+									"path": [
+										"actuator",
+										"prometheus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "메트릭확인하기user.cata Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/actuator/user.cata",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"actuator",
+										"user.cata"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "catalogservice",
+			"item": [
+				{
+					"name": "재고확인하기",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\":\"000-2\",\n    \"qty\":\"10\",\n    \"unitPrice\":\"1000\",\n    \"totalPrice\":10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{catalog-service-port}}/catalogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{catalog-service-port}}",
+							"path": [
+								"catalogs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "kafkaconnect",
+			"item": [
+				{
+					"name": "connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.40:8083/connectors",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc-source-connector/status",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors/mariadb-source-connector/status",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"mariadb-source-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc-sink-connector/status",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors/mariadb-sink-connector/status",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"mariadb-sink-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "커넥터source 삭제",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors/mariadb-source-connector",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"mariadb-source-connector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "커넥터sink 삭제",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.40:8083/connectors/mariadb-sink-connector",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"mariadb-sink-connector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "소스 커넥터 생성 글자깨지는거",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"jdbc-source-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n    \"connection.url\": \"jdbc:mariadb://192.168.0.40:3306/msa?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf9mb4\",  // MySQL DB 연결 URL\r\n    \"connection.user\": \"root\",  // DB 사용자 이름\r\n    \"connection.password\": \"1234\",  // DB 비밀번호\r\n    \"table.whitelist\": \"orders\",  // 읽을 테이블 이름\r\n    \"mode\": \"incrementing\",  // 데이터 읽기 모드 설정 (여기서는 증가하는 키 사용)\r\n    \"incrementing.column.name\": \"id\",  // 증가하는 키의 컬럼 이름\r\n    \"topic.prefix\": \"jdbc-\",  // 생성될 Kafka 토픽의 접두사\r\n    \"tasks.max\": \"1\"  // 병렬로 실행할 최대 작업 수\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "소스 커넥터 생성 json",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"mariadb-source-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n    \"connection.url\": \"jdbc:mariadb://192.168.0.40:30307/msa?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8\",  // MySQL DB 연결 URL\r\n    \"connection.user\": \"root\",  // DB 사용자 이름\r\n    \"connection.password\": \"1234\",  // DB 비밀번호\r\n    \"table.whitelist\": \"orders\",  // 읽을 테이블 이름\r\n    \"mode\": \"incrementing\",  // 데이터 읽기 모드 설정 (여기서는 증가하는 키 사용)\r\n    \"incrementing.column.start\": \"0\",\r\n    \"incrementing.column.name\": \"id\",  // 증가하는 키의 컬럼 이름\r\n    \"topic.prefix\": \"mariadb-\",  // 생성될 Kafka 토픽의 접두사\r\n    \"tasks.max\": \"1\",  // 병렬로 실행할 최대 작업 수\r\n    \"key.column\": \"id\",  // key로 사용할 컬럼 지정 (order_id)\r\n    \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"key.converter.schemas.enable\": \"true\",\r\n    \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"value.converter.schemas.enable\": \"true\",\r\n    \"incrementing.initial\": 1, // id 1부터 message 등록 없으면 했는데까지..\r\n    \"validate.non.null\": false\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc-source-connector/restart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"jdbc-source-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n    \"connection.url\": \"jdbc:mariadb://192.168.0.40:30307/msa?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8mb4\",  // MySQL DB 연결 URL\r\n    \"connection.user\": \"root\",  // DB 사용자 이름\r\n    \"connection.password\": \"1234\",  // DB 비밀번호\r\n    \"table.whitelist\": \"orders\",  // 읽을 테이블 이름\r\n    \"mode\": \"incrementing\",  // 데이터 읽기 모드 설정 (여기서는 증가하는 키 사용)\r\n    \"incrementing.column.name\": \"id\",  // 증가하는 키의 컬럼 이름\r\n    \"topic.prefix\": \"jdbc-\",  // 생성될 Kafka 토픽의 접두사\r\n    \"tasks.max\": \"1\",  // 병렬로 실행할 최대 작업 수\r\n    \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"key.converter.schemas.enable\": \"false\",\r\n    \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"value.converter.schemas.enable\": \"false\",\r\n    \"incrementing.initial\": 1 // id 1부터 message 등록 없으면 했는데까지..\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors/jdbc-source-connector/restart",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"jdbc-source-connector",
+								"restart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "실크 커넥터 생성",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"mariadb-sink-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"topics\": \"mariadb-orders\",\r\n    \"connection.url\": \"jdbc:mariadb://192.168.0.40:30307/msa?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8mb4\",\r\n    \"connection.user\": \"root\",\r\n    \"connection.password\": \"1234\",\r\n    \"insert.mode\": \"upsert\",  \r\n    \"pk.mode\": \"record_value\",  // 기본 키를 사용하지 않음\r\n    \"pk.fields\":\"id\",\r\n    \"table.name.format\": \"mariadb-orders\",  \r\n    \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"key.converter.schemas.enable\": \"true\",\r\n    \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"value.converter.schemas.enable\": \"true\",\r\n    \"auto.create\":\"true\",   // 테이블 생성유무\r\n    \"auto.evolve\":\"true\"   // 특정 테이터의 열이 누락된 경우 대상 테이블에 ALTER 구문을 날려 자동으로 테이블 구조를 바꾸는지 여부(하지만 테이터 타입변경, 컬럼제거, 기본키 제약 조건 추가등은 시도되지 않는다)\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "실크 커넥터 생성 Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"mariadb-sink-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"topics\": \"mariadb-orders\",\r\n    \"connection.url\": \"jdbc:mariadb://192.168.0.40:30307/msa?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8mb4\",\r\n    \"connection.user\": \"root\",\r\n    \"connection.password\": \"1234\",\r\n    \"insert.mode\": \"upsert\",\r\n    \"pk.mode\": \"record_key\",\r\n    \"pk.fields\": \"id\",\r\n    \"table.name.format\": \"mariadb-orders\",\r\n    \"key.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"key.converter.schemas.enable\": \"false\",\r\n    \"value.converter\": \"org.apache.kafka.connect.json.JsonConverter\",\r\n    \"value.converter.schemas.enable\": \"false\",\r\n    \"auto.create\": \"true\",\r\n    \"auto.evolve\": \"true\",\r\n    \"errors.deadletterqueue.topic.name\": \"dlq-mariadb-orders\",\r\n    \"errors.deadletterqueue.topic.replication.factor\": 1,\r\n    \"errors.log.enable\": \"true\",\r\n    \"errors.log.include.messages\": \"true\",\r\n    \"errors.retry.timeout\": \"60000\",\r\n    \"errors.retry.delay.max.ms\": \"1000\"\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "192.168.0.40:8083/connectors",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"40"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "kafkaconnect mac",
+			"item": [
+				{
+					"name": "connectors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.29:8083/connectors",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"29"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc-source-connector/status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.29:8083/connectors/jdbc-source-connector/status",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"29"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"jdbc-source-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/my-source-connect/status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.29:8083/connectors/my-source-connect/status",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"29"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"my-source-connect",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "jdbc-sink-connector/status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.29:8083/connectors/jdbc-sink-connector/status",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"29"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"jdbc-sink-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "192.168.0.29:8083 커넥터 삭제",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.29:8083/connectors/user_entity-from-user_entity-source",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"29"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"user_entity-from-user_entity-source"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "192.168.0.29:8083 커넥터 삭제 Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "192.168.0.29:8083/connectors/user_entity-from-user_entity-source",
+							"host": [
+								"192",
+								"168",
+								"0",
+								"29"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"user_entity-from-user_entity-source"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "192.168.0.29:8083 소스 커넥터 생성",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"jdbc-source-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n    \"connection.url\": \"jdbc:mysql://mysql:3306/msa?useSSL=false&allowPublicKeyRetrieval=true\",  // MySQL DB 연결 URL\r\n    \"connection.user\": \"msa\",  // DB 사용자 이름\r\n    \"connection.password\": \"1234\",  // DB 비밀번호\r\n    \"table.whitelist\": \"user_entity\",  // 읽을 테이블 이름\r\n    \"mode\": \"incrementing\",  // 데이터 읽기 모드 설정 (여기서는 증가하는 키 사용)\r\n    \"incrementing.column.name\": \"id\",  // 증가하는 키의 컬럼 이름\r\n    \"topic.prefix\": \"jdbc-\",  // 생성될 Kafka 토픽의 접두사\r\n    \"tasks.max\": \"1\"  // 병렬로 실행할 최대 작업 수\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8083/connectors",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "192.168.0.29:8083 소스 커넥터 생성 Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"my-source-connect\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.confluent.connect.jdbc.JdbcSourceConnector\",\r\n        \"connection.url\": \"jdbc:mysql://mysql:3306/msa\",\r\n        \"connection.user\":\"msa\",\r\n        \"connection.password\":\"1234\",\r\n        \"mode\":\"incrementing\",\r\n        \"incrementing.column.name\" : \"id\",\r\n        \"table.whitelist\" : \"user_entity\",\r\n        \"topic.prefix\" : \"example_topic_\",\r\n        \"tasks.max\" : \"1\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8083/connectors",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "192.168.0.29:8083 실크 커넥터 생성",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"jdbc-sink-connector\",\r\n  \"config\": {\r\n    \"connector.class\": \"io.confluent.connect.jdbc.JdbcSinkConnector\",\r\n    \"tasks.max\": \"1\",\r\n    \"topics\": \"topic-user-entity-copy\",  // Kafka 토픽 이름\r\n    \"connection.url\": \"jdbc:mysql://mysql:3306/msa\",  // MySQL DB 연결 URL\r\n    \"connection.user\": \"msa\",  // DB 사용자 이름\r\n    \"connection.password\": \"1234\",  // DB 비밀번호\r\n    \"insert.mode\": \"insert\",  // 데이터를 삽입 모드로 처리\r\n    \"auto.create\": \"true\",  // 테이블 자동 생성 여부\r\n    \"pk.mode\": \"none\",  // 기본 키 모드 설정\r\n    \"table.name.format\": \"user_entity_copy\"  // DB에 삽입할 테이블 이름\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8083/connectors",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "kafka",
+			"item": [
+				{
+					"name": "producers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"string\",\r\n  \"quantity\": 10,\r\n  \"id\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{kakfa-producer-port}}/producers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{kakfa-producer-port}}",
+							"path": [
+								"producers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "producers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{kakfa-producer-port}}/producers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{kakfa-producer-port}}",
+							"path": [
+								"producers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "zipkin",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:9411/zipkin/api/v2/traces",
+							"host": [
+								"localhost"
+							],
+							"port": "9411",
+							"path": [
+								"zipkin",
+								"api",
+								"v2",
+								"traces"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "http://localhost:8888/user-service/mybatis Copy",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "user",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "gildong",
+						"type": "text"
+					},
+					{
+						"key": "user",
+						"value": "password",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8888/user-service/jpa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"user-service",
+						"jpa"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/token-test/create",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "gildong",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/token-test/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"token-test",
+						"create"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/token-test/create Copy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "gildong",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/token-test/valid",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"token-test",
+						"valid"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request Copy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "id",
+						"value": "gildong",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlYmFkOTVlMS00OGQxLTQzNDAtOTM1ZS0wZDE3ZTk4OWZjNDIiLCJleHAiOjE3Mjc0Mzk3MjIsImlhdCI6MTcyNzM1MzMyMn0.L2RClrRLBZm9t5lOxZzY6BxjgDpQAJvxJlWBSlmnkJriZnr-HaTKnhd6ZFj46UbNfeYmuGJNnMFBiAwjRJ2Mbg\n",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "e9308040-cbcb-42f2-b990-7a6a9df45e40",
+			"type": "string"
+		},
+		{
+			"key": "user-service-port",
+			"value": "10000",
+			"type": "string"
+		},
+		{
+			"key": "order-service-port",
+			"value": "10001",
+			"type": "string"
+		},
+		{
+			"key": "catalog-service-port",
+			"value": "10002",
+			"type": "string"
+		},
+		{
+			"key": "kakfa-producer-port",
+			"value": "8090",
+			"type": "string"
+		},
+		{
+			"key": "kafka-consumer-port",
+			"value": "8091",
+			"type": "string"
+		},
+		{
+			"key": "first-service-port",
+			"value": "8081",
+			"type": "string"
+		},
+		{
+			"key": "second-service-port",
+			"value": "8082",
+			"type": "string"
+		},
+		{
+			"key": "apigateway-service-port",
+			"value": "8080",
+			"type": "string"
+		},
+		{
+			"key": "config-service-port",
+			"value": "8888",
+			"type": "string"
+		},
+		{
+			"key": "eureka-service-port",
+			"value": "8761",
+			"type": "string"
+		}
+	]
+}

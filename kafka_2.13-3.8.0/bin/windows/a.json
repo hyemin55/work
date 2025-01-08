@@ -1,0 +1,68 @@
+[
+  {
+    "schema": {
+      "type": "struct",
+      "fields": [
+        {
+          "type": "int32",
+          "optional": false,
+          "field": "qty"
+        },
+        {
+          "type": "int32",
+          "optional": false,
+          "field": "total_price"
+        },
+        {
+          "type": "int32",
+          "optional": false,
+          "field": "unit_price"
+        },
+        {
+          "type": "int64",
+          "optional": false,
+          "field": "id"
+        },
+        {
+          "type": "string",
+          "optional": false,
+          "field": "product_id"
+        },
+        {
+          "type": "string",
+          "optional": false,
+          "field": "order_id"
+        },
+        {
+          "type": "string",
+          "optional": false,
+          "field": "user_id"
+        }
+      ],
+      "optional": false,
+      "name": "orders"
+    },
+    "payload": {
+      "qty": 8,
+      "total_price": 8,
+      "unit_price": 8,
+      "id": 8,
+      "product_id": "8",
+      "order_id": "8",
+      "user_id": "8"
+    }
+  },
+  {
+    "schema": {
+      "type": "struct",
+      "fields": [
+        { "type": "int32", "optional": false, "field": "user_id" },
+        { "type": "string", "optional": false, "field": "user_name" },
+        { "type": "int32", "optional": false, "field": "user_age" }
+      ],
+      "optional": false,
+      "name": "user"
+    },
+    "payload": { "user_id": 20, "user_name": "user20", "user_age": 30 }
+  }
+]

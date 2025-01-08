@@ -1,0 +1,844 @@
+{
+	"info": {
+		"_postman_id": "78b10e50-0c6a-4283-b27f-c1555d3555e7",
+		"name": "msa505",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20118389",
+		"_collection_link": "https://www.postman.com/orbital-module-astronaut-21341867/share-msa/collection/dpti7h6/msa505?action=share&source=collection_link&creator=20118389"
+	},
+	"item": [
+		{
+			"name": "config",
+			"item": [
+				{
+					"name": "http://localhost:8888/refresh",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8888/actuator",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/actuator",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"actuator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8888/user-service/jpa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/user-service/jpa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"user-service",
+								"jpa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "userservice",
+			"item": [
+				{
+					"name": "k8s",
+					"item": [
+						{
+							"name": "actuator/metrics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/actuator/metrics",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"actuator",
+										"metrics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "actuator/prometheus",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/actuator/prometheus",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"actuator",
+										"prometheus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "actuator/metrics/jvm.memory.used",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:40003/actuator/metrics/jvm.memory.used",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "40003",
+									"path": [
+										"actuator",
+										"metrics",
+										"jvm.memory.used"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "join",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"dddd@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{user-service-port}}/user-service/join",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{user-service-port}}",
+									"path": [
+										"user-service",
+										"join"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost/user-service/list",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"user-service",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "사용자주문목록",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost/user-service/getuser/{{user-id}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"user-service",
+										"getuser",
+										"{{user-id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "env",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20000/env",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"env"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actuator/metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20000/actuator/metrics",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"actuator",
+								"metrics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actuator/metrics생성",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20000/user-service/long-work",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"user-service",
+								"long-work"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actuator/metrics Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20000/actuator/metrics/myStockCount",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"actuator",
+								"metrics",
+								"myStockCount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actuator/prometheus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20000/actuator/prometheus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"actuator",
+								"prometheus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "join",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"bbb@naver.com\",\r\n  \"name\": \"김길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:20000/user-service/join",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"user-service",
+								"join"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:20000/user-service/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"user-service",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "사용자주문목록",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:20000/api/user-service/getuser/{{user-id}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"api",
+								"user-service",
+								"getuser",
+								"{{user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/user-service/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"user-service",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "nodetest",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4999",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4999"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user-service/login",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"eee@naver.com\",\r\n  \"name\": \"홍길동\",\r\n  \"password\": \"abcd1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:20000/user-service/login?email=bbb@naver.com&password=abcd1234",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20000",
+							"path": [
+								"user-service",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "bbb@naver.com"
+								},
+								{
+									"key": "password",
+									"value": "abcd1234"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "firstservice",
+			"item": [
+				{
+					"name": "first-service/test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:40001/first-service/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "40001",
+							"path": [
+								"first-service",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "second-service/test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/second-service/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"second-service",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "node",
+			"item": [
+				{
+					"name": "catalog-service",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/catalog-service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"catalog-service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "catalog-service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": \"T-04\",\r\n    \"productName\": \"A티셔츠\",\r\n    \"stock\": 100,\r\n    \"unitPrice\": 15000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/catalog-service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"catalog-service"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orderservice",
+			"item": [
+				{
+					"name": "k8",
+					"item": [
+						{
+							"name": "order-service/order",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost/order-service/{{user-id}}/order",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"order-service",
+										"{{user-id}}",
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "order-service/order",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productId\": \"p-002\",\r\n    \"qty\":10,\r\n    \"unitPrice\":1000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost/order-service/{{user-id}}/order",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"order-service",
+										"{{user-id}}",
+										"order"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "order-service/order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20001/order-service/{{user-id}}/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20001",
+							"path": [
+								"order-service",
+								"{{user-id}}",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order-service/order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": \"p-001\",\r\n    \"qty\":10,\r\n    \"unitPrice\":1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:20001/order-service/{{user-id}}/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20001",
+							"path": [
+								"order-service",
+								"{{user-id}}",
+								"order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "catalogservice",
+			"item": [
+				{
+					"name": "k8",
+					"item": [
+						{
+							"name": "order-service/order",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost/catalog-service/catalogs",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"catalog-service",
+										"catalogs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "catalog-service/catalogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:20002/catalog-service/catalogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "20002",
+							"path": [
+								"catalog-service",
+								"catalogs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "first-service-port",
+			"value": "40001",
+			"type": "string"
+		},
+		{
+			"key": "second-service-port",
+			"value": "40002",
+			"type": "string"
+		},
+		{
+			"key": "user-service-port",
+			"value": "40003",
+			"type": "string"
+		},
+		{
+			"key": "user-id",
+			"value": "1058fdf7-0570-46e6-8f35-7e564255a4f0",
+			"type": "string"
+		}
+	]
+}

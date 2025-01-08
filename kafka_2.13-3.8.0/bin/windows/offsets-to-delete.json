@@ -1,0 +1,11 @@
+{
+  "partitions": [
+    {
+      "topic": "_connect-offsets",
+      "partition": 0,
+      "offset": 0
+    }
+  ],
+  "version": 1
+}
+
