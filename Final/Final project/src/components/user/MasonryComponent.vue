@@ -192,14 +192,10 @@ const RouteDetailPage = () => {
   border-radius: 0.7rem;
   padding: 7px 10px;
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 700;
   /* padding: 5px 8px; */
   border-radius: 0.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: rgba(247, 247, 247, 0.8);
-  box-shadow:
-    inset -3px -3px 3px #ffffff73,
-    inset 1px 1px 3px rgba(94, 104, 121, 0.288);
+  background-color: #fff;
 }
 
 @keyframes scale {

@@ -16,7 +16,7 @@
   width: 100%;
 }
 img {
-  width: 7%;
+  width: 15%;
   height: auto;
   animation: rotate 4s infinite linear;
 }

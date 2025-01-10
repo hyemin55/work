@@ -1,11 +1,14 @@
 <script setup>
 import { GLOBAL_URL } from "@/api/util";
+import { useUserStore } from "@/stores/Login";
 import axios from "axios";
 import { ref, watchEffect } from "vue";
 
+
+const userStore = useUserStore();
+
 const userInfo = ref([]);
 const post = ref();
-
 watchEffect(async () => {
   try {
     const res = await axios.get(`${GLOBAL_URL}/api/payment/buyer-info`, {
@@ -34,7 +37,7 @@ watchEffect(async () => {
         </div>
 
         <div class="info_box">
-          <p><b>주문자</b> : <b>{{ userInfo.buyerName || "홍길동" }}</b></p>
+          <p><b>주문자</b> : <b>{{ userInfo.buyerName || `${userStore.nickName}` }}</b></p>
           <p>
             이메일 : {{ userInfo.buyerEmail }}
             <span>

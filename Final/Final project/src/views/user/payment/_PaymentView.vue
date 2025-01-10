@@ -1,25 +1,28 @@
 <script setup>
 import { GLOBAL_IMP_KEY, GLOBAL_URL } from '@/api/util';
 import { usePayMentStore } from '@/stores/PayMentStore';
+import { useUserStore } from '@/stores/Login';
 import PayMethod from '@/views/user/payment/PayMethodView.vue';
 import PayMoney from '@/views/user/payment/PayMoneyView.vue';
 import PayProduct from '@/views/user/payment/PayProductView.vue';
 import PayUserInfo from '@/views/user/payment/PayUserInfoView.vue';
 import axios from 'axios';
 import { computed, onMounted, ref, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
 // 결제 pinia
 // const payMentStore = usePayMentStore()
 // const payinfo = computed(() => payMentStore.payProduct)
 
 // JSON 문자열을 객체로 변환
 // const cartItems = route.params.item ? route.params.item.split(',') : [];
+const nickName = useUserStore().nickName;
+const email = useUserStore().email;
 const route = useRoute();
 const cartData = JSON.parse(decodeURIComponent(route.query.item));
 console.log('받은 배열', cartData.purchaseProductDtos);
 console.log('받은 총 가격', cartData.totalPrice);
-
 const merchant_uid = `IMP${Date.now()}`; // 결제외부API 키 (항사 새로이 생성된다.)
 
 // 검증 순서
@@ -41,6 +44,10 @@ watchEffect(() => {
     // SSE 연결을 초기화합니다.
     connectSSE();
     // window.location.reload()
+    router.push({
+      name: 'ordercomplete',
+      query: { merchant_uid },
+    });
   }
 });
 
@@ -86,11 +93,11 @@ const requestPay = async () => {
       pg: 'html5_inicis',
       pay_method: 'card',
       merchant_uid: merchant_uid,
-      // name: cartData.purchaseProductDtos.map((item) => item.name).join(','),
-      name: 'test',
+      name: cartData.purchaseProductDtos.map(item => item.usedProductId).join(','),
+      // name: 'test',
       amount: cartData.totalPrice,
-      buyer_email: 'kdh7313@naver.com',
-      buyer_name: '김태영',
+      buyer_email: email,
+      buyer_name: nickName,
       buyer_tel: '010-1234-5678',
       buyer_addr: '대구광역시 중구',
       buyer_postcode: '123-456',
@@ -167,6 +174,7 @@ const requestPay = async () => {
                 buyerAddr: rsp.buyer_addr,
                 buyerPostcode: rsp.buyer_postcode,
                 purchaseProductDtos: cartData.purchaseProductDtos, // 제품IDs와 수량들
+                purchaseId: purchaseId.value,
               };
 
               // 주문 정보 저장
@@ -200,19 +208,16 @@ const requestPay = async () => {
 };
 // 알림 이벤트 소스 (항시 대기중)
 const connectSSE = () => {
-  const sse = new EventSource(`${GLOBAL_URL}/api/notification/payment/completed/subscriber`, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-    },
-  });
+  const token = sessionStorage.getItem('token');
+  const sse = new EventSource(`${GLOBAL_URL}/api/notification/payment/completed/subscriber?token=${token}`);
+
   console.log('start sse');
   console.log(sse);
 
   sse.addEventListener('paymentCompletedEvent', async event => {
     console.log('SSE event received:', event.data);
     const data = await JSON.parse(event.data);
-    purchaseStatus.value = event.data.status;
+    purchaseStatus.value = data.status;
     console.log('Message:', data.message);
     console.log('Order ID:', data.orderId);
     console.log('Total Amount:', data.totalAmount);
@@ -228,6 +233,10 @@ const connectSSE = () => {
 };
 const payroute = useRoute();
 const payData = JSON.parse(decodeURIComponent(payroute.query.item));
+console.log(decodeURIComponent(payroute.query.item));
+
+console.log(('dfadfdas', payData));
+// console.log(decodeURIComponent('dfadfdas', ));
 </script>
 
 <template>
@@ -284,7 +293,7 @@ h2 {
 }
 .pay_btn:hover {
   background-color: var(--color-main-bloode);
-  color: #a7ae9c;
+  color: #fff;
 }
 .line {
   width: 100%;

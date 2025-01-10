@@ -13,7 +13,7 @@ export const useWishStore = defineStore('wish', {
             // 들어오는 id값 하나라 객체가 아니다. 그렇기 때문에 뒤에 .productId가 안들어가되됨
             // product.productId 이렇게 찾아야할 값이 => product인 것이다.
             console.log('pinia에 들어온 값', product)
-            const aready = this.wishList.find(item => item === product);          
+            const aready = this.wishList.find(item => item === product);
 
             if(aready){
                 this.wishList = this.wishList.filter(item => item !== product);
@@ -28,13 +28,13 @@ export const useWishStore = defineStore('wish', {
             localStorage.removeItem('wishList');
             this.wishList = [];
         },
-        
-        
+
+
 
         // 상품 찜 목록
         itemMakeWishList(product){
             console.log('무엇이 온거야', product)
-            const aready = this.itemWishList.find(item => item === product);          
+            const aready = this.itemWishList.find(item => item === product);
             if(aready){
                 this.itemWishList = this.itemWishList.filter(item => item !== product);
                 localStorage.setItem('itemWishList', JSON.stringify(this.itemWishList))
@@ -43,6 +43,7 @@ export const useWishStore = defineStore('wish', {
                 this.itemWishList.push(product)
                 localStorage.setItem('itemWishList', JSON.stringify(this.itemWishList))
             }
+            return aready;
         },
         itemRemoveWishList(){
             localStorage.removeItem('itemWishList');
@@ -51,5 +52,5 @@ export const useWishStore = defineStore('wish', {
     },
 
     getter:{}
-    
+
 });

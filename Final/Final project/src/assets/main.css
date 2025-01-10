@@ -40,6 +40,9 @@ button {
   text-decoration: none;
   box-sizing: border-box;
 }
+table {
+  border-collapse: collapse;
+}
 input[type='checkbox'] {
   cursor: pointer;
 }
@@ -51,10 +54,42 @@ input[type='checkbox'] {
 .MainAdmin {
   height: auto;
   min-height: calc(100vh - 70px);
-  width: calc(100vw - 200px);
+  width: calc(100% - 200px);
   margin: 70px 0 0 200px;
-  padding: 10px 0 0 10px;
-  /* background-color: brown; */
+  padding: 10px 10px 0 10px;
+  background-color: var(--color-main-Lgray);
+  transition: all 0.3s;
+}
+#AdminNav {
+  position: fixed;
+  left: 0;
+  width: 200px;
+  height: calc(100vh - 70px);
+  /* background-color: var(--color-main-pink); */
+  background-color: #fdf4f1  ;
+  font-size: 1.6rem;
+  transition: all 0.3s;
+}
+@media (max-width: 1000px) {
+  .MainAdmin {
+    min-height: calc(100vh - 70px);
+    max-width: calc(100% - 43px);
+    width: 100%;
+    margin: 70px 0 0 43px;
+    transition: all 0.3s;
+  }
+  #AdminNav {
+    width: 43px;
+    transition: all 0.3s ease;
+  }
+  #AdminNav:hover {
+    width: 150px;
+  }
+  .expanded {
+    min-height: calc(100% - 70px);
+    width: calc(100% - 150px);
+    margin: 70px 0 0 150px;
+  }
 }
 /* @media (hover: hover) {
   a:hover {

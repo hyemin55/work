@@ -41,12 +41,8 @@ const urlShare = () => {
 onMounted(async () => {
   try {
     const slideImages = await getSlideImages(idx.value);
-    // console.log('slideImages', slideImages);
     if (slideImages.status == 200) {
       list.value = slideImages.data;
-      // console.log('list.value', list.value);
-      // console.log('리스트파일이름' + list.value)
-      // console.log('리스트파일이름' + list.value.images.length)
     }
   } catch (e) {
     console.error('실패', e);
@@ -58,7 +54,7 @@ onMounted(async () => {
   <article id="productSlide">
     <div class="iconPosition">
       <Carousel id="gallery" v-bind="galleryConfig" v-model="currentSlide" :autoplay="3000">
-        <Slide v-for="(image, index) in list.images" :key="index">
+        <Slide v-for="(image, index) in list" :key="index">
           <img :src="`${GLOBAL_URL}/api/file/download/${image.filename}`" alt="" class="carousel_image" />
         </Slide>
       </Carousel>
@@ -68,8 +64,14 @@ onMounted(async () => {
     </div>
 
     <!-- :autoplay="2000" -->
-    <Carousel id="thumbnails" v-bind="thumbnailsConfig" v-model="currentSlide" :pause-autoplay-on-hover="true" :mouse-drag="false">
-      <Slide v-for="(image, index) in list.images" :key="index">
+    <Carousel
+      id="thumbnails"
+      v-bind="thumbnailsConfig"
+      v-model="currentSlide"
+      :pause-autoplay-on-hover="true"
+      :mouse-drag="false"
+    >
+      <Slide v-for="(image, index) in list" :key="index">
         <img :src="`${GLOBAL_URL}/api/file/download/${image.filename}`" class="carousel_thumbnail" />
       </Slide>
 

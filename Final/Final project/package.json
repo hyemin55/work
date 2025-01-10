@@ -16,6 +16,8 @@
     "aos": "^2.3.4",
     "axios": "^1.7.7",
     "chart.js": "^4.4.6",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "dayjs": "^1.11.13",
     "mitt": "^3.0.1",
     "pinia": "^2.2.4",
     "queue-fifo": "^0.2.6",

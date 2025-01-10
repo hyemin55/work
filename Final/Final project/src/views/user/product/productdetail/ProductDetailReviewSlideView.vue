@@ -25,7 +25,6 @@ function closeModal() {
 
 const reviewImgsData = async () => {
   const reviewImageList = await getReviewImageList(idx.value);
-  console.log(reviewImageList.data);
   slides.value = reviewImageList.data;
 };
 

@@ -59,71 +59,125 @@ watchEffect(() => {
   };
 });
 
-// 정렬 함수들
-// const latestDate = () => {sortedList.value = [...list.value].sort((a, b) => new Date(a.registerDate) - new Date(b.registerDate))}
-// const oldeDate = () => {sortedList.value = [...list.value].sort((a, b) => new Date(b.registerDate) - new Date(a.registerDate))}
-// const highPrice = () => {sortedList.value = [...list.value].sort((a, b) => b.price - a.price)}
-// const lowPrice = () => {sortedList.value = [...list.value].sort((a, b) => a.price - b.price)}
-
 // 정렬 기준을 바꿀 때 호출되는 함수
 const sortList = (order, index) => {
   hiddenItem.value = index;
   switch (order) {
     case 'latestDate':
       sortTitle.value = '최신순';
-      // latestDate()
       break;
     case 'oldeDate':
       sortTitle.value = '오래된 순';
-      // oldeDate()
       break;
     case 'highPrice':
       sortTitle.value = '높은 가격순';
-      // highPrice()
       break;
     case 'lowPrice':
       sortTitle.value = '낮은 가격순';
-      // lowPrice()
       break;
     case 'basic':
     default:
       sortTitle.value = '추천순 ⇅';
-  } // sortedList.value = [...list.value]  // 기본적으로 원래 순서로 돌아감
+  }
 };
 
-const filterData = [
-  {
-    id: 1,
-    title: '새상품',
-    content: ['새상품만 보기'],
-  },
-  {
-    id: 2,
-    title: '브랜드',
-    content: ['브랜드1', '브랜드2', '브랜드3', '브랜드4', '브랜드5', '브랜드6'],
-  },
-  {
-    id: 3,
-    title: '성별',
-    content: ['남성용', '여성용'],
-  },
-  {
-    id: 4,
-    title: '용량',
-    content: ['100ml 이상', '100ml~50ml', '50ml 이하'],
-  },
-  {
-    id: 5,
-    title: '지속시간',
-    content: ['파르푕', '오드파르푕', '오드뜨왈렛', '오드코롱'],
-  },
-];
+const filterData = ref([]);
+const setFilter = ()=>{
+  filterData.value = [];
+  if(categoryId.value === "3"){
+    filterData.value = [{
+      id: 1,
+      title: '브랜드',
+      content: ['Ferrari', 'Chanel', 'Versace', 'Jomalone', 'Cocodor', 'Diptyque', 'Santa Maria Novella', 'Tom Ford', 'Comme Des Garcons Parfum', 'Dior'],
+    },
+    {
+      id: 2,
+      title: '성별',
+      content: ['남성용', '여성용'],
+    },
+    {
+      id: 3,
+      title: '용량',
+      content: ['100ml 이상', '100ml ~ 50ml', '50ml 이하'],
+    },
+    {
+      id: 4,
+      title: '지속시간',
+      content: ['파르푕', '오드파르푕', '오드뜨왈렛', '오드코롱'],
+    }]
+  }
+  else if(categoryId.value === "2"){
+    filterData.value = [{
+      id: 5,
+      title: '브랜드',
+      content: ['Jomalone', 'Diptyque', 'Annunziata'],
+    },
+    {
+      id: 6,
+      title: '용도',
+      content: ['실내용 ', '차량용', '휴대용', '욕실용'],
+    },
+    {
+      id: 7,
+      title: '용량',
+      content: ['100ml 이상', '100ml ~ 50ml', '50ml 이하'],
+    }]
+  }
+  else if(categoryId.value === "1"){
+    filterData.value = [{
+      id: 8,
+      title: '브랜드',
+      content: ['Yankee Candle', 'Dolce & Gabbana',],
+    },
+    {
+      id: 9,
+      title: '성별',
+      content: ['남성용', '여성용'],
+    },
+    {
+      id: 10,
+      title: '용량',
+      content: ['100g 이상', '100g ~ 50g', '50g 이하'],
+    }]
+  }
+}
+  
+onMounted(()=>{
+  setFilter();
+})
+watch(categoryId, (newValue, oldValue) =>{
+  console.log("categoryId 값이 변경되었습니다:", newValue);
+  // filterMode.value = false
+  // filterLayout.value = true
+  // ball.value = false;
+  setFilter();
+})
+
+
+const ball = ref(false)
+const filterLayout = ref(true) //상품 레이아웃 변경
+const filterMode = ref(false) //필터 존재여부 변경
+const chageMode = ()=>{
+  filterMode.value = !filterMode.value;
+  filterLayout.value = !filterMode.value;
+  ball.value = !ball.value;
+}
 </script>
 
 <template>
   <section id="product_wrapper" class="scroll-target">
     <article class="product_gnb">
-      <h1 class="product_category_title">{{ categoryTitle }}</h1>
+      <h1 class="product_category_title">{{ categoryTitle }} {{ categoryId == 4 ? '검색결과' : undefined }}</h1>
+
+      <div class="filter_btn">
+        <p class="filter_btn_text">
+          <img src="/src/assets/img/free-icon-font-filter.svg" alt="">
+        </p>
+        <div class="filter_btn_switch" @click="chageMode">
+          <p class="filter_ball" :class="{'ball_x0' : !ball, 'ball_x24': ball}"></p>
+          <!-- <p class="onoffText"><span>off</span><span>on</span></p> -->
+        </div>
+      </div>
 
       <div class="product_dropdown">
         <p class="product_mount">총 '{{ totalDataLength }}개' 제품</p>
@@ -140,14 +194,14 @@ const filterData = [
       </div>
     </article>
 
-    <article class="product_list" v-if="list && list.pages && list.pages[0]">
-      <div class="product_fillter">
+    <article class="product_list" v-if="list && list.pages && list.pages[0] && categoryId.value !== 4 " >
+      <div class="product_fillter" v-if="filterMode">
         <form class="product_fillter_form">
           <ProductFilter v-for="filterData in filterData" :key="filterData.id" :filterInfo="filterData"> </ProductFilter>
         </form>
       </div>
 
-      <div class="product_list_grid">
+      <div class="product_list_grid" :class="{'onFilter': filterLayout, 'offFilter': !filterLayout}">
         <ProductComponent v-for="product in list.pages.flatMap(page => page.data)" :key="product.productId" :productInfo="product" />
       </div>
     </article>
@@ -225,6 +279,47 @@ const filterData = [
   background-color: #f0f0f0;
 }
 
+.filter_btn{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 130px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+.filter_btn_text{
+  height: 100%;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+.filter_btn_text img{
+  height: 80%;
+  margin-right: 2.5px;
+}
+.filter_btn_switch{
+  position: relative;
+  height: 100%;
+  width: 52px;
+  cursor: pointer;
+  background-color: rgb(197, 33, 33);
+  border-radius: 1.5rem;
+  padding: 4px;
+  box-shadow: inset 1px 1px 5px 2px var(--color-main-bloode);
+}
+.filter_ball{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: aliceblue;
+  transition: transform 0.5s;
+  box-shadow: -1px -1px 4px #ffffff73, 2px 2px 3px rgba(94, 104, 121, .288);
+}
+.ball_x0{transform: translateX(0);}
+.ball_x24{transform: translateX(24px);}
+
 /* 로딩 UI설정 */
 .loadingUi {
   width: 100%;
@@ -246,21 +341,29 @@ const filterData = [
   position: relative;
   width: 325px;
   height: auto;
+  margin-top: 10px;
 }
 .product_fillter_form {
-  position: sticky;
-  top: 200px;
-  width: 305px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 285px;
   height: 700px;
-  background-color: #e9e9e9;
+  /* background-color: #e9e9e9; */
   /* background-color: indianred; */
 }
 .product_list_grid {
-  width: calc(100% - 325px);
   height: auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+}
+.onFilter{
+  width: calc(100%);
+  grid-template-columns: repeat(4, 1fr);
+}
+.offFilter{
+  width: calc(100% - 325px);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* 미디어쿼리 구간 */

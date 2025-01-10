@@ -7,27 +7,20 @@ import ProductDetailReview from '@/views/user/product/productdetail/ProductDetai
 import ProductInfoSection from '@/views/user/product/productdetail/ProductDetailInfoSectionView.vue';
 
 const route = useRoute();
-
 const productId = ref(route.params.idx);
-const productSize = ref(route.query.size);
-
 const isProductInfoLoaded = ref(false); // 상태 변수
 
 // ProductInfoSection이 로드 완료된 후 호출되는 메소드
 const handleProductInfoLoaded = newStatus => {
   isProductInfoLoaded.value = newStatus;
-  console.log(isProductInfoLoaded.value);
 };
 
 watchEffect(() => {
   productId.value = route.params.idx;
-  productSize.value = route.query.size;
 });
 </script>
 
 <template>
-  <!-- <nav class="productRoute">{{ productId }}번 상품 상세페이지 경로</nav> -->
-
   <section id="product">
     <main id="productMain">
       <ProductSlide :productId="productId" />
@@ -57,9 +50,7 @@ watchEffect(() => {
 /* 상단 구역 */
 #productMain {
   display: flex;
-  /* justify-content: center; */
   height: auto;
-  /* background-color: antiquewhite; */
 }
 .sectionLine::before {
   position: absolute;

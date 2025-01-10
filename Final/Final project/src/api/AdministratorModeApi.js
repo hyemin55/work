@@ -41,6 +41,17 @@ export const getProductManagementList = async (pageNum, size) => {
   }
 };
 
+// OrderManagementView.vue
+export const getOrderManagementList = async () => {
+  try {
+    const OrderManagementListRes = await axios.get(`${GLOBAL_URL}/admin/order/management`, {});
+    return OrderManagementListRes.data;
+  } catch (error) {
+    console.log('', error);
+    throw error;
+  }
+};
+
 // UserManagementView.vue
 export const getNotSortByRoleMemberData = async pageNumber => {
   try {
@@ -83,17 +94,14 @@ export const postRoleChange = async (memberId, role) => {
 };
 
 // ReviewManagementView.vue
-export const deleteReviewManagement = async reviewId => {
+export const getdeleteReviewManagement = async reviewId => {
   try {
-    await axios.get(`${GLOBAL_URL}/admin/review/management/delete?`, {
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      },
+    const deleteReviewManagementRes = await axios.delete(`${GLOBAL_URL}/admin/review/management/delete`, {
       params: {
         reviewId: reviewId,
       },
     });
+    return deleteReviewManagementRes.data;
   } catch (error) {
     console.log('', error);
     throw error;
@@ -117,7 +125,7 @@ export const getSearchKeyword = async (searchKeyword, pageNumber) => {
 };
 
 // ReviewManagementView.vue
-export const notSortByReviewData = async (pageNumber, pageSize) => {
+export const getNotSortByReviewData = async (pageNumber, pageSize) => {
   try {
     const notSortByReviewDataRes = await axios.get(`${GLOBAL_URL}/admin/review/management`, {
       params: {
@@ -133,7 +141,7 @@ export const notSortByReviewData = async (pageNumber, pageSize) => {
 };
 
 // ReviewManagementView.vue
-export const sortByReviewData = async (reviewSortBy, pageNumber, pageSize) => {
+export const getSortByReviewData = async (reviewSortBy, pageNumber, pageSize) => {
   try {
     const sortByReviewDataRes = await axios.get(`${GLOBAL_URL}/admin/review/management`, {
       params: {
@@ -143,6 +151,44 @@ export const sortByReviewData = async (reviewSortBy, pageNumber, pageSize) => {
       },
     });
     return sortByReviewDataRes;
+  } catch (error) {
+    console.log('', error);
+    throw error;
+  }
+};
+
+// StatisticsView.vue 총매출
+export const getTotalSalesStatisticsData = async standard => {
+  try {
+    const totalSalesStatisticsDataRes = await axios.get(`${GLOBAL_URL}/admin/statistics/revenue`, {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
+      params: {
+        [standard]: standard,
+      },
+    });
+    return totalSalesStatisticsDataRes.data;
+  } catch (error) {
+    console.log('', error);
+    throw error;
+  }
+};
+
+// StatisticsView.vue 순수익
+export const getNetProfitStatisticsData = async standard => {
+  try {
+    const netProfitStatisticsDataRes = await axios.get(`${GLOBAL_URL}/admin/statistics/net-profit`, {
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+      },
+      params: {
+        [standard]: standard,
+      },
+    });
+    return netProfitStatisticsDataRes.data;
   } catch (error) {
     console.log('', error);
     throw error;

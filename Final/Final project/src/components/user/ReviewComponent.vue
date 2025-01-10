@@ -1,10 +1,16 @@
 <script setup>
-import { getViewCurrentPage } from '@/api/productDetailApi';
+import {
+  getReviewImageList,
+  getReviewList,
+  getReviewListGoodIconState,
+  getViewCurrentPage,
+} from '@/api/productDetailApi';
 import { GLOBAL_URL } from '@/api/util';
+import { dateTimeFormat } from '@/FormatData';
 import { useUserStore } from '@/stores/Login';
 import axios from 'axios';
-import { ref, watch, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 const useStore = useUserStore();
 const props = defineProps({
   // 받아오는props의 정의 방법
@@ -15,6 +21,7 @@ const props = defineProps({
 });
 
 const route = useRoute();
+const router = useRouter();
 const idx = ref(route.params.idx);
 const currentPage = ref(1);
 const totalPages = ref(10);
@@ -29,23 +36,39 @@ const startPage = ref(0);
 const endPage = ref(0);
 const star_list = ['★', '★★', '★★★', '★★★★', '★★★★★'];
 const GoodIcon = ref(true);
-
-// 도움돼요
-const GoodIconState = async reviewId => {
-  console.log(reviewId);
-  if (!useStore.loginCheck) {
-    alert('로그인이 필요한 기능입니다.');
+// 유저별 리뷰 도움되요 표시
+const dolode = async () => {
+  // console.log('currentPage', currentPage.value);
+  GoodIcon.value = [];
+  if (useStore.loginCheck === false) {
+    GoodIcon.value = false;
     return;
   }
-  const reviewListRes = await axios.get(`${GLOBAL_URL}/detail/favorite/${idx.value}`);
-  console.log(reviewListRes.data);
-  GoodIcon.value = ([reviewIdShow]) => {};
+  const reviewListRes = await getReviewList(idx.value, currentPage.value - 1);
+  GoodIcon.value = reviewListRes.data;
+  // console.log(GoodIcon.value);
+};
+
+// 유저별 도움돼요 클릭 시 서버로 데이터 넘기기
+const GoodIconState = async reviewId => {
+  // console.log(reviewId);
+  if (!useStore.loginCheck) {
+    alert('로그인이 필요한 기능입니다.');
+    router.push({ name: 'login2' });
+    return;
+  }
+  const reviewListRes = await getReviewListGoodIconState(reviewId);
+  // console.log(reviewListRes.data.checked);
+  // console.log(reviewList.value);
+  // console.log(GoodIcon.value.checked);
+  dolode();
+  viewCurrentPage();
 };
 
 // 이전페이지
 const backPage = () => {
   if (currentPageGroup.value <= 0) {
-    console.log('첫페이지입니다.');
+    // console.log('첫페이지입니다.');
     alert('첫페이지입니다.');
     return;
   }
@@ -56,7 +79,7 @@ const backPage = () => {
 // 다음페이지
 const nextPage = () => {
   if (currentPageGroup.value >= totalPageGroup.value) {
-    console.log('마지막페이지입니다.');
+    // console.log('마지막페이지입니다.');
     alert('마지막페이지입니다.');
     return;
   }
@@ -66,9 +89,9 @@ const nextPage = () => {
 
 // 선택페이지
 const goToPage = page => {
-  console.log('page', page);
+  // console.log('page', page);
   if (currentPage.value == page) {
-    console.log('현재페이지입니다.');
+    // console.log('현재페이지입니다.');
     return;
   }
   currentPage.value = page;
@@ -87,8 +110,9 @@ const viewCurrentPage = async () => {
     totalPageGroup.value = Math.floor(totalPages.value / 10);
     startPage.value = currentPageGroup.value * 10 + 1;
     endPage.value = Math.min(startPage.value + 9, totalPages.value);
-    // console.log(reviewCount.value);
+    // console.log(reviewList.value);
   }
+  dolode();
 };
 
 // 선택된 페이지번호에 CSS 설정
@@ -108,6 +132,7 @@ watch(
     reviewCount.value = newReviewCount;
     viewCurrentPage();
   },
+  dolode(),
 );
 </script>
 
@@ -127,14 +152,26 @@ watch(
           </p>
         </div>
       </div>
-      <li class="reviewGoodIcon" v-if="GoodIcon" @click="GoodIconState(list.reviewId)">
-        <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766584.svg" alt="" />
-        {{ list.favoriteCount }} 도움되요
-      </li>
-      <li class="reviewGoodIcon" v-else @click="GoodIconState(list.reviewId)">
-        <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766580.svg" alt="" />
-        {{ list.favoriteCount }} 도움되요
-      </li>
+      <template v-if="useStore.loginCheck && GoodIcon">
+        <li
+          class="reviewGoodIcon reviewGoodIconTrue"
+          v-if="GoodIcon[index]?.checked"
+          @click="GoodIconState(GoodIcon[index].reviewId)"
+        >
+          <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766584.svg" alt="" />
+          {{ list.favoriteCount }} 도움되요
+        </li>
+        <li class="reviewGoodIcon" v-else @click="GoodIconState(GoodIcon[index].reviewId)">
+          <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766580.svg" alt="" />
+          {{ list.favoriteCount }} 도움되요
+        </li>
+      </template>
+      <template v-else>
+        <li class="reviewGoodIcon" @click="GoodIconState(0)">
+          <img src="@/assets/img/icon/free-icon-font-hand-holding-heart-17766580.svg" alt="" />
+          {{ list.favoriteCount }} 도움되요
+        </li>
+      </template>
     </ul>
 
     <div class="userReviewImgs">
@@ -142,23 +179,27 @@ watch(
     </div>
     <p class="userReviewText">{{ list.content }}</p>
     <p class="userReviewTime">
-      {{ list.reviewCreationDate }}
+      {{ dateTimeFormat(list.reviewCreationDate) }}
     </p>
   </div>
 
   <template v-if="reviewCount == 0 || reviewCount == null">
     <div id="userReviewList" class="border noUserReviewList">
-      <img src="@/assets/img/free-icon-font-note-sticky-9798415.svg" alt="" />
+      <img src="@/assets/img/icon/free-icon-font-note-sticky-9798415.svg" alt="" />
       <p>아직 리뷰가 등록되지 않았어요 ㅠㅡㅠ</p>
     </div>
   </template>
 
   <ul id="totalPages">
     <li @click="backPage">이전</li>
-    <li class="totalPages" v-for="pageNum in endPage - startPage + 1" v-bind:key="pageNum" @click="goToPage(startPage + pageNum - 1)" :class="{ active: activePage(pageNum) }">
+    <li
+      class="totalPages"
+      v-for="pageNum in endPage - startPage + 1"
+      v-bind:key="pageNum"
+      @click="goToPage(startPage + pageNum - 1)"
+      :class="{ active: activePage(pageNum) }"
+    >
       {{ startPage + pageNum - 1 }}
-      {{ startPage }}
-      {{ pageNum }}
     </li>
     <li @click="nextPage">다음</li>
   </ul>
@@ -220,6 +261,9 @@ watch(
   width: auto;
   height: 100%;
 }
+.reviewGoodIconTrue {
+  color: orange;
+}
 .userReviewImgs {
   display: flex;
   align-items: center;
@@ -263,8 +307,6 @@ watch(
   justify-content: space-between;
   height: 50px;
   width: auto;
-  margin: 25px 0 7px 0;
-  /* background-color: aqua; */
 }
 .userInfo {
   display: flex;
@@ -305,7 +347,8 @@ watch(
   /* width: 10%; */
   /* margin: 0 1%; */
 }
-.totalPages.active {
+.totalPages.active,
+#totalPages li:hover {
   color: var(--color-main-bloode);
   font-weight: 600;
   text-decoration: underline;
