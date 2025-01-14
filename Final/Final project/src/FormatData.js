@@ -23,3 +23,10 @@ export const dateFormat = date => {
     day: '2-digit',
   }).format(new Date(date));
 };
+
+export const timeFormat = date => {
+  return new Intl.DateTimeFormat('ko-KR', {
+    hour: 'numeric',
+    minute: 'numeric',
+  }).format(new Date(date));
+};

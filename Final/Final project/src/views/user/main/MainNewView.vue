@@ -1,5 +1,5 @@
 <script setup>
-import MainNewSildeView from './MainNewSildeView.vue'
+import MainNewSildeView from './MainNewSildeView.vue';
 </script>
 
 <template>
@@ -27,5 +27,10 @@ import MainNewSildeView from './MainNewSildeView.vue'
   display: flex;
   justify-content: center;
   padding: 40px 0;
+}
+@media (max-width: 630px) {
+  #main_new {
+    height: 650px;
+  }
 }
 </style>

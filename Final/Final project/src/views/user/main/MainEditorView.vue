@@ -1,20 +1,10 @@
 <script setup>
-import MainEditorPicksSlideView from './MainEditorPicksSlideView.vue'
+import MainEditorPicksSlideView from './MainEditorPicksSlideView.vue';
 </script>
 
 <template>
   <article id="main_editor">
-    <h1>Editor's Picks</h1>
-
-    <!-- <ul id="main_editor_list">
-        <li class="main_editor_img1">
-          <img src="../../img/editor_front_img.png" alt="" />
-        </li>
-        <li class="main_editor_img2">
-          <img src="../../img/editor_front_img.png" alt="" />
-        </li>
-      </ul> -->
-
+    <h1>Editor's Pick of the Month</h1>
     <MainEditorPicksSlideView></MainEditorPicksSlideView>
   </article>
 </template>
@@ -34,5 +24,10 @@ import MainEditorPicksSlideView from './MainEditorPicksSlideView.vue'
   text-align: center;
   padding-top: 40px;
   margin-bottom: 20px;
+}
+@media (max-width: 630px) {
+  #main_editor {
+    height: 600px;
+  }
 }
 </style>

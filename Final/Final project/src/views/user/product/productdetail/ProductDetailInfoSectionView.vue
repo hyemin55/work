@@ -1,130 +1,110 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { formatPrice } from '@/FormatPrice';
+import { formatPrice } from '@/FormatData';
 import _ProductDetailView from '@/views/user/product/productdetail/_ProductDetailView.vue';
 import { getProductData, getReviewData } from '@/api/productDetailApi';
 import ProductDetailSalseChartViewVue from '@/views/user/product/productdetail/ProductDetailSalseChartView.vue';
 import { useCartStore } from '@/stores/CartStore';
 import { useUserStore } from '@/stores/Login';
-
+import SaleProductModal from '@/components/user/modal/SaleProductModal.vue';
 import axios from 'axios';
 import { GLOBAL_URL } from '@/api/util';
 import { fetchMemeberCart, mergeMemberCart } from '@/api/cartApi';
+import { itemWishClick } from '@/api/wishApi';
+import { useWishStore } from '@/stores/WishStore';
+
 const route = useRoute();
 const router = useRouter();
-
+const wishStore = useWishStore();
+const cartStore = useCartStore();
+const Modal = ref(false);
 const productData = ref([]);
 const reviewData = ref(null);
-const productDataOk = ref([]);
-
+const productImages = ref([]);
 const idx = ref(route.params.idx);
-const size = ref(route.query.size);
-
-const cartStore = useCartStore();
+const wishHeart = ref(false);
+const cartHeart = ref(false);
 
 // 로그인 pinia
 const userStore = useUserStore();
 const userLogin = computed(() => userStore.loginCheck);
-const emit = defineEmits();
 // const emit = defineEmits();
-
-// 1. 클릭한 옵션값을 idx에 담아준다.
-const productOptionSelect = item => {
-  // console.log('item', item.productId);
-  // console.log('item', item.size);
-  router.push({
-    name: 'productsdetail',
-    params: { idx: item.productId },
-    query: { size: item.size },
-  });
-};
 
 // 3. 옵션값을 클릭하면 watch에서 추적하는 idx값이 바뀌고 doLoad를 호출한다.
 const doLoad = async () => {
-  // console.log(`doLoad = ${idx.value}`);
   try {
-    productData.value = await getProductData(idx.value);
-    reviewData.value = await getReviewData(idx.value);
+    const productDataRes = await getProductData(idx.value);
+    const reviewDataRes = await getReviewData(idx.value);
 
-    // console.log('productData 값 : ', productData.value.data[0].productId);
-    // console.log('reviewData 값 : ', reviewData.value.length);
-
-    if (productData.value.status === 200 && reviewData.value.status === 200) {
-      // console.log('productData.value.status === 200', productData.value);
-      for (let i = 0; i < productData.value.data.length; i++) {
-        // console.log('조건에 맞는 아이는? ', productData.value.data[i].size);
-        if (productData.value.data[i].productId == idx.value && productData.value.data[i].size == size.value) {
-          productDataOk.value = productData.value.data[i];
-          // console.log('데이터내용들', productDataOk.value);
-        }
-      }
-      // console.log('reviewData.value', reviewData.value);
-
-      // const newStatus = true;
-      // emit('onProductInfoLoaded', newStatus);
-    } else if (productData.value.status == 500) {
-      console.log(productData.value.status);
-      router.push({ name: 'main' });
-    } else {
-      console.log('실패1');
-    }
+    productData.value = productDataRes.detailProductInfoDto;
+    productImages.value = productDataRes.productImage;
+    reviewData.value = reviewDataRes;
+    cartAndWishView();
   } catch (err) {
     console.log('실패2' + err);
   }
 };
-const BuyNow = () => {};
 
-// console.log(productDataOk);
-
-// 장바구니 추가
-const addToCart = async () => {
-  const data = {
-    productId: Number(idx.value),
-    productName: productDataOk.value.productName,
-    price: productDataOk.value.price,
-    brandName: productDataOk.value.brandName,
-    size: productDataOk.value.size,
-    images: [productDataOk.value.mainImage],
-    mainImage: productDataOk.value.mainImage,
-    quantity: 1,
-  };
-
-  cartStore.addItem(data);
-  alert('장바구니에 담았습니다.');
-
-  if (userLogin.value) {
-    try {
-      const res = axios.post(`${GLOBAL_URL}/cart/add`, data, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-        },
-      });
-      console.log(res);
-      const pushData = cart.value.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-      }));
-      await mergeMemberCart(pushData);
-      const fetchRes = await fetchMemeberCart();
-      // 스토어에서 장바구니 업데이트(store 랜더링)
-      cartStore.updateCart(fetchRes.data);
-    } catch (e) {
-      console.log(e);
-    }
+const cartAndWishView = () => {
+  if (cartStore.cartItems.find(cartItem => cartItem.usedProductId === productData.value.usedProductId)) {
+    cartHeart.value = true;
+  }
+  if (wishStore.itemWishList.find(itemWishList => itemWishList === productData.value.usedProductId)) {
+    wishHeart.value = true;
+  } else {
+    wishHeart.value = false;
   }
 };
 
-// 찜 클릭 이벤트
-const redHeart = ref(false);
-const addToWishlist = () => {
-  redHeart.value = !redHeart.value;
-  if (redHeart.value == true) alert('༼ つ ◕_◕ ༽つ 찜~');
+// 바로 판매하기 클릭 시 모달 창 열림
+const SellNowOpenModal = () => {
+  if (userStore.loginCheck) {
+    Modal.value = true;
+  } else {
+    alert('로그인이 필요합니다.');
+    router.push({ name: 'login2' });
+  }
+};
+const closeModal = () => {
+  Modal.value = false;
 };
 
-const isselectedSize = size => {
-  return route.query.size === size.size.toString() && route.params.idx === size.productId.toString();
+// 장바구니 추가
+
+const addToCart = async () => {
+  const data = {
+    brandName: productData.value.brandName,
+    nickName: sessionStorage.getItem('nickName'),
+    productId: productData.value.productId,
+    productName: productData.value.productName,
+    productSize: productData.value.productSize,
+    sellingPrice: productData.value.verifiedSellingPrice,
+    usedOrNot: false,
+    usedProductId: Number(idx.value),
+    userSaleImages: productImages.value,
+    verifiedSaleGradeType: productData.value.gradeType,
+    quantity: 1,
+  };
+  cartStore.addItem(data);
+  cartAndWishView();
+  // alert('장바구니에 담았습니다.');
 };
+
+// 찜 클릭 이벤트
+const addToWishlist = async () => {
+  if (userLogin.value) {
+    // DB통신(추가,삭제)
+    await itemWishClick(productData.value.usedProductId);
+    // Pinia(추가, 삭제)
+    wishStore.itemMakeWishList(productData.value.usedProductId);
+    cartAndWishView();
+  } else {
+    alert('로그인 후 사용이 가능합니다.');
+    router.push({ path: '/login2' });
+  }
+};
+
 // 리뷰별점평균을 소수점 1자리만 남긴다.
 const Average = data => {
   data = data * 10;
@@ -133,9 +113,34 @@ const Average = data => {
   return data;
 };
 
+// 바로 결제하기
+const doPayment = () => {
+  if (sessionStorage.getItem('token')) {
+    const purchaseProductDto = [
+      {
+        usedProductId: productData.value.usedProductId,
+        quantity: 1,
+        productName: productData.value.productName,
+      },
+    ];
+    const data = {
+      purchaseProductDtos: purchaseProductDto,
+      totalPrice: productData.value.verifiedSellingPrice,
+    };
+
+    router.push({
+      path: '/payment',
+      query: { item: encodeURIComponent(JSON.stringify(data)) },
+    });
+  } else {
+    alert('로그인 후 이용 가능합니다.');
+    router.push({ path: '/login2' });
+  }
+};
+
 watchEffect(() => {
   idx.value = route.params.idx;
-  size.value = route.query.size;
+  wishHeart.value;
   doLoad();
 });
 </script>
@@ -143,37 +148,38 @@ watchEffect(() => {
 <template>
   <article id="productInfoSection">
     <ul id="productInfo">
-      <li>{{ productDataOk.brandName }}</li>
-      <li>{{ productDataOk.productName }}</li>
+      <li>{{ productData.brandName }}</li>
+      <li>{{ productData.productName }}ㆍ{{ productData.size }} ml</li>
       <li v-if="reviewData">
         1,222찜 수
-        <span style="color: orange">★ {{ Average(reviewData.data.starAverage) }} ({{ reviewData.data.reviewCount }} reviews)</span>
+        <span style="color: orange"
+          >★ {{ Average(reviewData.starAverage) }} ({{ reviewData.reviewCount }} reviews)</span
+        >
       </li>
-      <li>{{ formatPrice(productDataOk.price) }}</li>
+      <li>{{ formatPrice(productData.verifiedSellingPrice) }}</li>
+      <li>판매용량 : {{ productData.productSize }} ml / {{ productData.usedOrNot ? '새상품' : '중고상품' }}</li>
     </ul>
 
-    <p class="OptionSelect">옵션선택</p>
-    <div id="productOption">
-      <button @click="productOptionSelect(size)" v-for="(size, index) in productData.data" :key="index" :class="{ selectedSize: isselectedSize(size) }">{{ size.size }} ml</button>
-    </div>
     <!-- <div>
       <p>제조일자 : 2024-11-01</p>
       <p>유통기한 : 2029-11-01</p>
     </div> -->
 
     <div class="addButtonGroub">
-      <button class="addToCart Sell​​Now">바로 판매하기</button>
-      <button class="addToCart BuyNow" @click="BuyNow">바로 구매하기</button>
-      <!-- <button class="addToCart" @click="addToCart"> -->
-      <button class="icon_box" @click="addToCart">
+      <button class="addToCart Sell​​Now" @click="SellNowOpenModal">바로 판매하기</button>
+      <button class="addToCart BuyNow" @click="doPayment">바로 구매하기</button>
+      <button class="icon_box" @click="addToCart" :class="{ active: cartHeart }">
         <img class="icon" src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" />
       </button>
-      <button class="icon_box" :class="{ active: redHeart }" @click.stop="addToWishlist">
+      <button class="icon_box" :class="{ active: wishHeart }" @click.stop="addToWishlist">
         <img class="icon" src="@/assets/img/icon/free-icon-font-heart-line.svg" alt="" />
       </button>
     </div>
 
-    <ProductDetailSalseChartViewVue />
+    <ProductDetailSalseChartViewVue v-if="productData" :size="productData.size" />
+  </article>
+  <article>
+    <SaleProductModal v-if="Modal" @closeModal="closeModal" />
   </article>
 </template>
 
@@ -199,7 +205,8 @@ watchEffect(() => {
   font-size: 1.4rem;
   margin-top: 20px;
 }
-#productInfo li:nth-child(4) {
+#productInfo li:nth-child(4),
+#productInfo li:nth-child(5) {
   font-size: 2rem;
   margin-top: 20px;
 }
@@ -285,6 +292,8 @@ button.selectedSize {
 @media (max-width: 630px) {
   #productInfoSection {
     width: 100%;
+    margin: 0 auto;
+    padding: 0 3%;
   }
 }
 </style>

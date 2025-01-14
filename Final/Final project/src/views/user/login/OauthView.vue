@@ -4,10 +4,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { login, loginCheck } from '@/api/KakaoLoginApi';
 import { useUserStore } from '@/stores/Login';
 import LodingView from '@/views/loding/LodingView.vue';
+import { useWishStore } from '@/stores/WishStore';
+import { categoryWishList } from '@/api/wishApi';
 
 const route = useRoute();
 const router = useRouter();
 const useStore = useUserStore();
+const wishStore = useWishStore();
 
 // 받은 인가코드로 토큰받아오기
 watchEffect(async () => {
@@ -19,15 +22,24 @@ watchEffect(async () => {
     if (!res.status.toString().startsWith('2')) return;
     res = await loginCheck();
     useStore.login(res.data); //스토어 등록
-    console.log(res.data);
+
+    const wishListData = await categoryWishList(); // 로그인시 찜하기 정보 가져오기
+    wishListData
+      .map(item => item.wishListCategoryDto.id)
+      .forEach(id => {
+        // id만 추출해서
+        wishStore.makeWishList(id); // 찜 상품의 id를, store에 저장
+      });
+
     if (res.status.toString().startsWith('2')) {
-      console.log(res.data);
+      // console.log(res.data);
     } else return;
+
     // if사용해 role 권한이 admin이면 관리자페이지로 푸시
     if (res.data.role === 'ADMIN') {
       console.log('관리자페이지로이동');
       router.push({ name: 'mainDashboard' });
-    } else if (res.data.nickName === '민이♡') {
+    } else if (res.data.role === 'APPRAISER') {
       console.log('검수자페이지로이동');
       router.push({ name: 'mainInspectionList' });
     } else {

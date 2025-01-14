@@ -25,22 +25,20 @@ const props = defineProps({
     required: false,
   },
 })
-const cart_idx = ref(props.productInfo.productId) // 부모자로 보낼 idx
+
+const cart_idx = ref(props.productInfo.usedProductId) // 부모자로 보낼 idx
 const cart_product_name = ref(props.productInfo.productName)
-const cart_product_price = ref(props.productInfo.price) // 이것도
-const cart_quantity = ref(props.productInfo.quantity)
-// 사이즈 수정 필요
-const cart_size = ref(props.productInfo.size)
-const cartCheck = ref(props.isChecked)
+const cart_product_price = ref(props.productInfo.sellingPrice) // 이것도
+const cart_size = ref(props.productInfo.productSize);
+const cartCheck = ref(props.isChecked);
+const imgURL = ref(props.productInfo.userSaleImages);
 
-console.log(cart_size.value)
 
+// 장바구니 check배열 
 onMounted(() => {
   makeCartCheckList()
 })
-watch(
-  () => props.isChecked,
-  newValue => {
+watch(() => props.isChecked, newValue => {
     // props 변화 감지 => makecartCheckList 실행
     cartCheck.value = newValue
     makeCartCheckList()
@@ -50,15 +48,14 @@ const makeCartCheckList = () => {
   // 배열에 추가
   if (cartCheck.value) {
     cartStore.cartCheckList.push({
-      productId: cart_idx.value,
-      price: cart_product_price.value,
-      quantity: cart_quantity,
+      usedProductId: cart_idx.value,
+      sellingPrice: cart_product_price.value,
     })
   }
   // 배열에 삭제
   else {
     cartStore.cartCheckList = cartStore.cartCheckList.filter(
-      item => item.productId !== cart_idx.value,
+      item => item.usedProductId !== cart_idx.value,
     )
   }
 }
@@ -72,52 +69,11 @@ watch(cartCheck, newValue => {
   emit('update:isChecked', newValue)
 })
 
-// 수량 변경
-const upCount = async () => {
-  cartStore.upQuantity(cart_idx.value)
-  const data = {
-    productId: cart_idx.value,
-    quantity: 1,
-  }
-  if (userLogin.value) {
-    await axios.post(`${GLOBAL_URL}/cartProduct/increment`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-      },
-    })
-  }
-}
-const downCount = async () => {
-  if (cart_quantity.value > 1) {
-    cartStore.downQuantity(cart_idx.value)
-    const data = {
-      productId: cart_idx.value,
-      quantity: 1,
-      memberId: 1,
-    }
-    if (userLogin.value) {
-      await axios.post(`${GLOBAL_URL}/cartProduct/decrement`, data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-        },
-      })
-    }
-  }
-}
-watch(
-  () => props.productInfo.quantity,
-  newValue => {
-    cart_quantity.value = newValue
-  },
-)
-
 // 상품으로 이동
 const router = useRouter()
 const moveDetail = () => {
   router.push({
-    path: `/productsdetail/${props.productInfo.productId}`,
+    path: `/productsdetail/${props.productInfo.usedProductId}`,
     query: {
       size: cart_size.value,
     },
@@ -140,11 +96,8 @@ const moveDetail = () => {
       />
       <span class="custom-checkmark"></span>
     </label>
-    <div class="img">
-      <img
-        :src="`${GLOBAL_URL}/api/file/download/${productInfo.images[0].filename}`"
-        @click="moveDetail"
-      />
+    <div class="img" v-if="imgURL != null">
+      <img :src="`${GLOBAL_URL}/api/file/download/${imgURL[0].filename}`" @click="moveDetail"/>
     </div>
     <div class="text">
       <div class="text_box">
@@ -152,12 +105,7 @@ const moveDetail = () => {
           상품명 : {{ cart_product_name }}
         </p>
         <p class="contents">옵션 : {{ cart_size }}ml</p>
-        <p class="price">{{ cart_product_price.toLocaleString() }}원</p>
-      </div>
-      <div class="count">
-        <button @click="downCount">-</button>
-        <p>수량 : {{ cart_quantity }}</p>
-        <button @click="upCount">+</button>
+        <p class="price">{{ cart_product_price }}원</p>
       </div>
     </div>
   </article>
@@ -204,14 +152,15 @@ const moveDetail = () => {
 .img {
   width: 197px;
   height: 100%;
-  /* background-color: #fff; */
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 .img img {
   cursor: pointer;
   height: 90%;
+  border-radius: 1.5rem;
 }
 /* 텍스트 박스 설정 */
 .text {

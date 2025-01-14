@@ -1,18 +1,17 @@
 <script setup>
 import { useUserStore } from '@/stores/Login';
-import { ref, watchEffect, onMounted, onUpdated, nextTick } from 'vue';
+import { ref, watchEffect, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { eventBus } from '@/eventBus';
 import { useCartStore } from '@/stores/CartStore';
+import { useWishStore } from '@/stores/WishStore';
 
 const cartStore = useCartStore();
 const route = useRoute();
 const router = useRouter();
 const HeaderMode = ref(false);
-
 const useStore = useUserStore();
-
-const loginCheck = ref(false);
+const wishStore = useWishStore();
 const token = ref(false);
 watchEffect(() => {
   HeaderMode.value = route.path === '/';
@@ -20,27 +19,12 @@ watchEffect(() => {
 });
 
 const kakaoLogout = async () => {
-  // await logout(sessionStorage.getItem('token'))
   useStore.logout();
-  // console.log('로그아웃 성공')
-  // console.log(token.value)
-  // token.value = false
+  wishStore.removeWishList();
   eventBus.emit('logout');
   router.push({ name: 'login2' });
 };
 
-onMounted(() => {
-  const savedToken = sessionStorage.getItem('token');
-  if (savedToken) {
-    token.value = true;
-    useStore.loginCheck = true; // 스토어에 로그인 상태 설정
-  } else {
-    useStore.loginCheck = false;
-  }
-});
-// onMounted(() => {
-//   token.value = localStorage.getItem('token')
-// })
 const categories = [
   { title: 'Perfume', path: '/category/Perfume/3' },
   { title: 'Diffuser', path: '/category/Diffuser/2' },
@@ -82,6 +66,13 @@ const toggleSearch = () => {
     }
   });
 };
+
+// 검색어 입력
+const handleClick = () => {
+  console.log('검색');
+  router.push({ path: `/category/"${searchQuery.value}"/4` },)
+};
+
 </script>
 
 <template>
@@ -101,10 +92,12 @@ const toggleSearch = () => {
           <li><router-link to="/mypage">마이페이지</router-link></li>
           <li class="noCursor">&nbsp;|&nbsp;</li>
           <li>고객센터</li>
-          <li class="noCursor">&nbsp;|&nbsp;</li>
-          <li><router-link to="/mainInspectionList">검수자</router-link></li>
-          <li class="noCursor">&nbsp;|&nbsp;</li>
-          <li><router-link to="/mainDashboard">관리자</router-link></li>
+          <li class="noCursor" v-if="useStore.role === 'APPRAISER'">&nbsp;|&nbsp;</li>
+          <li v-if="useStore.role === 'APPRAISER'">
+            <router-link to="/mainInspectionList">검수자</router-link>
+          </li>
+          <li class="noCursor" v-if="useStore.role === 'ADMIN'">&nbsp;|&nbsp;</li>
+          <li v-if="useStore.role === 'ADMIN'"><router-link  to="/mainDashboard">관리자</router-link></li>
         </ul>
       </template>
       <template v-else>
@@ -128,7 +121,17 @@ const toggleSearch = () => {
       </ul>
       <ul class="gnb02">
         <li>
-          <input v-show="isSearchVisible" v-bind:style="searchStyle" type="text" placeholder="검색어를 입력해주세요." class="search-input" v-model="searchQuery" ref="searchInput" />
+          <input
+            v-show="isSearchVisible"
+            v-bind:style="searchStyle"
+            type="text"
+            placeholder="검색어를 입력해주세요."
+            class="search-input"
+            v-model="searchQuery"
+            ref="searchInput"
+            required
+            @keydown.enter="handleClick"
+          />
           <img @click="toggleSearch" class="icon" src="@/assets/img/icon/free-icon-font-search-3917132.png" alt="" />
         </li>
         <li>

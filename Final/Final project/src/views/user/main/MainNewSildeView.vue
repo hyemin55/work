@@ -2,11 +2,10 @@
 <script setup>
 import { Carousel, Slide, Navigation, Icon, Pagination } from 'vue3-carousel';
 import { ref, watchEffect } from 'vue';
-import axios from 'axios';
 import 'vue3-carousel/dist/carousel.css';
 import { GLOBAL_URL } from '@/api/util';
 import router from '@/router';
-import { formatPrice } from '@/FormatPrice';
+import { getNewSildes } from '@/api/mainApi';
 
 const slides = ref([]);
 const pageNum = 0;
@@ -16,17 +15,8 @@ const size = 10;
 
 const getNewList = async () => {
   try {
-    const res = await axios.get(`${GLOBAL_URL}/api/products/new?pageNum=${pageNum}&size=${size}`);
-    // console.log(res)
-    if (res.status == 200) {
-      // New_list.value = res.data
-      // console.log('나와랏', res.data)
-      // for (let i = 0; i < res.data.length; i++) {
-      //   slides.value.push(res.data[i].images[0])
-      // }
-      slides.value = res.data;
-      console.log(slides.value);
-    }
+    const newSildesRes = await getNewSildes();
+    slides.value = newSildesRes;
   } catch (e) {
     console.log('리스트 못 받아오는 오류에요 = ' + e);
   }
@@ -35,11 +25,9 @@ const getNewList = async () => {
 watchEffect(() => {
   getNewList();
 });
-const navDetailProduct = (productId, size) => {
-  console.log(productId);
+const navDetailProduct = usedProductId => {
   router.push({
-    path: `/productsdetail/${productId}`,
-    query: { size: size },
+    path: `/productsdetail/${usedProductId}`,
   });
 };
 
@@ -48,16 +36,25 @@ const navDetailProduct = (productId, size) => {
 
 <template>
   <div class="wrapper">
-    <Carousel :items-to-show="3.5" :autoplay="2000" :snapAlign="'center'" :wrap-around="true" :pause-autoplay-on-hover="true" :mouseDrag="false">
+    <Carousel
+      :items-to-show="3.5"
+      :autoplay="2000"
+      :snapAlign="'center'"
+      :wrap-around="true"
+      :pause-autoplay-on-hover="true"
+      :mouseDrag="false"
+    >
       <Slide v-for="(slide, index) in slides" :key="index">
         <!-- <div v-for="productDtail in New_list" :key="productDtail.productId"> -->
-        <div class="carousel__item" @click="navDetailProduct(slide.productId, slide.size)">
+        <div class="carousel__item" @click="navDetailProduct(slide.usedProductId)">
           <p class="time_check">{{ slide.registerDate }} 등록상품</p>
-          <img class="slideImg" :src="`${GLOBAL_URL}/api/file/download/${slide.images[0].filename}`" />
+          <p class="gradeType">{{ slide.gradeType }}등급</p>
+          <img class="slideImg" :src="`${GLOBAL_URL}/api/file/download/${slide.mainImage}`" />
           <div class="item_info">
             <p>{{ slide.brandName }}</p>
-            <p>{{ slide.productName }}</p>
-            <p>￦ {{ slide.price.toLocaleString() }}</p>
+            <p>이름{{ slide.productName }}ㆍ{{ slide.size }} ml</p>
+            <p>￦ {{ Number(slide.price).toLocaleString() }}</p>
+            <p></p>
           </div>
         </div>
         <!-- </div> -->
@@ -86,11 +83,16 @@ const navDetailProduct = (productId, size) => {
   /* border: 0.5px solid var(--color-main-bloode); */
   cursor: pointer;
 }
-
+.carousel__item:hover {
+  background-color: rgb(225, 225, 225);
+}
 .carousel__item img {
   position: absolute;
-  width: 95%;
-  max-height: auto;
+  width: 330px;
+  height: 330px;
+  object-fit: cover;
+  border-radius: 10px;
+  background-color: white;
   top: 20%;
 }
 
@@ -108,6 +110,20 @@ const navDetailProduct = (productId, size) => {
   position: absolute;
   top: 30px;
 }
+.gradeType {
+  position: absolute;
+  top: 70px;
+  font-size: 2rem;
+  color: orange;
+  padding: 5px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: rgb(247, 247, 247);
+  box-shadow:
+    inset -3px -3px 3px #ffffff73,
+    inset 1px 1px 3px rgba(94, 104, 121, 0.288);
+}
+
 .item_info {
   position: absolute;
   display: flex;
@@ -121,9 +137,32 @@ const navDetailProduct = (productId, size) => {
   font-size: 2rem;
   color: var(--color-main-bloode);
 }
+.item_info p:nth-child(2) {
+  font-size: 2.3rem;
+}
 .item_info p {
   font-size: 2.7rem;
   /* height: 200px; */
   padding: 5px 20px;
+}
+@media (max-width: 630px) {
+  .carousel__item {
+    height: 440px;
+    border-radius: 10px;
+  }
+  .time_check {
+    font-size: 1.6rem;
+    top: 20px;
+  }
+  .carousel__item img {
+    width: 180px;
+  }
+  .item_info p:nth-child(1) {
+    font-size: 1.8rem;
+  }
+  .item_info p {
+    font-size: 2rem;
+    padding: 5px 5px;
+  }
 }
 </style>

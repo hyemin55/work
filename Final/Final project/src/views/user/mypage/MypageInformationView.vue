@@ -1,9 +1,9 @@
 <script setup>
+import { useUserStore } from '@/stores/Login';
 import { ref } from 'vue';
 
-const save = ()=>{
-  console.log("작성저장")
-}
+const userStore = useUserStore();
+
 const profileImage = sessionStorage.getItem('profileImage')
 const inputFile = ref();
 const change_profile_image = ()=>{
@@ -11,6 +11,15 @@ const change_profile_image = ()=>{
 }
 const imageUpload = ()=>{
   console.log('사진업로드')
+}
+
+// mode 변경
+const mode = ref('read');
+const update = ()=>{
+  mode.value = 'update'
+}
+const save = ()=>{
+  mode.value = 'read'
 }
 
 </script>
@@ -34,31 +43,37 @@ const imageUpload = ()=>{
         <form>
           <div class="form-group">
             <label for="nickname">닉네임</label>
-            <input type="text" id="nickname" value="닉네임" />
+            <span v-if="mode === 'read'">{{ userStore.nickName }}</span>
+            <input v-else type="text" id="nickname" :value="userStore.nickName" />
           </div>
           <div class="form-group">
             <label for="address">주소</label>
-            <input type="text" id="address" value="대구광역시 달서구 반월로 135 그린컴퓨터아트학원 5층 505호" />
+            <span v-if="mode === 'read'">대구광역시 달서구 반월로 135 그린컴퓨터아트학원 5층 505호</span>
+            <input v-else type="text" id="address" value="대구광역시 달서구 반월로 135 그린컴퓨터아트학원 5층 505호" />
           </div>
           <div class="form-group">
             <label for="name">이름</label>
-            <input type="text" id="name" value="김영희" />
+            <span v-if="mode === 'read'">{{ userStore.nickName }}</span>
+            <input v-else type="text" id="name" :value="userStore.nickName" />
           </div>
           <div class="form-group">
             <label for="phone">핸드폰번호</label>
-            <input type="tel" id="phone" value="010-1234-1234" />
+            <span v-if="mode === 'read'">010-1234-1234</span>
+            <input v-else type="tel" id="phone" value="010-1234-1234" />
           </div>
           <div class="form-group">
             <label for="email">이메일</label>
-            <input type="email" id="email" value="abcdefhijk@naver.com" readonly/>
-            <!-- <small class="email_small">카카오 계정입니다.</small> -->
+            <span v-if="mode === 'read'">{{ userStore.email }}</span>
+            <input v-else type="email" id="email" :value="userStore.email" readonly/>
           </div>
           <div class="form-group">
             <label for="gender">성별</label>
-            <input type="text" id="gender" value="여" readonly/>
+            <span v-if="mode === 'read'">비공개</span>
+            <input v-else type="text" id="gender" value="여" readonly/>
           </div>
 
-          <button @click.prevent="save" type="submit" class="info_save_btn">저정하기</button>
+          <button v-if="mode === 'read'" @click.prevent="update" type="submit" class="info_save_btn">수정하기</button>
+          <button v-else @click.prevent="save" type="submit" class="info_save_btn">저정하기</button>
         </form>
 
         <p class="secession">
@@ -86,6 +101,7 @@ const imageUpload = ()=>{
   display: flex;
   width: 100%;
   height: 630px;
+  background: #f9f9f9;
 }
 /* 프로필이미지 설정 */
 .profile_image {
@@ -123,7 +139,6 @@ const imageUpload = ()=>{
   width: calc(100% - 250px);
   height: 100%;
   position: relative;
-  background-color: var(--color-main-pink);
 }
 .user_info form{
   text-align: center;
@@ -146,13 +161,15 @@ label {
 }
 input[type="text"],
 input[type="tel"],
-input[type="email"] {
+input[type="email"],
+span {
   width: 100%;
   min-width: 300px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
+  padding: 10px;
 }
 input[type="text"]:focus,
 input[type="tel"]:focus,
@@ -163,6 +180,10 @@ input[type="email"]:focus {
   position: absolute;
   font-size: 12px;
   color: #666;
+}
+span{
+  display: flex;
+  align-items: center;
 }
 
 /* save 버튼설정 */

@@ -7,6 +7,7 @@ import MypageSalseHistoryView from '@/views/user/mypage/MypageSalseHistoryView.v
 import MypageWishlistView from '@/views/user/mypage/MypageWishlistView.vue';
 import MypageReviewView from '@/views/user/mypage/MypageReviewView.vue';
 import MypageCurrentSituationView from '@/views/user/mypage/MypageCurrentSituationView.vue';
+import ModalCommon from '@/views/appraiser/InspectionModalView.vue';
 
 const user = useUserStore();
 onMounted(() => {});
@@ -22,6 +23,14 @@ const componentMap = {
   myInformation: MypageInformationView,
 };
 const currentComponent = computed(() => componentMap[selectpage.value]);
+
+const selectedItem = ref('myOrderHistory');
+const handleNavClick = (page) => {
+  selectedItem.value = page;
+  selectpage.value = page;
+  window.scrollTo({ top: 0 });
+};
+
 </script>
 
 <template>
@@ -32,11 +41,11 @@ const currentComponent = computed(() => componentMap[selectpage.value]);
         <p>{{ user.nickName }}</p>
       </div>
       <ul id="myInfoNavList">
-        <li @click="selectpage = 'myOrderHistory'">주문 내역 조회</li>
-        <li @click="selectpage = 'mySalseHistory'">판매 내역 조회</li>
-        <li @click="selectpage = 'myWishlist'">찜 목록</li>
-        <li @click="selectpage = 'myReview'">내 리뷰 관리</li>
-        <li @click="selectpage = 'myInformation'">회원 정보 관리</li>
+        <li :class="{ active: selectedItem === 'myOrderHistory' }" @click="handleNavClick('myOrderHistory')">주문 내역 조회</li>
+        <li :class="{ active: selectedItem === 'mySalseHistory' }" @click="handleNavClick('mySalseHistory')">판매 내역 조회</li>
+        <li :class="{ active: selectedItem === 'myWishlist' }" @click="handleNavClick('myWishlist')">찜 목록</li>
+        <li :class="{ active: selectedItem === 'myReview' }" @click="handleNavClick('myReview')">내 리뷰 관리</li>
+        <li :class="{ active: selectedItem === 'myInformation' }" @click="handleNavClick('myInformation')">회원 정보 관리</li>
       </ul>
     </article>
 
@@ -111,6 +120,7 @@ const currentComponent = computed(() => componentMap[selectpage.value]);
   color: var(--color-main-bloode);
   font-family: 'Pretendard-Bold';
 }
+
 #rightGroub {
   /* position: absolute; */
   width: 100%;
@@ -129,5 +139,11 @@ const currentComponent = computed(() => componentMap[selectpage.value]);
   margin: 15px 0 15px 3%;
   /* background-color: rgb(207, 232, 255); */
   height: auto;
+}
+
+#myInfoNavList li.active {
+  color: var(--color-main-bloode);
+  font-weight: bold;
+  position: relative;
 }
 </style>

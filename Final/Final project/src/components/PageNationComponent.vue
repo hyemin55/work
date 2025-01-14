@@ -10,10 +10,10 @@ emit = 아래의 이름으로 부모컴포넌트에서 emit을 받아주고 페�
  -->
 <template>
   <article>
-    <ul id="totalPages" v-if="pageNationData.totalCount > 0">
+    <ul id="totalPages" v-if="pageNationData != null && pageNationData.totalCount > 0">
       <li @click="backPage">이전</li>
       <li
-        class="totalPages"
+        class="Pages"
         v-for="pageNum in endPage - startPage + 1"
         v-bind:key="pageNum"
         @click="goToPage(startPage + pageNum - 1)"
@@ -50,7 +50,7 @@ const endPage = ref(0);
 // 이전페이지
 const backPage = () => {
   if (currentPageGroup.value <= 0) {
-    console.log('첫페이지입니다.');
+    // console.log('첫페이지입니다.');
     alert('첫페이지입니다.');
     return;
   }
@@ -61,7 +61,7 @@ const backPage = () => {
 // 다음페이지
 const nextPage = () => {
   if (currentPageGroup.value >= totalPageGroup.value) {
-    console.log('마지막페이지입니다.');
+    // console.log('마지막페이지입니다.');
     alert('마지막페이지입니다.');
     return;
   }
@@ -71,13 +71,13 @@ const nextPage = () => {
 
 // 선택페이지
 const goToPage = page => {
-  console.log('page', page);
   if (currentPage.value == page) {
-    console.log('현재페이지입니다.');
+    // console.log('현재페이지입니다.');
     return;
   }
   currentPage.value = page;
   viewCurrentPage();
+  window.scrollTo({ top: 0 });
 };
 
 // 현재페이지
@@ -104,15 +104,15 @@ const activePage = pageNum => {
     return currentPage.value - 1 - currentPageGroup.value * 10 === pageNum - 1;
   }
 };
+
 const dolode = () => {
-  totalCount.value = props.pageNationData.totalCount;
-  console.log('totalCount', totalCount.value);
-  pageSize.value = props.pageNationData.pageSize;
+  totalCount.value = props.pageNationData != null ? props.pageNationData.totalCount : 5;
+  pageSize.value = props.pageNationData != null ? props.pageNationData.pageSize : 5;
   viewCurrentPage();
 };
 watchEffect(() => {
   dolode();
-  console.log(props.pageNationData);
+  props.pageNationData
 });
 </script>
 
@@ -132,7 +132,7 @@ watchEffect(() => {
   cursor: pointer;
   padding: 1%;
 }
-.totalPages {
+.Pages {
   /* background-color: rgb(236, 207, 172); */
   display: flex;
   align-items: center;
@@ -140,7 +140,8 @@ watchEffect(() => {
   /* width: 10%; */
   /* margin: 0 1%; */
 }
-.totalPages.active {
+.Pages.active,
+li:hover {
   color: var(--color-main-bloode);
   font-weight: 600;
   text-decoration: underline;

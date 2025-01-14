@@ -11,6 +11,7 @@ export const useUserStore = defineStore('member', {
     userId: '',
     snsType: '',
     role: '',
+    mainVuePage: true,
   }),
   //   data를 받아오면 위의 상태안에 값을 넣고 레이아웃네비뷰의 watchEffect로 다시 넘겨준다.
   actions: {
@@ -24,15 +25,17 @@ export const useUserStore = defineStore('member', {
       this.email = data.email;
       this.snsType = data.snsType;
       this.role = data.role;
-
-      if (this.profileImage === 'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg' || null) {
+      if (
+        this.profileImage ===
+          'http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg' ||
+        null
+      ) {
         this.profileImage = image1234;
       }
-      console.log(sessionStorage.getItem('token'));
       sessionStorage.setItem('nickName', this.nickName);
       sessionStorage.setItem('profileImage', this.profileImage);
+      // console.log('mainVuePage',this.mainVuePage)
     },
-
     logout() {
       this.loginCheck = false;
       this.nickName = '';
@@ -42,10 +45,15 @@ export const useUserStore = defineStore('member', {
       this.userId = '';
       this.snsType = '';
       this.role = '';
-      console.log(this.role);
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('nickName');
       sessionStorage.removeItem('profileImage');
+    },
+    moveMain() {
+      this.mainVuePage = false;
+    },
+    moveNotMain() {
+      this.mainVuePage = true;
     },
   },
 });

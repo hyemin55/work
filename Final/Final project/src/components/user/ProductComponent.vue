@@ -1,74 +1,23 @@
 <script setup>
 import { GLOBAL_URL } from '@/api/util';
-import { useRouter } from 'vue-router';
-import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import { useCartStore } from '@/stores/CartStore';
 import axios from 'axios';
 import { useUserStore } from '@/stores/Login';
+import { categoryWishClick } from '@/api/wishApi';
+import { addCartDatabase } from '@/api/cartApi';
+import { useWishStore } from '@/stores/WishStore';
 // import { useQueryClient } from '@tanstack/vue-query';
 // import { getProductData, getReviewData, getReviewImageList, getSlideImages, getstarCounting } from '@/api/productDetail';
 
 // 로그인 pinia
-const userStore = useUserStore(); 
+const userStore = useUserStore();
 const userLogin = computed(() => userStore.loginCheck);
 
-// 장바구니 추가
-const cartStore = useCartStore();
-const addToCart = () => {
-  
-  alert("장바구니에 담았습니다.")
-  console.log('props.productInfo', props.productInfo);
-  cartStore.addItem(props.productInfo);
-  if (userLogin.value) {
-    const data = {
-      productId: props.productInfo.productId,
-      quantity: 1,
-    };
-    try {
-      const res = axios.post(`${GLOBAL_URL}/cart/add`, data, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-        },
-      });
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-};
-
-// const productClient = useQueryClient();
-// 찜목록 추가
-const redHeart = ref(false);
-const iconClick = ref(false); // 찜하트 css
-
-const addToWishlist = () => {
-  redHeart.value = !redHeart.value;
-  iconClick.value = !iconClick.value; // 찜하트 css
-
-  // productClient.prefetchQuery(['productSlideImage', props.productInfo.productId], ()=>{
-  //   getSlideImages(props.productInfo.productId)
-  // })
-  // productClient.prefetchQuery(['productProductData', props.productInfo.productId], ()=>{
-  //   getProductData(props.productInfo.productId)
-  // })
-  // productClient.prefetchQuery(['productStarCount', props.productInfo.productId], ()=>{
-  //   getstarCounting(props.productInfo.productId)
-  // })
-  // productClient.prefetchQuery(['productReviewImage', props.productInfo.productId], ()=>{
-  //   getReviewImageList(props.productInfo.productId)
-  // })
-  // productClient.prefetchQuery(['productReviewData', props.productInfo.productId], ()=>{
-  //   getReviewData(props.productInfo.productId)
-  // })
-};
-
 // 단위 변경
-// const unit = ref('ml');
-// watch(() => categoryTitle.value, (newTitle) => {
-//   if (newTitle === 'Candle') {unit.value = 'g';}
-//   else {unit.value = 'ml';}
-//   });
+const route = useRoute();
+const unit = ref(route.params.idx == 1 ? 'g' : 'ml');
 
 // 상품리스트에 출력
 const props = defineProps({
@@ -78,57 +27,100 @@ const props = defineProps({
     required: true,
   },
 });
-
-// 3. defineProps으로 정의한 명령어를 변수로 정리하는 부분입니다.
+// console.log("들어오는값 ", props.productInfo);
 const productName = ref(props.productInfo.productName || '상품이름');
 const content = ref(props.productInfo.content || '상품설명');
-const price = ref(props.productInfo.price || '가격');
+const minPrice = ref(props.productInfo.minPrice || '0');
+const maxPrice = ref(props.productInfo.maxPrice || '0');
 const size = ref(props.productInfo.size || '사이즈');
 // const review_avr = ref('평점');
 const reviewCount = ref(props.productInfo.reviewCount || '0');
+const brand = ref(props.productInfo.brandName || 'Santa Maria Novella');
+
+const gradeTypes = ref(props.productInfo.gradeTypes || 'Sold out');
+const gradeTypesArray = ref(gradeTypes.value.split(',').map(type => type.trim()));
 
 // useNavigator
 const router = useRouter();
 const navDetailProduct = () => {
-  console.log('사이즈 값', size.value);
   router.push({
-    path: `/productsdetail/${props.productInfo.productId}`,
+    path: `/masonry/${props.productInfo.productId}`,
     query: {
-      size: size.value,
+      // 여기서 상품의 하나에 대한 카테고리 아이디를 넘겨준다.
+      title: productName.value,
+      brand: brand.value,
     },
   });
 };
 
-const popup = document.querySelector('.cart_pop')
-// const popup_close = document.querySelector('.cart_pop_close')
+// 찜목록 추가 ##############################################
+const redHeart = ref(false); // 찜 상태
+const iconClick = ref(false); // 하트 icon css
+const wishStore = useWishStore();
 
- 
+watchEffect(() => {
+  const wishProduct = wishStore.wishList.find(item => item === props.productInfo.productId);
+  // console.log(wishProduct);
+  if (wishProduct) {
+    // store에 id 값이 있다면 값을 true로..
+    redHeart.value = true;
+    iconClick.value = true;
+  } else {
+    redHeart.value = false;
+    iconClick.value = false;
+  }
+});
 
+const addToWishlist = async () => {
+  if (userLogin.value) {
+    // DB통신(추가,삭제)
+    await categoryWishClick(props.productInfo.productId);
+    // Pinia(추가, 삭제)
+    wishStore.makeWishList(props.productInfo.productId);
+  } else {
+    alert('로그인 후 사용이 가능합니다.');
+    router.push({ path: '/login2' });
+  }
+};
+// ##########################################################
 </script>
 
 <template>
   <article class="products">
     <div class="product_img" @click="navDetailProduct">
+      <div class="rank">
+        <p v-if="gradeTypesArray.length" v-for="rankData in gradeTypesArray" :key="rankData" class="brandNew">
+          {{ rankData }}
+        </p>
+      </div>
       <img :src="`${GLOBAL_URL}/api/file/download/${productInfo.images[0].filename}`" style="height: 90%" />
       <ul @click.stop>
-        <li class="cart_push" @click.stop="addToCart">
-          <img class="icon" src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" />
-        </li>
+        <!-- <li class="cart_push" @click.stop="addToCart"><img class="icon" src="@/assets/img/icon/free-icon-font-shopping-cart.svg" alt="" /></li> -->
         <li class="wish_push" :class="{ active: redHeart }" @click.stop="addToWishlist">
-          <img class="icon" src="@/assets/img/icon/free-icon-font-heart-line.svg" alt="" :style="{ display: iconClick ? 'none' : 'flex' }" />
-          <img class="icon" src="@/assets/img/icon/free-icon-font-heart.svg" alt="" :style="{ display: iconClick ? 'flex' : 'none' }" />
+          <img
+            class="icon"
+            src="@/assets/img/icon/free-icon-font-heart-line.svg"
+            alt=""
+            :style="{ display: iconClick ? 'none' : 'flex' }"
+          />
+          <img
+            class="icon"
+            src="@/assets/img/icon/free-icon-font-heart.svg"
+            alt=""
+            :style="{ display: iconClick ? 'flex' : 'none' }"
+          />
         </li>
       </ul>
     </div>
     <div class="product_text">
       <ul>
-        <li @click="navDetailProduct" class="product_title">
-          {{ productName }}ㆍ<span class="size">{{ size }}<span>ml</span></span>
-        </li>
+        <li @click="navDetailProduct" class="product_title">{{ productName }} • {{ size }}{{ unit }}</li>
         <li class="product_content">{{ content }}</li>
       </ul>
       <ul>
-        <li class="product_price">￦ {{ price.toLocaleString() }}</li>
+        <li class="product_price">
+          {{ maxPrice > 0 ? '￦ ' + minPrice.toLocaleString() + ' ~ ' + maxPrice.toLocaleString() : '. . .' }}
+        </li>
         <li class="product_review">
           <span>
             <img class="star" src="@/assets/img/icon/free-icon-font-star.svg" alt="" />
@@ -139,18 +131,17 @@ const popup = document.querySelector('.cart_pop')
         </li>
       </ul>
     </div>
+    <!-- <div class="sild_out" v-if="!gradeTypesArray.length">
+      <p>상품이<br>품절되었습니다.</p>
+    </div> -->
   </article>
 </template>
 
 <style scoped>
-.cart_pop{
-  width: 500px;
-  height: 500px;
-  background-color: antiquewhite;
-}
-
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 /* 전체설정 */
 .products {
+  position: relative;
   max-width: 305px;
   width: 100%;
   /* height: 400px; */
@@ -159,6 +150,8 @@ const popup = document.querySelector('.cart_pop')
   overflow: hidden;
   margin: 10px 0;
 }
+.products .sild_out {position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 9; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center;}
+.products .sild_out p {font-size: 2.2rem; text-align: center; color: #fff; line-height: 1.4;}
 /* 상단_이미지 설정 */
 .product_img {
   position: relative;
@@ -199,9 +192,6 @@ const popup = document.querySelector('.cart_pop')
   background-color: var(--color-main-gray);
   /* background-color:#fdf4f1; */
   border: 2px solid rgba(0, 0, 0, 0.05);
-}
-.product_img > ul > li:nth-child(1) {
-  margin-right: -7px;
 }
 
 .wish_push.active {
@@ -268,5 +258,26 @@ const popup = document.querySelector('.cart_pop')
 }
 .size {
   /* font-weight: 400; */
+}
+
+.rank {
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  display: flex;
+}
+.brandNew {
+  padding: 5px 10.5px;
+  margin-right: 4px;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgb(247, 247, 247);
+  box-shadow:
+    inset -3px -3px 3px #ffffff73,
+    inset 1px 1px 3px rgba(94, 104, 121, 0.288);
+  /* font-family: "Playfair Display", serif; */
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: orange;
 }
 </style>

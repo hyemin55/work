@@ -13,8 +13,8 @@ const props = defineProps({
     Required:true
   }
 });
-console.log(new Intl.DateTimeFormat('ko-KR',{year: 'numeric',month:'2-digit', day:'2-digit',hour:'numeric',minute:'numeric'}).format(new Date()))
-console.log(props)
+// console.log(new Intl.DateTimeFormat('ko-KR',{year: 'numeric',month:'2-digit', day:'2-digit',hour:'numeric',minute:'numeric'}).format(new Date()))
+// console.log(props)
     const send = ()=>{
       const res = confirm('등록하시겠습니까?')
       if(res){
@@ -92,7 +92,7 @@ console.log(props)
   height: 600px;
   background-color: rgb(255, 255, 255);
   z-index: 11;
-  border: 2px solid var(--color-main-bloode);
+  border: 2px solid #507383;
   padding: 5%;
   line-height: 2;
   font-size: 1.6rem;
@@ -107,8 +107,8 @@ box-shadow: 1px 1px 3px #333;
 /* background-color: antiquewhite; */
 }
 tr{
-  border: 0.5px solid var(--color-main-bloode);
-  
+  border: 0.5px solid #507383;
+
 }
 .title{
   width: 100%;
@@ -121,7 +121,6 @@ input[type='text']{
 .content{
   width: 100%;
   height: 350px;
-  /* background-color: brown; */
 }
 textarea,
 input[type='text']{
@@ -134,7 +133,6 @@ input[type='text']{
 textarea:focus,
 input[type='text']:focus{
   outline: none;
-  /* background-color: var(--color-main-Lgray); */
 }
 /* 전송, 취소 버튼 */
 .Results_transfer_button {
@@ -149,11 +147,15 @@ input[type='text']:focus{
   text-align: center;
   border-radius: 10px;
   margin:5% 8%;
-  border: 2px solid var(--color-main-bloode);
+  color: white;
+  background-color: #8f9d8d;
+  box-shadow: inset 2px 2px 4px rgb(255, 255, 255);
+  transition: all 0.3s ease;
 }
 .Results_transfer_button > button:hover {
-  color: white;
-  border: 2px solid var(--color-main-bloode);
-  background-color: orange;
+  background-color: #627c85;
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
 }
+
 </style>
