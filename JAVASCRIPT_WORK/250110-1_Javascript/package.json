@@ -1,0 +1,19 @@
+{
+  "name": "250110-1_javascript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "set AA=20 && node ex01.js",
+    "dev": "set AA=10 && node ex01.js",
+    "aaa": "echo aaa && ls -al",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mysql2": "^3.12.0"
+  }
+}
